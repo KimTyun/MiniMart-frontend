@@ -16,10 +16,14 @@ export const getKakaoLoginUrl = async () => {
 // 카카오 사용자 정보 조회
 export const fetchUserInfo = async () => {
    try {
-      const response = await minimartApi.get('/auth/kakao/me') // 헤더는 interceptors로 자동 설정됨
+      const response = await minimartApi.get('/auth/me')
       return response.data
    } catch (error) {
-      console.error('사용자 정보 조회 오류:', error)
+      if (error.response?.status === 401) {
+         return null
+      } else {
+         console.error('사용자 정보 조회 오류:', error)
+      }
       throw error
    }
 }

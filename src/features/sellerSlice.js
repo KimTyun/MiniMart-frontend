@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { registerSeller } from '../api/authApi'
+import { registerSeller } from '../api/sellerApi'
 
 export const registerSellerThunk = createAsyncThunk('seller/register', async (payload, { rejectWithValue }) => {
    try {

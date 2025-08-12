@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logoutUserThunk, fetchUserInfoThunk } from '../../features/authSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import { KakaoLogout } from '../../api/authApi'
 
 const Button = styled.button`
    width: 100px;
