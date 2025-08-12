@@ -169,7 +169,7 @@ const UserInfoForm = () => {
       const formData = new FormData()
       formData.append('profileImage', file)
 
-      const response = await fetch('/mypage/uploads/profile-images', {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/mypage/uploads/profile-images`, {
          method: 'POST',
          headers: {
             Authorization: `Bearer ${token}`,

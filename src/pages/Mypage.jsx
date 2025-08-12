@@ -6,6 +6,8 @@ import OrderHistoryForm from '../components/my/OrderHistoryForm'
 import FollowForm from '../components/my/FollowForm'
 import '../styles/MyPage.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL
+
 const MyPage = () => {
    const navigate = useNavigate()
 
@@ -15,7 +17,7 @@ const MyPage = () => {
          const token = localStorage.getItem('token')
          if (!token) throw new Error('토큰 없음')
 
-         const res = await fetch('/mypage', {
+         const res = await fetch(`${import.meta.env.VITE_API_URL}/mypage`, {
             headers: { Authorization: `Bearer ${token}` },
          })
 

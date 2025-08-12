@@ -8,7 +8,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL
 export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (url, thunkAPI) => {
    try {
       const token = localStorage.getItem('token')
-      const response = await fetch(url, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/mypage`, {
          method: 'GET',
          headers: {
             'Content-Type': 'application/json',
