@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchMyPageThunk, updateMyPageThunk, deleteAccountThunk } from '../../features/mypageSlice'
+import { logoutUserThunk } from '../../features/authSlice'
+import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
@@ -11,28 +13,35 @@ const UserInfoForm = () => {
    const { loading, error } = useSelector((state) => state.mypage)
    const [previewImage, setPreviewImage] = useState('')
    const token = localStorage.getItem('token')
+   const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
+   const open = useDaumPostcodePopup(scriptUrl)
 
-   const [formData, setFormData] = useState({
-      name: '',
-      phone_number: '',
-      email: '',
-      address: '',
-      profile_img: '',
-   })
+   const [name, setName] = useState('')
+   const [phone_number, setPhone_number] = useState('')
+   const [email, setEmail] = useState('')
+   const [zipcode, setZipcode] = useState('')
+   const [address, setAddress] = useState('')
+   const [detailaddress, setDetailaddress] = useState('')
+   const [extraaddress, setExtraaddress] = useState('')
+   const [profile_img, setProfile_img] = useState('')
+   const [originalData, setOriginalData] = useState(null)
 
    useEffect(() => {
-      dispatch(fetchMyPageThunk())
+      dispatch(fetchMyPageThunk('/mypage'))
    }, [dispatch])
 
    useEffect(() => {
       if (user) {
-         setFormData({
-            name: user.name || '',
-            phone_number: user.phone_number || '',
-            email: user.email || '',
-            address: user.address || '',
-            profile_img: user.profile_img || '',
-         })
+         setOriginalData(user)
+         setName(user.name || '')
+         setPhone_number(user.phone_number || '')
+         setEmail(user.email || '')
+         setZipcode(user.zipcode || '') // ⭐ DB에서 불러온 우편번호
+         setAddress(user.address || '') // ⭐ DB에서 불러온 기본 주소
+         setDetailaddress(user.detailaddress || '') // ⭐ DB에서 불러온 상세 주소
+         setExtraaddress(user.extraaddress || '') // ⭐ DB에서 불러온 참고항목
+         setProfile_img(user.profile_img || '')
+
          const fullImageUrl = user.profile_img ? `${API_BASE_URL}${user.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`
          setPreviewImage(fullImageUrl)
       }
@@ -47,9 +56,57 @@ const UserInfoForm = () => {
    const handleChange = (e) => {
       setFormData({ ...formData, [e.target.name]: e.target.value })
    }
+   const handleAddressSearch = () => {
+      open({
+         onComplete: (data) => {
+            let roadAddr = data.roadAddress
+            let extraAddr = ''
+
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
+               extraAddr += data.bname
+            }
+            if (data.buildingName !== '' && data.apartment === 'Y') {
+               extraAddr += extraAddr !== '' ? ', ' + data.buildingName : data.buildingName
+            }
+            if (extraAddr !== '') {
+               extraAddr = `(${extraAddr})`
+            }
+
+            setZipcode(data.zonecode)
+            setAddress(roadAddr)
+            setExtraaddress(extraAddr)
+            setDetailaddress('') // 상세주소는 초기화
+         },
+      })
+   }
 
    const handleSave = () => {
-      dispatch(updateMyPageThunk(formData))
+      if (loading) {
+         return
+      }
+
+      if (!originalData) {
+         alert('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.')
+         return
+      }
+
+      const updatedFields = {}
+      if (name !== originalData.name) updatedFields.name = name
+      if (phone_number !== originalData.phone_number) updatedFields.phone_number = phone_number
+      // if (email !== originalData.email) updatedFields.email = email
+      if (zipcode !== originalData.zipcode) updatedFields.zipcode = zipcode
+      if (address !== originalData.address) updatedFields.address = address
+      if (detailaddress !== originalData.detailaddress) updatedFields.detailaddress = detailaddress
+      if (extraaddress !== originalData.extraaddress) updatedFields.extraaddress = extraaddress
+      if (profile_img !== originalData.profile_img) updatedFields.profile_img = profile_img
+
+      //바꾼 거 없으면 나가
+      if (Object.keys(updatedFields).length === 0) {
+         alert('변경된 내용이 없습니다.')
+         return
+      }
+
+      dispatch(updateMyPageThunk(updatedFields))
          .unwrap()
          .then(() => {
             alert('수정사항이 성공적으로 적용되었습니다.')
@@ -74,10 +131,15 @@ const UserInfoForm = () => {
             .unwrap()
             .then(() => {
                alert('정상적으로 탈퇴 되었습니다.')
-               // 로그아웃 처리 or 리다이렉트 등 추가 필요
+               dispatch(logoutUserThunk())
+                  .unwrap()
+                  .then(() => {
+                     window.location.href = '/'
+                  })
             })
             .catch((err) => {
-               alert(`회원 탈퇴 실패: ${err}`)
+               console.error('회원 탈퇴 실패:', err)
+               alert(`회원 탈퇴 실패: ${err.message || err}`)
             })
       }
    }
@@ -90,14 +152,13 @@ const UserInfoForm = () => {
             setPreviewImage(reader.result)
          }
          reader.readAsDataURL(file)
-
          uploadProfileImage(file)
             .then((uploadedImageUrl) => {
-               setFormData((prev) => ({ ...prev, profile_img: uploadedImageUrl }))
+               setProfile_img(uploadedImageUrl)
             })
             .catch(() => {
                alert('이미지 업로드 실패')
-               setPreviewImage(formData.profile_img)
+               setPreviewImage(profile_img)
             })
       } else {
          alert('이미지 파일만 선택해주세요.')
@@ -108,7 +169,7 @@ const UserInfoForm = () => {
       const formData = new FormData()
       formData.append('profileImage', file)
 
-      const response = await fetch(`${API_BASE_URL}/mypage/uploads/profile-images`, {
+      const response = await fetch('/mypage/uploads/profile-images', {
          method: 'POST',
          headers: {
             Authorization: `Bearer ${token}`,
@@ -139,25 +200,42 @@ const UserInfoForm = () => {
          <div className="profile-card">
             <div className="profile-row">
                <label htmlFor="name">이름</label>
-               <input id="name" name="name" type="text" value={formData.name} onChange={handleChange} />
+               <input id="name" name="name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
             </div>
 
             <div className="profile-row">
                <label htmlFor="phone_number">전화번호</label>
-               <input id="phone_number" name="phone_number" type="tel" value={formData.phone_number} placeholder="01012345678" maxLength="11" onChange={handleChange} />
+               <input id="phone_number" name="phone_number" type="tel" value={phone_number} placeholder="01012345678" maxLength="11" onChange={(e) => setPhone_number(e.target.value)} />
             </div>
 
             <div className="profile-row">
                <label htmlFor="email">이메일</label>
-               <input id="email" name="email" type="email" value={formData.email} placeholder="변경할 이메일" onChange={handleChange} />
+               <input id="email" name="email" type="email" value={email} placeholder="변경할 이메일" onChange={(e) => setEmail(e.target.value)} />
             </div>
 
             <div className="profile-row">
+               <label htmlFor="zipcode">우편번호</label>
+               <div className="address-input-group">
+                  <input id="zipcode" name="zipcode" type="text" value={zipcode} readOnly placeholder="우편번호" />
+                  <button type="button" onClick={handleAddressSearch}>
+                     우편번호 찾기
+                  </button>
+               </div>
+            </div>
+            <div className="profile-row">
                <label htmlFor="address">주소</label>
-               <input id="address" name="address" type="text" className="user-address-input" value={formData.address} onChange={handleChange} />
+               <input id="address" name="address" type="text" value={address} readOnly placeholder="주소" />
+            </div>
+            <div className="profile-row">
+               <label htmlFor="detail_address">상세 주소</label>
+               <input id="detail_address" name="detail_address" type="text" value={detailaddress} onChange={(e) => setDetailaddress(e.target.value)} placeholder="상세 주소" />
+            </div>
+            <div className="profile-row">
+               <label htmlFor="extra_address">참고항목</label>
+               <input id="extra_address" name="extra_address" type="text" value={extraaddress} readOnly placeholder="참고항목" />
             </div>
 
-            <button className="btn btn-save" onClick={handleSave} disabled={loading}>
+            <button className="btn btn-save" onClick={handleSave} disabled={loading || !user}>
                {loading ? '저장 중...' : '정보 수정'}
             </button>
             <button className="btn btn-withdraw" onClick={handleDeleteAccount} disabled={loading}>

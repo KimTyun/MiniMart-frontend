@@ -15,7 +15,7 @@ const MyPage = () => {
          const token = localStorage.getItem('token')
          if (!token) throw new Error('토큰 없음')
 
-         const res = await fetch('/api/mypage', {
+         const res = await fetch('/mypage', {
             headers: { Authorization: `Bearer ${token}` },
          })
 
