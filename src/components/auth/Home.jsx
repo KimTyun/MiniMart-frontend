@@ -3,7 +3,7 @@ import '../../styles/minipage.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchUserInfoThunk } from '../../features/authSlice'
 import { itemPopularThunk, itemRecentThunk } from '../../features/itemSlice'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import SearchIcon from '@mui/icons-material/Search'
 import SearchBar from '../shared/SearchBar'
 
@@ -35,7 +35,17 @@ function Home() {
       ['5', '비파형 동검', 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'],
       ['6', '세형 동검', 'There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...'],
    ]
-
+   const navigate = useNavigate() // ✅ 페이지 이동 함수
+   // ✅ 상품 클릭 시 SearchPage로 이동하는 함수
+   const handleProductClick = (productName) => {
+      // SearchPage는 검색 결과 '객체'를 받으므로, 가짜 데이터를 만들어서 전달합니다.
+      // 실제로는 이 상품명으로 API를 호출해야 합니다.
+      const mockResults = {
+         items: [], // 실제 데이터는 비어있지만, SearchPage는 이 구조를 기대합니다.
+         totalItems: 0,
+      }
+      navigate('/search', { state: { results: mockResults, searchTerm: productName } })
+   }
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
@@ -129,27 +139,27 @@ function Home() {
                )
             })}
          </div>
+         {/* MD 추천 픽 */}
          <div style={{ display: 'flex', margin: '100px', flexWrap: 'wrap' }}>
-            {/* MD 추천 픽 나중에 상품 등록 되면 DB에서 어떻게 가져올지 보고 결정*/}
             <h1 className="md-h1">MD 추천 픽 !</h1>
             {mdProduct.map((e) => {
                return (
-                  <Card key={e[0]} sx={{ maxWidth: 250, margin: '50px' }}>
-                     <CardActionArea>
-                        <CardMedia sx={{ height: 250 }} component="img" height="140" image={`/md추천픽/md${e[0]}.png`} alt={`신제품${e[0]}`} />
+                  // ❌ 기존 CardActionArea를 div로 변경하고 onClick 이벤트를 추가합니다.
+                  <div key={e[0]} onClick={() => handleProductClick(e[1])} style={{ cursor: 'pointer' }}>
+                     <Card sx={{ maxWidth: 250, margin: '50px' }}>
+                        <CardMedia sx={{ height: 250 }} component="img" image={`/md추천픽/md${e[0]}.png`} alt={`신제품${e[0]}`} />
                         <CardContent>
                            <Typography gutterBottom variant="h6" component="div" className="text-ellipsis1">
                               {e[1]}
                            </Typography>
-
                            <Typography component="div" sx={{ display: 'flex' }}>
                               <Typography className="text-ellipsis3" component="span" variant="body2" sx={{ color: 'text.secondary', textAlign: 'left' }}>
                                  {e[2]}
                               </Typography>
                            </Typography>
                         </CardContent>
-                     </CardActionArea>
-                  </Card>
+                     </Card>
+                  </div>
                )
             })}
          </div>
