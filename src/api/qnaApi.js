@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// Q&A 작성 API
+// 문의 작성 API
 export const createQna = async (formData) => {
    const res = await axios.post('/api/qna', formData, {
       headers: {
