@@ -9,13 +9,6 @@
    background-color: #fff;
 }
 
-/* 상단 노란색 배너(스크린샷 상단 노란 띠) */
-.top-accent {
-   height: 48px;
-   background: #f0d85a; /* 스크린샷의 옅은 노란색 */
-   width: 100%;
-}
-
 /* ---------- 프로필 섹션 ---------- */
 .user-info-box {
    display: flex;
@@ -104,6 +97,16 @@
 
 .user-address-box .user-address-input {
    flex: 1;
+}
+.address-input-group {
+   /* Flexbox를 사용하여 내부 요소들을 가로로 정렬합니다. */
+   display: flex;
+   /* 입력창과 버튼 사이에 8px의 간격을 둡니다. */
+   gap: 8px;
+}
+.address-input-group input {
+   /* Flexbox 컨테이너에서 남은 공간을 채우도록 합니다. */
+   flex-grow: 1;
 }
 
 /* 버튼 공통 */

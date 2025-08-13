@@ -95,8 +95,8 @@ const Footer = () => {
                <Link to="/shipping" style={styles.link}>
                   배송 서비스
                </Link>
-               <Link to="/faq" style={styles.link}>
-                  FAQs
+               <Link to="/customer-service" style={styles.link}>
+                  FAQ
                </Link>
             </div>
 
