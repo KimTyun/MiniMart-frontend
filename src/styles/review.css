@@ -1,0 +1,219 @@
+/* review.css */
+
+/* 전체 페이지 레이아웃 */
+body {
+   background-color: #f7f7f7; /* 배경색 */
+}
+
+.review-page {
+   max-width: 800px;
+   margin: 0 auto;
+   padding: 60px 20px;
+   font-family: Arial, sans-serif; /* 폰트 설정 */
+}
+
+/* 제목 스타일 */
+.review-title {
+   text-align: center;
+   font-size: 22px;
+   background-color: #f1d25f;
+   padding: 12px 24px;
+   border-radius: 8px;
+   display: block;
+   width: fit-content;
+   margin: 0 auto 30px;
+   font-weight: bold;
+}
+
+/* 리뷰 폼 컨테이너 */
+.review-form {
+   border: 1px solid #ddd;
+   padding: 40px;
+   border-radius: 6px;
+   background-color: #fff;
+   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* 이미지 업로드 섹션 */
+.image-upload-actions {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+   margin-bottom: 20px; /* 다음 입력 필드와의 간격 */
+}
+
+.image-preview-list {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 12px;
+   margin-bottom: 20px;
+}
+
+.image-preview-box,
+.image-upload-box {
+   width: 100px;
+   height: 100px;
+   border: 1px solid #ddd;
+   border-radius: 4px;
+   overflow: hidden;
+   position: relative;
+   box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+}
+.image-preview-item {
+   width: 100px;
+   height: 100px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   overflow: hidden;
+}
+
+.image-preview-item img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.image-preview-box img {
+   width: 100%;
+   height: 100%;
+   object-fit: cover;
+}
+
+.image-upload-box {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   cursor: pointer;
+   background-color: #f9f9f9;
+}
+
+.image-upload-box:hover {
+   background-color: #f0f0f0;
+}
+
+.image-upload-box span {
+   font-size: 40px;
+   color: #ccc;
+   font-weight: 100;
+}
+
+.image-upload-actions {
+   display: flex;
+   align-items: center;
+   gap: 12px;
+}
+
+.upload-box {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   width: 100px;
+   height: 100px;
+   border: 1px dashed #ccc; /* 점선 테두리 */
+   border-radius: 4px;
+   background-color: #f9f9f9;
+   cursor: pointer;
+   transition: background-color 0.2s ease;
+}
+
+.upload-box:hover {
+   background-color: #f0f0f0;
+}
+
+.plus-icon {
+   font-size: 40px;
+   color: #ccc;
+   font-weight: 300;
+}
+
+.upload-btn {
+   display: inline-block;
+   background-color: #000;
+   color: #fff;
+   font-size: 14px;
+   padding: 8px 16px;
+   border-radius: 4px;
+   cursor: pointer;
+   font-weight: normal;
+}
+
+.upload-hint {
+   font-size: 13px;
+   color: #555;
+}
+
+/* 입력 필드 레이아웃 */
+.form-row {
+   margin-bottom: 15px;
+   display: flex;
+   flex-direction: column; /* 세로 정렬 */
+}
+
+/* 제목 입력 필드 */
+.input-title-container {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   margin-bottom: 15px;
+   gap: 10px;
+}
+
+.input-title-container label {
+   font-weight: bold;
+   width: 60px;
+   flex-shrink: 0;
+}
+
+.input-title {
+   flex-grow: 1;
+   height: 40px;
+   padding: 0 12px;
+   font-size: 15px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+}
+
+.private-check {
+   display: flex;
+   align-items: center;
+   gap: 4px;
+   font-size: 14px;
+   white-space: nowrap;
+   flex-shrink: 0;
+}
+
+/* 내용 입력 필드 */
+.input-content {
+   width: 100%;
+   height: 200px;
+   padding: 12px;
+   font-size: 15px;
+   border: 1px solid #ccc;
+   border-radius: 4px;
+   resize: vertical; /* 세로 크기 조절만 가능 */
+   margin-bottom: 16px;
+}
+
+.input-content-label {
+   font-weight: bold;
+   margin-bottom: 8px; /* label과 textarea 사이 간격 */
+}
+
+/* 제출 버튼 */
+.submit-btn {
+   display: block;
+   width: 100%;
+   height: 45px;
+   background-color: #333;
+   color: #fff;
+   font-size: 16px;
+   border: none;
+   border-radius: 4px;
+   cursor: pointer;
+   font-weight: bold;
+   transition: background-color 0.2s ease;
+}
+
+.submit-btn:hover {
+   background-color: #555;
+}
