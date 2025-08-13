@@ -2,39 +2,47 @@ import React, { useState, useRef } from 'react'
 import axios from 'axios'
 import '../../styles/qna.css'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
 
 const QnAForm = () => {
    const fileInputRef = useRef(null)
    const [images, setImages] = useState([])
-   const [title, setTitle] = useState('')
-   const [content, setContent] = useState('')
-   const [isSecret, setIsSecret] = useState(false)
+   const [formData, setFormData] = useState({
+      title: '',
+      content: '',
+      isSecret: false,
+   })
+
+   const handleChange = (e) => {
+      const { name, value, type, checked } = e.target
+      setFormData((prev) => ({
+         ...prev,
+         [name]: type === 'checkbox' ? checked : value,
+      }))
+   }
 
    const handleImageChange = (e) => {
       const files = Array.from(e.target.files)
       setImages((prev) => [...prev, ...files])
       e.target.value = ''
    }
-   const handleImageUploadClick = () => {
-      fileInputRef.current.click()
-   }
+
    const handleSubmit = async (e) => {
       e.preventDefault()
 
-      if (!title.trim() || !content.trim()) {
+      if (!formData.title.trim() || !formData.content.trim()) {
          alert('제목과 내용을 모두 입력해주세요.')
          return
       }
 
       try {
-         const formData = new FormData()
-         images.forEach((img) => formData.append('images', img))
-         formData.append('title', title)
-         formData.append('content', content)
-         formData.append('isSecret', isSecret)
+         const formPayload = new FormData()
+         images.forEach((img) => formPayload.append('images', img))
+         formPayload.append('title', formData.title)
+         formPayload.append('content', formData.content)
+         formPayload.append('isSecret', formData.isSecret)
 
-         const res = await axios.post(`${API_BASE_URL}/api/qna`, formData, {
+         const res = await axios.post(`${API_BASE_URL}/api/qna`, formPayload, {
             headers: { 'Content-Type': 'multipart/form-data' },
             withCredentials: true,
          })
@@ -42,9 +50,11 @@ const QnAForm = () => {
          if (res.status === 201) {
             alert('질문이 등록되었습니다.')
             setImages([])
-            setTitle('')
-            setContent('')
-            setIsSecret(false)
+            setFormData({
+               title: '',
+               content: '',
+               isSecret: false,
+            })
          }
       } catch (err) {
          console.error(err)
@@ -65,7 +75,7 @@ const QnAForm = () => {
                      </div>
                   ))}
                   {images.length < 5 && (
-                     <div className="image-upload-box" onClick={handleImageUploadClick}>
+                     <div className="image-upload-box" onClick={() => fileInputRef.current.click()}>
                         <span>+</span>
                      </div>
                   )}
@@ -74,15 +84,15 @@ const QnAForm = () => {
             </div>
             <div className="input-title-container">
                <label>제목</label>
-               <input className="input-title" type="text" placeholder="제목을 입력하세요" value={title} onChange={(e) => setTitle(e.target.value)} />
+               <input className="input-title" type="text" name="title" placeholder="제목을 입력하세요" value={formData.title} onChange={handleChange} />
                <label className="private-check">
-                  <input type="checkbox" checked={isSecret} onChange={(e) => setIsSecret(e.target.checked)} />
+                  <input type="checkbox" name="isSecret" checked={formData.isSecret} onChange={handleChange} />
                   비밀 글
                </label>
             </div>
             <div className="form-row">
                <label className="input-content-label">상세한 내용을 입력해주세요</label>
-               <textarea className="input-content" placeholder="내용을 입력하세요" value={content} onChange={(e) => setContent(e.target.value)} />
+               <textarea className="input-content" name="content" placeholder="내용을 입력하세요" value={formData.content} onChange={handleChange} />
             </div>
             <button type="submit" className="submit-btn">
                등록 하기
@@ -91,4 +101,5 @@ const QnAForm = () => {
       </div>
    )
 }
+
 export default QnAForm
