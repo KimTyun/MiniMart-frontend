@@ -13,13 +13,10 @@ import Mypage from './pages/Mypage'
 import GoogleLoginSuccess from './pages/auth/GoogleLoginSuccess'
 import Footer from './components/shared/Footer'
 import RegisterSeller from './pages/RegisterSeller'
-<<<<<<< HEAD
 import ManagerPage from './pages/ManagerPage'
-=======
 import SearchPage from './pages/SearchPage'
 import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
->>>>>>> 972e9836a2aaf105e72a9b237bd49d689ee8b6c1
 
 function App() {
    const dispatch = useDispatch()
@@ -50,16 +47,12 @@ function App() {
             {/* 내 정보 페이지 */}
             <Route path="/login/success/google" element={<GoogleLoginSuccess />} />
             <Route path="/mypage" element={<Mypage />} />
-<<<<<<< HEAD
             {/* 판매자 등록 페이지 */}
             <Route path="/seller-register" element={<RegisterSeller />}></Route>
             {/* 관리자 페이지 */}
             <Route path="/manager/*" element={<ManagerPage />}></Route>
-=======
-            <Route path="seller-register" element={<RegisterSeller />}></Route>
             <Route path="/search" element={<SearchPage />} />
             <Route path="/customer-service" element={<CustomerService />} />
->>>>>>> 972e9836a2aaf105e72a9b237bd49d689ee8b6c1
          </Routes>
          <Footer />
       </>
