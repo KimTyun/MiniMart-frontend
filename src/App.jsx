@@ -16,7 +16,7 @@ import RegisterSeller from './pages/RegisterSeller'
 import SearchPage from './pages/SearchPage'
 import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
-import ReviewPage from './pages/item/ReviewPage'
+import QnAPage from './pages/item/QnAPage'
 
 function App() {
    const dispatch = useDispatch()
@@ -51,7 +51,7 @@ function App() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/customer-service" element={<CustomerService />} />
             {/* 리뷰 페이지 */}
-            <Route path="/review" element={<ReviewPage />} />
+            <Route path="/qna" element={<QnAPage />} />
          </Routes>
          <Footer />
       </>
