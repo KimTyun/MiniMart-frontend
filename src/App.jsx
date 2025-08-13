@@ -14,6 +14,7 @@ import Mypage from './pages/Mypage'
 import GoogleLoginSuccess from './pages/auth/GoogleLoginSuccess'
 import Footer from './components/shared/Footer'
 import RegisterSeller from './pages/RegisterSeller'
+import ItemDetail from './pages/item/ItemDetail'
 
 function App() {
    const dispatch = useDispatch()
@@ -39,6 +40,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/success" element={<LoginSuccess />} />
             <Route path="/item/upload" element={<ItemCreatePage />} />
+            <Route path="/item/:id" element={<ItemDetail />} />
             {/* 이메일 비번찾기 */}
             <Route path="/findpassword" element={<FindPasswordPage />} />
             {/* 내 정보 페이지 */}

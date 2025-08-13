@@ -1,0 +1,79 @@
+.item-detail-wrap {
+   width: 800px;
+   display: flex;
+   flex-direction: column;
+   margin: 64px auto;
+   background-color: white;
+}
+
+.item-detail__rep-wrap {
+   display: flex;
+   gap: 64px;
+   justify-content: center;
+}
+
+.item-detail__rep-wrap .rep-imgs {
+   width: 300px;
+   height: 470px;
+   background-color: lightblue;
+   margin: 0;
+}
+
+.item-detail__rep-wrap .rep-info {
+   width: 300px;
+   height: 470px;
+   margin: 0;
+}
+
+.item-detail__rep-wrap .rep-info > h2 {
+   font-size: 1.2rem;
+   text-align: left;
+}
+.item-detail__rep-wrap .rep-info > div.rep-price {
+   text-align: left;
+}
+.item-detail__rep-wrap .rep-info > div.rep-price > div {
+   display: flex;
+}
+.item-detail__rep-wrap .rep-info > div.rep-price > div i {
+   width: 20px;
+   height: 20px;
+}
+
+.item-detail__rep-wrap .rep-info > div.rep-price > div p {
+   text-align: left;
+   font-size: 2rem;
+   font-weight: bolder;
+}
+
+.item-detail__rep-wrap .rep-info > div.rep-price i {
+   width: 40px;
+   height: 30px;
+   display: inline-block;
+   text-align: left;
+}
+
+.item-detail__rep-wrap .rep-info > p {
+   text-align: left;
+}
+
+.item-detail__rep-wrap .rep-info .rep-options {
+   display: flex;
+   justify-content: space-between;
+}
+
+.item-detail__rep-wrap .rep-info .rep-options > div > label {
+   color: black;
+   text-align: left;
+   padding-top: 10px;
+}
+
+.item-detail__rep-wrap .rep-info .rep-options > div > div {
+   width: 140px;
+   height: 40px;
+   padding: 0;
+}
+
+.MuiList-root.MuiList-padding.MuiMenu-list.css-1toxriw-MuiList-root-MuiMenu-list {
+   width: 140px !important;
+}
