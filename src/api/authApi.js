@@ -6,7 +6,6 @@ const API_URL = import.meta.env.VITE_API_URL
 export const getKakaoLoginUrl = async () => {
    try {
       const response = await minimartApi.get(`/auth/kakao`)
-      // minimartApi에는 이미 baseURL이 설정되어 있어야 함
       return response.data // { url: '...' } 반환
    } catch (error) {
       console.error('카카오 로그인 오류', error)
@@ -116,3 +115,6 @@ export const checkCookie = async () => {
    const response = await minimartApi.get('/auth/google/checkcookie')
    return response.data.expired
 }
+
+// 판매자 등록 (구매자 → 판매자 승급)
+export const registerSeller = (payload) => minimartApi.post('/auth/seller/register', payload)

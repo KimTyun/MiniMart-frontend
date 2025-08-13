@@ -9,11 +9,13 @@ import RegisterPage from './pages/local/RegisterPage'
 import LoginPage from './pages/local/LoginPage'
 import FindPasswordPage from './pages/local/FindPasswordPage'
 import ItemCreatePage from './pages/item/ItemCreatePage'
-import Haeder from './components/auth/Header'
 import Mypage from './pages/Mypage'
 import GoogleLoginSuccess from './pages/auth/GoogleLoginSuccess'
 import Footer from './components/shared/Footer'
 import RegisterSeller from './pages/RegisterSeller'
+import SearchPage from './pages/SearchPage'
+import Navbar from './components/shared/Navbar'
+import CustomerService from './pages/CustomerService'
 import ItemDetail from './pages/item/ItemDetail'
 
 function App() {
@@ -32,7 +34,7 @@ function App() {
 
    return (
       <>
-         <Haeder />
+         <Navbar />
          <Routes>
             {/* 메인 페이지 */}
             <Route path="/" element={<MainPage />}></Route>
@@ -47,6 +49,8 @@ function App() {
             <Route path="/login/success/google" element={<GoogleLoginSuccess />} />
             <Route path="/mypage" element={<Mypage />} />
             <Route path="seller-register" element={<RegisterSeller />}></Route>
+            <Route path="/search" element={<SearchPage />} />
+            <Route path="/customer-service" element={<CustomerService />} />
          </Routes>
          <Footer />
       </>

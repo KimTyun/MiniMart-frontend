@@ -1,35 +1,72 @@
 import { useState } from 'react'
 import '../styles/registerSeller.css'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerSellerThunk } from '../features/sellerSlice'
+import { useNavigate } from 'react-router-dom'
 
 function RegisterSeller() {
+   const dispatch = useDispatch()
+   const { loading } = useSelector((s) => s.seller || { loading: false })
+   const navigate = useNavigate()
+
+   const [biz, setBiz] = useState('')
+   const [bizName, setBizName] = useState('')
+   const [introduce, setIntroduce] = useState('')
+   const [bizNumber, setBizNumber] = useState('')
+   const [representativeName, setRepresentativeName] = useState('')
+   const [mainProduct, setMainProduct] = useState('')
    const [address, setAddress] = useState('')
    const [detailAddress, setDetailAddress] = useState('')
    const [postcode, setPostcode] = useState('')
    const [extraAddress, setExtraAddress] = useState('')
 
+   //    사업자 등록증 하이픈 형식으로 받기
+   const formatBiz = (v) => {
+      const d = v.replace(/\D/g, '').slice(0, 10)
+      const m = d.match(/^(\d{0,3})(\d{0,2})(\d{0,5})$/)
+      return [m?.[1], m?.[2], m?.[3]].filter(Boolean).join('-')
+   }
+
    const handleRegister = () => {
-      if (!email || !address || !password || !confirmPassword) {
-         alert('모든 필드를 입력해주세요!')
+      if (!biz || !bizName || !bizNumber || !representativeName || !address) {
+         alert('필수 항목을 입력하세요.')
          return
       }
 
-      dispatch(
-         registerUserThunk({
-            address: `${address} ${detailAddress} ${extraAddress}`,
-         })
-      )
-         .unwrap()
-         .then(() => setIsRegisterComplete(true))
-         .catch((err) => console.error('회원가입 에러:', err))
-   }
+      const digitsBiz = biz.replace(/\D/g, '')
+      if (digitsBiz.length !== 10) {
+         alert('사업자등록번호는 숫자 10자리여야 합니다.')
+         return
+      }
 
+      const business_address = `${postcode ? `[${postcode}] ` : ''}${address} ${detailAddress} ${extraAddress}`.trim()
+
+      const payload = {
+         name: bizName,
+         introduce: introduce || null,
+         phone_number: bizNumber.replace(/\D/g, ''),
+         banner_img: null,
+         biz_reg_no: digitsBiz, // ⬅️ 숫자만 10자리로 전송
+         representative_name: representativeName,
+         main_products: mainProduct || null,
+         business_address,
+      }
+
+      dispatch(registerSellerThunk(payload))
+         .unwrap()
+         .then(() => {
+            alert('판매자 등록 완료!')
+            navigate('/', { replace: true }) // ⬅️ 여기서 이동
+         })
+         .catch((msg) => alert(msg))
+   }
    return (
       <div className="register-container">
          <img className="logo" src="/Logo.png" alt="미니 로고" />
 
          <div className="register-input">
             <label>사업자 등록번호</label>
-            <input type="text" placeholder="XXXX-XXXX-XXXX" />
+            <input type="text" value={biz} onChange={(e) => setBiz(formatBiz(e.target.value))} placeholder="XXX-XX-XXXXX" />
          </div>
 
          <div className="register-input">
@@ -39,27 +76,27 @@ function RegisterSeller() {
 
          <div className="register-input">
             <label>상호법인명</label>
-            <input type="text" placeholder="(주)Minimart" />
+            <input type="text" value={bizName} onChange={(e) => setBizName(e.target.value)} placeholder="(주)Minimart" />
          </div>
 
          <div className="register-input">
             <label>회사 소개</label>
-            <input type="text" placeholder="어떤 회사인가요?" />
+            <input type="text" value={introduce} onChange={(e) => setIntroduce(e.target.value)} placeholder="어떤 회사인가요?" />
          </div>
 
          <div className="register-input">
             <label htmlFor="phone">대표 번호</label>
-            <input type="text" placeholder="010-XXXX-XXXX" />
+            <input type="text" value={bizNumber} onChange={(e) => setBizNumber(e.target.value)} placeholder="010-XXXX-XXXX" />
          </div>
 
          <div className="register-input">
             <label>대표자 명</label>
-            <input type="text" placeholder="대표자명 입력" />
+            <input type="text" value={representativeName} onChange={(e) => setRepresentativeName(e.target.value)} placeholder="대표자명 입력" />
          </div>
 
          <div className="register-input">
             <label>대표 판매 물품</label>
-            <input type="text" placeholder="종목" />
+            <input type="text" value={mainProduct} onChange={(e) => setMainProduct(e.target.value)} placeholder="종목" />
          </div>
 
          <div className="register-input">
@@ -94,7 +131,9 @@ function RegisterSeller() {
          </div>
 
          <div className="button-group">
-            <button onClick={handleRegister}>판매자 신청하기</button>
+            <button disabled={loading} onClick={handleRegister}>
+               {loading ? '처리 중...' : '판매자 신청하기'}
+            </button>
          </div>
       </div>
    )

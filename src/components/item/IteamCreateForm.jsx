@@ -199,9 +199,9 @@ function IteamCreateForm() {
                <div className="item-upload-form__imgs">{repImgUrl && <img src={repImgUrl} alt="대표 이미지 미리보기" />}</div>
                <div className="item_img">
                   <label htmlFor="rep_item_img" className="item_img_label">
-                     대표 상품 이미지 등록{' '}
+                     대표 상품 이미지 등록
                   </label>
-                  <span> 4mb 이내의 이미지 등록이 가능합니다. </span>
+                  <span> 4mb 이내의 이미지 등록이 가능합니다. (3:4 비율의 이미지를 추천합니다)</span>
 
                   {empty.rep_img && <p className="empty"> 반드시 대표 이미지를 등록해야 합니다.</p>}
 
