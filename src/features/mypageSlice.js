@@ -14,7 +14,8 @@ export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (ur
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
          },
-      }) // 응답이 성공적인지 확인
+         cache: 'no-cache',
+      })
 
       if (!response.ok) {
          const errorText = await response.text()
@@ -86,6 +87,21 @@ const mypageSlice = createSlice({
    reducers: {},
    extraReducers: (builder) => {
       builder
+         // 내 정보 불러오기
+         .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.user = action.payload
+            state.error = null
+         })
+         .addCase(fetchMyPageThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(fetchMyPageThunk.rejected, (state, action) => {
+            state.loading = false
+            state.user = null
+            state.error = action.payload
+         })
          // 회원정보 수정
          .addCase(updateMyPageThunk.pending, (state) => {
             state.loading = true
