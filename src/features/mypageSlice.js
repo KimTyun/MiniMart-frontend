@@ -88,6 +88,24 @@ export const fetchOrderHistoryThunk = createAsyncThunk('mypage/fetchOrderHistory
    }
 })
 
+//주문취소
+export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
+   try {
+      const token = localStorage.getItem('token')
+      const response = await axios.patch(
+         `${API_BASE_URL}/orders/${orderId}/cancel`,
+         {}, // PATCH 요청 본문이 필요 없는 경우 빈 객체 전달
+         {
+            headers: { Authorization: `Bearer ${token}` },
+         }
+      )
+      return response.data
+   } catch (error) {
+      console.error('cancelOrderThunk 에러:', error.response)
+      return thunkAPI.rejectWithValue(error.response?.data?.message || '주문 취소 실패')
+   }
+})
+
 //팔로우한 판매자 목록
 export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedSellers', async (_, thunkAPI) => {
    //Mocks이용한 가상 팔로워 목록. 나중에 제출 시 이 주석 블록 전체 삭제
@@ -189,7 +207,19 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-
+         .addCase(cancelOrderThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(cancelOrderThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.error = null
+            state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: '취소됨' } : order))
+         })
+         .addCase(cancelOrderThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
          //팔로우한 판매자 목록
          .addCase(fetchFollowedSellersThunk.pending, (state) => {
             state.loading = true

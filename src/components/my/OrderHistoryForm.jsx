@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { fetchOrderHistoryThunk } from '../../features/mypageSlice'
+import { fetchOrderHistoryThunk, cancelOrderThunk } from '../../features/mypageSlice'
 
 const OrderHistoryForm = () => {
    const dispatch = useDispatch()

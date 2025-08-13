@@ -10,7 +10,7 @@ const ReviewForm = () => {
    const navigate = useNavigate()
    const location = useLocation()
    const dispatch = useDispatch()
-
+   const { loading, error } = useSelector((state) => state.review)
    const { order } = location.state || {}
 
    const [rating, setRating] = useState(0)
