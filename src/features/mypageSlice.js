@@ -1,16 +1,32 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getMyPage, updateMyPage, deleteAccount, writeReview, unfollowSeller } from '../api/mypageApi'
+import { getMyPage, updateMyPage, writeReview, unfollowSeller } from '../api/mypageApi'
 import axios from 'axios'
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 // 내 정보 불러오기
-export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, thunkAPI) => {
+export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (url, thunkAPI) => {
    try {
-      const res = await getMyPage()
-      return res.data
+      const token = localStorage.getItem('token')
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/mypage`, {
+         method: 'GET',
+         headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+         },
+      }) // 응답이 성공적인지 확인
+
+      if (!response.ok) {
+         const errorText = await response.text()
+         throw new Error(errorText || '불러오기 실패')
+      }
+
+      const data = await response.json()
+      return data
    } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || '불러오기 실패')
+      // 에러 핸들링을 강화
+      console.error('fetchMyPageThunk 에러:', err)
+      return thunkAPI.rejectWithValue(err.message || '불러오기 실패')
    }
 })
 
@@ -26,12 +42,17 @@ export const updateMyPageThunk = createAsyncThunk('mypage/updateMyPage', async (
 })
 
 // 회원 탈퇴
-export const deleteAccountThunk = createAsyncThunk('mypage/deleteAccount', async (_, thunkAPI) => {
+export const deleteAccountThunk = createAsyncThunk('mypage/deleteAccount', async (_, { rejectWithValue }) => {
    try {
-      const res = await deleteAccount()
-      return res.data
-   } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || '회원 탈퇴 실패')
+      const token = localStorage.getItem('token')
+      const response = await axios.delete(`${API_BASE_URL}/mypage/delete`, {
+         headers: {
+            Authorization: `Bearer ${token}`,
+         },
+      })
+      return response.data // 성공 메시지를 반환
+   } catch (error) {
+      return rejectWithValue(error.response.data.message || error.message)
    }
 })
 
@@ -81,17 +102,15 @@ const mypageSlice = createSlice({
          // 회원 탈퇴
          .addCase(deleteAccountThunk.pending, (state) => {
             state.loading = true
-            state.error = null
          })
          .addCase(deleteAccountThunk.fulfilled, (state) => {
             state.loading = false
-            state.user = null
+            state.user = null // 회원 탈퇴 성공 시 사용자 정보 초기화
          })
          .addCase(deleteAccountThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
-
          // 리뷰 작성
          .addCase(writeReviewThunk.pending, (state) => {
             state.loading = true

@@ -3,6 +3,8 @@ import axios from 'axios'
 import '../../styles/findpassword.css'
 import minimartApi from '../../api/axiosApi'
 
+import { Link } from 'react-router-dom'
+
 const FindPasswordForm = () => {
    const [step, setStep] = useState(1)
    const [email, setEmail] = useState('')
@@ -21,15 +23,21 @@ const FindPasswordForm = () => {
       }
    }
 
-   // Step 2: 인증코드 확인
+   // Step 2: 인증코드 확인 및 비밀번호 유효성 검사
    const handleVerifyCode = async () => {
+      const passwordRule = /^(?=.*[!@#$%^&*])(?=.*[a-zA-Z0-9]).{8,}$/
+      if (!passwordRule.test(newPassword)) {
+         setMessage('비밀번호는 8자리 이상이어야 하며, 특수문자를 1개 이상 포함해야 합니다.')
+         return
+      }
+
       try {
          const res = await minimartApi.post('auth/local/find/email/verify-and-reset', {
             email,
             verificationCode: codeInput,
             newPassword,
          })
-         setStep(4) // 완료 상태
+         setStep(4)
          setMessage('비밀번호가 성공적으로 변경되었습니다.')
       } catch (err) {
          setMessage(err.response?.data?.message || '오류가 발생했습니다.')
@@ -65,6 +73,9 @@ const FindPasswordForm = () => {
          {step === 4 && (
             <div className="form-box">
                <p>{message}</p>
+               <Link to="/" className="btn">
+                  홈으로 돌아가기
+               </Link>
             </div>
          )}
 
