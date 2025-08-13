@@ -65,7 +65,6 @@ function Home() {
       }
    }, [dispatch, token, user])
 
-   console.log(itemPopular)
    return (
       <div style={{ width: '100%' }}>
          {/* 검색하는 부분 */}
