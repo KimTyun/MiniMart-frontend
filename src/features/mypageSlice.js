@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getMyPage, updateMyPage, writeReview, unfollowSeller } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller } from '../api/mypageApi'
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
@@ -88,6 +88,24 @@ export const fetchOrderHistoryThunk = createAsyncThunk('mypage/fetchOrderHistory
    }
 })
 
+//주문취소
+export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
+   try {
+      const token = localStorage.getItem('token')
+      const response = await axios.patch(
+         `${API_BASE_URL}/orders/${orderId}/cancel`,
+         {}, // PATCH 요청 본문이 필요 없는 경우 빈 객체 전달
+         {
+            headers: { Authorization: `Bearer ${token}` },
+         }
+      )
+      return response.data
+   } catch (error) {
+      console.error('cancelOrderThunk 에러:', error.response)
+      return thunkAPI.rejectWithValue(error.response?.data?.message || '주문 취소 실패')
+   }
+})
+
 //팔로우한 판매자 목록
 export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedSellers', async (_, thunkAPI) => {
    //Mocks이용한 가상 팔로워 목록. 나중에 제출 시 이 주석 블록 전체 삭제
@@ -111,16 +129,6 @@ export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedS
       return response.data
    } catch (err) {
       return thunkAPI.rejectWithValue(err.message || '팔로잉 목록 불러오기 실패')
-   }
-})
-
-// 리뷰 작성 (orderId와 리뷰 내용 받음)
-export const writeReviewThunk = createAsyncThunk('mypage/writeReview', async ({ orderId, reviewData }, thunkAPI) => {
-   try {
-      const res = await writeReview(orderId, reviewData)
-      return res.data
-   } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || '리뷰 작성 실패')
    }
 })
 
@@ -186,19 +194,6 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         // 리뷰 작성
-         .addCase(writeReviewThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(writeReviewThunk.fulfilled, (state) => {
-            state.loading = false
-            // 리뷰 작성 후 별도 처리 필요 시 여기에 작성
-         })
-         .addCase(writeReviewThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
          //주문내역
          .addCase(fetchOrderHistoryThunk.pending, (state) => {
             state.loading = true
@@ -212,7 +207,19 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-
+         .addCase(cancelOrderThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(cancelOrderThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.error = null
+            state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: '취소됨' } : order))
+         })
+         .addCase(cancelOrderThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
          //팔로우한 판매자 목록
          .addCase(fetchFollowedSellersThunk.pending, (state) => {
             state.loading = true
@@ -245,4 +252,5 @@ const mypageSlice = createSlice({
    },
 })
 
-export default mypageSlice.reducer
+export const { actions, reducer } = mypageSlice
+export default reducer
