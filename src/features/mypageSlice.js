@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getMyPage, updateMyPage, writeReview, unfollowSeller } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller } from '../api/mypageApi'
 import axios from 'axios'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
@@ -114,16 +114,6 @@ export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedS
    }
 })
 
-// 리뷰 작성 (orderId와 리뷰 내용 받음)
-export const writeReviewThunk = createAsyncThunk('mypage/writeReview', async ({ orderId, reviewData }, thunkAPI) => {
-   try {
-      const res = await writeReview(orderId, reviewData)
-      return res.data
-   } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data || '리뷰 작성 실패')
-   }
-})
-
 // 팔로잉 취소 (sellerId 받음)
 export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', async (sellerId, thunkAPI) => {
    try {
@@ -186,19 +176,6 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         // 리뷰 작성
-         .addCase(writeReviewThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(writeReviewThunk.fulfilled, (state) => {
-            state.loading = false
-            // 리뷰 작성 후 별도 처리 필요 시 여기에 작성
-         })
-         .addCase(writeReviewThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
          //주문내역
          .addCase(fetchOrderHistoryThunk.pending, (state) => {
             state.loading = true
@@ -245,4 +222,5 @@ const mypageSlice = createSlice({
    },
 })
 
-export default mypageSlice.reducer
+export const { actions, reducer } = mypageSlice
+export default reducer
