@@ -106,6 +106,10 @@ const authSlice = createSlice({
    name: 'auth',
    initialState,
    reducers: {
+      clearAuth(state) {
+         state.user = null
+         state.token = null
+      },
       setToken: (state, action) => {
          state.token = action.payload
          localStorage.setItem('token', action.payload)
@@ -137,8 +141,13 @@ const authSlice = createSlice({
          })
          .addCase(fetchUserInfoThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.user = action.payload
-            state.isAuthenticated = true
+            if (action.payload) {
+               state.user = action.payload
+               state.isAuthenticated = true
+            } else {
+               state.user = null
+               state.isAuthenticated = false
+            }
          })
          .addCase(fetchUserInfoThunk.rejected, (state, action) => {
             state.loading = false
