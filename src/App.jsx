@@ -16,6 +16,7 @@ import RegisterSeller from './pages/RegisterSeller'
 import SearchPage from './pages/SearchPage'
 import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
+import SellerPage from './pages/SellerPage'
 
 function App() {
    const dispatch = useDispatch()
@@ -49,6 +50,7 @@ function App() {
             <Route path="seller-register" element={<RegisterSeller />}></Route>
             <Route path="/search" element={<SearchPage />} />
             <Route path="/customer-service" element={<CustomerService />} />
+            <Route path="/seller/:sellerId" element={<SellerPage />} />
          </Routes>
          <Footer />
       </>
