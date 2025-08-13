@@ -3,12 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logoutUserThunk, fetchUserInfoThunk } from '../../features/authSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { KakaoLogout } from '../../api/authApi'
 
 const Button = styled.button`
    width: 100px;
    height: 32px;
-   font-size: 14px;
+   font-size: 15px;
    border: none;
    border-radius: 6px;
    margin-right: 10px;
@@ -51,7 +50,9 @@ function Haeder() {
    const goToMyPage = () => {
       navigate('/mypage')
    }
-
+   const goToManager = () => {
+      navigate('/manager')
+   }
    return (
       <div>
          <div style={{ display: 'flex', width: '100%', height: '89px' }}>
@@ -67,6 +68,7 @@ function Haeder() {
                <Button>고객센터</Button>
                {user ? (
                   <>
+                     {user.role == 'ADMIN' ? <Button onClick={goToManager}>고객 관리</Button> : null}
                      <img style={{ width: '40px', height: '40px', borderRadius: '20px', cursor: 'pointer' }} src={user.profile_img} alt="카카오 프로필" onClick={goToMyPage} />
                      <p style={{ width: '60px', margin: '0 40px 0 20px' }}>{user.name}</p>
                      <LoginButton onClick={handleLogout}>로그아웃</LoginButton>

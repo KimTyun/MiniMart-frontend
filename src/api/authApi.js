@@ -119,6 +119,3 @@ export const checkCookie = async () => {
    const response = await minimartApi.get('/auth/google/checkcookie')
    return response.data.expired
 }
-
-// 판매자 등록 (구매자 → 판매자 승급)
-export const registerSeller = (payload) => minimartApi.post('/auth/seller/register', payload)
