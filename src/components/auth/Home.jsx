@@ -49,7 +49,15 @@ function Home() {
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
-   const { itemRecent, itemPopular, loading, error } = useSelector((state) => state.item)
+   const { followingList, loading } = useSelector((state) => state.follow)
+   const { itemRecent, itemPopular, error } = useSelector((state) => state.item)
+
+   useEffect(() => {
+      // 로그인한 유저일 경우에만 팔로잉 목록을 불러옵니다.
+      if (user) {
+         // dispatch(fetchFollowingSellersThunk())
+      }
+   }, [dispatch, user])
 
    useEffect(() => {
       dispatch(itemRecentThunk())
@@ -86,27 +94,29 @@ function Home() {
                </div>
             </Slider>
          </div>
-         {/* 팔로잉한 상점들 */}
-         <div>
-            <h1>팔로잉한 상점들</h1>
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', margin: '20px' }}>
-               {follow.map((e, i) => (
-                  <div className="follow-card" key={i}>
-                     <div>{e}</div>
-                     <div>
-                        {user ? (
-                           <div className="follow-pro">
-                              <img src={user.profile_img} alt={`${i}번째이미지`} />
-                              <p>{user.name}</p>
+         {/*팔로잉한 상점들 섹션 */}
+         {user && ( // 로그인한 유저에게만 보여줍니다.
+            <div>
+               <h1>팔로잉한 상점들</h1>
+               <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', margin: '20px' }}>
+                  {loading ? (
+                     <p>로딩 중...</p>
+                  ) : (
+                     followingList.map((seller) => (
+                        <Link to={`/seller/${seller.id}`} key={seller.id} className="follow-card" style={{ textDecoration: 'none' }}>
+                           <div>{seller.name}</div>
+                           <div>
+                              <div className="follow-pro">
+                                 <img src={seller.profile_img || '/none_profile_img.webp'} alt={seller.name} />
+                                 <p>{seller.name}</p>
+                              </div>
                            </div>
-                        ) : (
-                           <div>판매자1</div>
-                        )}
-                     </div>
-                  </div>
-               ))}
+                        </Link>
+                     ))
+                  )}
+               </div>
             </div>
-         </div>
+         )}
          {/* 신제품 출시! 나중에 상품 등록 되면 DB에서 어떻게 가져올지 보고 변경*/}
          <h1 className="new-h1">신제품 출시 !</h1>
          {loading && <div>로딩중...</div>}

@@ -4,6 +4,7 @@ import emailReducer from '../features/emailSlice'
 import itemReducer from '../features/itemSlice'
 import sellerReducer from '../features/sellerSlice'
 import mypageReducer from '../features/mypageSlice'
+import followReducer from '../features/followSlice'
 import adminReducer from '../features/adminSlice'
 import reviewReducer from '../features/reviewSlice'
 const store = configureStore({
@@ -13,6 +14,7 @@ const store = configureStore({
       item: itemReducer,
       seller: sellerReducer,
       mypage: mypageReducer,
+      follow: followReducer,
       admin: adminReducer,
       review: reviewReducer,
    },

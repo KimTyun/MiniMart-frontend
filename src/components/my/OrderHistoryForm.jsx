@@ -28,8 +28,9 @@ const OrderHistoryForm = () => {
    }
 
    const renderActionButtons = (order) => {
-      const isReviewable = order.status === '배송 완료'
-      const isCancellable = order.status === '배송 중'
+      const isReviewable = order.status === 'SHIPPED'
+      const isCancellable = order.status === 'PAID'
+      const isCanceled = order.status === 'CANCELED'
 
       const reviewButton = order.hasReview ? (
          <button className="btn-small primary" onClick={() => alert(`리뷰 수정 기능 (주문 ID: ${order.orderId})`)} disabled={loading}>
