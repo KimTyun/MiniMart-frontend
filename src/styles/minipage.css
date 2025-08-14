@@ -92,9 +92,14 @@ ul {
    text-align: left;
 }
 
+.new-card {
+   max-width: 340px;
+   flex-shrink: 0;
+   margin: 0 50px;
+}
+
 .new-whole {
    display: flex;
-   overflow-x: auto;
    padding: 10px;
 }
 

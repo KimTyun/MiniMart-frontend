@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getPendingSellers, approveSeller, rejectSeller, getMonth } from '../api/adminApi'
+import { getPendingSellers, approveSeller, rejectSeller, getMonth, getAllOrders } from '../api/adminApi'
 
 // Thunk: 승인 대기 목록 조회
 export const fetchPendingSellers = createAsyncThunk('admin/fetchPendingSellers', async (_, { rejectWithValue }) => {
@@ -41,8 +41,20 @@ export const getMonthThunk = createAsyncThunk('admin/getMonth', async (_, { reje
    }
 })
 
+// 주문 목록 가져오기
+export const getAllOrdersThunk = createAsyncThunk('admin/orders', async (_, { rejectWithValue }) => {
+   try {
+      const { data } = await getAllOrders()
+      console.log(data)
+      return data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '주문목록 데이터 가져오기 싪패했습니다.')
+   }
+})
+
 const initialState = {
    sellers: [], // 승인 대기 목록
+   orders: [], // 주문 목록
    loading: false,
    error: null,
 }
@@ -81,6 +93,20 @@ const adminSlice = createSlice({
             state.sellers = state.sellers.filter((seller) => seller.id !== action.payload)
          })
          .addCase(rejectSellerThunk.rejected, (state, action) => {
+            state.error = action.payload
+         })
+
+         // 주문 목록 가져오기
+         .addCase(getAllOrdersThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getAllOrdersThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.orders = action.payload
+         })
+         .addCase(getAllOrdersThunk.rejected, (state, action) => {
+            state.loading = false
             state.error = action.payload
          })
    },
