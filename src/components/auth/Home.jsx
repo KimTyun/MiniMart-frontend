@@ -73,7 +73,6 @@ function Home() {
       }
    }, [dispatch, token, user])
 
-   console.log(itemPopular)
    return (
       <div style={{ width: '100%' }}>
          {/* 검색하는 부분 */}
@@ -130,7 +129,7 @@ function Home() {
                return (
                   <Card key={item.id} sx={{ maxWidth: 345 }}>
                      <CardActionArea>
-                        <CardMedia sx={{ height: 500 }} component="img" src={`${item.ItemImgs[0].img_url}`} alt={item.name} />
+                        <CardMedia sx={{ height: 500 }} component="img" src={`${item.ItemImgs[0]?.img_url}`} alt={item.name} />
                         <CardContent>
                            <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
                               {item.name}
