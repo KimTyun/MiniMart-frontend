@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom'
 import Select from '../components/manager/Select'
 import ManagerAllow from '../components/manager/ManagerAllow'
 import ManagerProduct from '../components/manager/ManagerProduct'
-import ManagerStatistics from '../components/manager/ManagerStatistics'
+import ManagerStatistics from '../components/manager/managerStatistics'
 
 export default function ManagerPage() {
    return (

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getPendingSellers, approveSeller, rejectSeller } from '../api/adminApi'
+import { getPendingSellers, approveSeller, rejectSeller, getMonth } from '../api/adminApi'
 
 // Thunk: 승인 대기 목록 조회
 export const fetchPendingSellers = createAsyncThunk('admin/fetchPendingSellers', async (_, { rejectWithValue }) => {
@@ -28,6 +28,16 @@ export const rejectSellerThunk = createAsyncThunk('admin/rejectSeller', async (s
       return sellerId // 성공 시 처리된 sellerId를 반환하여 state에서 제거
    } catch (err) {
       return rejectWithValue(err.response?.data?.message || '판매자 거절에 실패했습니다.')
+   }
+})
+
+// 월별 데이터 가져오기
+export const getMonthThunk = createAsyncThunk('admin/getMonth', async (_, { rejectWithValue }) => {
+   try {
+      const { data } = await getMonth()
+      return data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 싪패했습니다.')
    }
 })
 

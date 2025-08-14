@@ -22,7 +22,7 @@ function Register() {
    const navigate = useNavigate()
    const { loading, error } = useSelector((state) => state.auth)
    const user = useSelector((state) => state.auth.user)
-   const profileUrl = user?.profile_img || '/uploads/profile-images/default.png'
+   // const profileUrl = user?.profile_img || '/uploads/profile-images/default.png'
 
    const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
    const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(password)

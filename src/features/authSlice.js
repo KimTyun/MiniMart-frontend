@@ -191,7 +191,7 @@ const authSlice = createSlice({
             state.loading = true
             state.error = null
          })
-         .addCase(logoutUserThunk.fulfilled, (state, action) => {
+         .addCase(logoutUserThunk.fulfilled, (state) => {
             state.loading = false
             state.isAuthenticated = false
             state.user = null //로그아웃 후 유저 정보 초기화
