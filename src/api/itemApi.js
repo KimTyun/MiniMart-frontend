@@ -38,3 +38,25 @@ export const itemPopular = async () => {
       throw error
    }
 }
+
+//단일 상품 불러오기
+export const getItem = async (id) => {
+   try {
+      const response = await minimartApi.get(`/item/${id}`)
+      return response
+   } catch (error) {
+      console.error('상품 불러오기 실패 : ', error)
+      throw error
+   }
+}
+
+//판매자 id 기반 상품 불러오기
+export const getSellerItems = async (id) => {
+   try {
+      const response = await minimartApi.get(`/item/seller/${id}`)
+      return response
+   } catch (error) {
+      console.error('상품 불러오기 실패 : ', error)
+      throw error
+   }
+}

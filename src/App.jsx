@@ -17,6 +17,10 @@ import ManagerPage from './pages/ManagerPage'
 import SearchPage from './pages/SearchPage'
 import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
+import SellerPage from './pages/SellerPage'
+import ItemDetail from './pages/item/ItemDetail'
+import QnAPage from './pages/item/QnAPage'
+import ReviewForm from './components/item/ReviewForm'
 
 function App() {
    const dispatch = useDispatch()
@@ -42,6 +46,7 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/login/success" element={<LoginSuccess />} />
             <Route path="/item/upload" element={<ItemCreatePage />} />
+            <Route path="/item/:id" element={<ItemDetail />} />
             {/* 이메일 비번찾기 */}
             <Route path="/findpassword" element={<FindPasswordPage />} />
             {/* 내 정보 페이지 */}
@@ -53,6 +58,11 @@ function App() {
             <Route path="/manager/*" element={<ManagerPage />}></Route>
             <Route path="/search" element={<SearchPage />} />
             <Route path="/customer-service" element={<CustomerService />} />
+            <Route path="/seller/:sellerId" element={<SellerPage />} />
+            {/* 문의 페이지 */}
+            <Route path="/qna" element={<QnAPage />} />
+            {/* 리뷰 페이지 */}
+            <Route path="/review" element={<ReviewForm />} />
          </Routes>
          <Footer />
       </>

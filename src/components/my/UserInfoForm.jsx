@@ -36,10 +36,10 @@ const UserInfoForm = () => {
          setName(user.name || '')
          setPhone_number(user.phone_number || '')
          setEmail(user.email || '')
-         setZipcode(user.zipcode || '') // ⭐ DB에서 불러온 우편번호
-         setAddress(user.address || '') // ⭐ DB에서 불러온 기본 주소
-         setDetailaddress(user.detailaddress || '') // ⭐ DB에서 불러온 상세 주소
-         setExtraaddress(user.extraaddress || '') // ⭐ DB에서 불러온 참고항목
+         setZipcode(user.zipcode || '')
+         setAddress(user.address || '')
+         setDetailaddress(user.detailaddress || '')
+         setExtraaddress(user.extraaddress || '')
          setProfile_img(user.profile_img || '')
 
          const fullImageUrl = user.profile_img ? `${API_BASE_URL}${user.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`
@@ -53,9 +53,6 @@ const UserInfoForm = () => {
       }
    }
 
-   const handleChange = (e) => {
-      setFormData({ ...formData, [e.target.name]: e.target.value })
-   }
    const handleAddressSearch = () => {
       open({
          onComplete: (data) => {
@@ -91,14 +88,30 @@ const UserInfoForm = () => {
       }
 
       const updatedFields = {}
-      if (name !== originalData.name) updatedFields.name = name
-      if (phone_number !== originalData.phone_number) updatedFields.phone_number = phone_number
-      // if (email !== originalData.email) updatedFields.email = email
-      if (zipcode !== originalData.zipcode) updatedFields.zipcode = zipcode
-      if (address !== originalData.address) updatedFields.address = address
-      if (detailaddress !== originalData.detailaddress) updatedFields.detailaddress = detailaddress
-      if (extraaddress !== originalData.extraaddress) updatedFields.extraaddress = extraaddress
-      if (profile_img !== originalData.profile_img) updatedFields.profile_img = profile_img
+      if (name !== originalData.name && name !== '') {
+         updatedFields.name = name
+      }
+      if (phone_number !== originalData.phone_number && phone_number !== '') {
+         updatedFields.phone_number = phone_number
+      }
+      // if (email !== originalData.email && email !== '') {
+      //    updatedFields.email = email
+      // }
+      if (zipcode !== originalData.zipcode && zipcode !== '') {
+         updatedFields.zipcode = zipcode
+      }
+      if (address !== originalData.address && address !== '') {
+         updatedFields.address = address
+      }
+      if (detailaddress !== originalData.detailaddress && detailaddress !== '') {
+         updatedFields.detailaddress = detailaddress
+      }
+      if (extraaddress !== originalData.extraaddress && extraaddress !== '') {
+         updatedFields.extraaddress = extraaddress
+      }
+      if (profile_img !== originalData.profile_img && profile_img !== '') {
+         updatedFields.profile_img = profile_img
+      }
 
       //바꾼 거 없으면 나가
       if (Object.keys(updatedFields).length === 0) {
@@ -235,7 +248,7 @@ const UserInfoForm = () => {
                <input id="extra_address" name="extra_address" type="text" value={extraaddress} readOnly placeholder="참고항목" />
             </div>
 
-            <button className="btn btn-save" onClick={handleSave} disabled={loading || !user}>
+            <button className="btn btn-save" onClick={handleSave} disabled={loading}>
                {loading ? '저장 중...' : '정보 수정'}
             </button>
             <button className="btn btn-withdraw" onClick={handleDeleteAccount} disabled={loading}>

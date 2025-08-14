@@ -1,4 +1,3 @@
-import axios from 'axios'
 import minimartApi from './axiosApi'
 const API_URL = import.meta.env.VITE_API_URL
 
@@ -28,15 +27,15 @@ export const fetchUserInfo = async () => {
    }
 }
 
-// 카카오 로그아웃
-export const KakaoLogout = async () => {
-   try {
-      await minimartApi.post('/auth/kakao/logout', {})
-   } catch (_) {
-   } finally {
-      localStorage.removeItem('token')
-   }
-}
+// // 카카오 로그아웃
+// export const KakaoLogout = async () => {
+//    try {
+//       await minimartApi.post('/auth/kakao/logout', {})
+//    } catch (_) {
+//    } finally {
+//       localStorage.removeItem('token')
+//    }
+// }
 
 // 회원가입
 export const registerUser = async (userData) => {

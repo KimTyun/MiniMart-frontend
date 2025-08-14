@@ -8,7 +8,7 @@ import { useDaumPostcodePopup } from 'react-daum-postcode'
 function Register() {
    const [name, setName] = useState('')
    const [email, setEmail] = useState('')
-   const [age, setAge] = useState('2025')
+   const [age, setAge] = useState('0')
    const [password, setPassword] = useState('')
    const [confirmPassword, setConfirmPassword] = useState('')
    const [zipcode, setZipcode] = useState('')
@@ -77,6 +77,10 @@ function Register() {
       }
       if (phone_number !== phone_number) {
          alert('핸드폰 번호 입력은 필수입니다.')
+         return
+      }
+      if (age < 14) {
+         alert('만 14세 이상만 가입이 가능합니다.')
          return
       }
 
