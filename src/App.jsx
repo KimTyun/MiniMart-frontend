@@ -29,12 +29,8 @@ function App() {
    // 앱 시작 시 토큰이 있으면 사용자 정보 요청
    // 카카오 토큰이 없으면 로컬 로그인이 되어있는가 체크
    useEffect(() => {
-      if (token) {
-         dispatch(fetchUserInfoThunk())
-      } else {
-         dispatch(checkAuthStatusThunk())
-      }
-   }, [dispatch, token])
+      dispatch(checkAuthStatusThunk())
+   }, [dispatch])
 
    return (
       <>
