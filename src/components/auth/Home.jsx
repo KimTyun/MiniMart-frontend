@@ -16,6 +16,7 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
+import { fetchFollowingSellersThunk } from '../../features/followSlice'
 
 function Home() {
    var settings = {
@@ -35,8 +36,8 @@ function Home() {
       ['5', '비파형 동검', 'It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.'],
       ['6', '세형 동검', 'There is no one who loves pain itself, who seeks after it and wants to have it, simply because it is pain...'],
    ]
-   const navigate = useNavigate() // ✅ 페이지 이동 함수
-   // ✅ 상품 클릭 시 SearchPage로 이동하는 함수
+   const navigate = useNavigate() //페이지 이동 함수
+   //상품 클릭 시 SearchPage로 이동하는 함수
    const handleProductClick = (productName) => {
       // SearchPage는 검색 결과 '객체'를 받으므로, 가짜 데이터를 만들어서 전달합니다.
       // 실제로는 이 상품명으로 API를 호출해야 합니다.
