@@ -88,6 +88,40 @@ function Home() {
                </div>
             </Slider>
          </div>
+<<<<<<<<< Temporary merge branch 1
+         {/*팔로잉한 상점들 섹션 */}
+         {user && ( // 로그인한 유저에게만 보여줍니다.
+            <div>
+               <h1>팔로잉한 상점들</h1>
+               <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', margin: '20px' }}>
+                  {loading ? (
+                     <p>로딩 중...</p>
+                  ) : (
+                     followingList.map((seller) => (
+                        <Link to={`/seller/${seller.id}`} key={seller.id} className="follow-card" style={{ textDecoration: 'none' }}>
+                           <div>{seller.name}</div>
+                           <div>
+                              <div className="follow-pro">
+                                 <img src={seller.profile_img || '/none_profile_img.webp'} alt={seller.name} />
+                                 <p>{seller.name}</p>
+                              </div>
+                           </div>
+                        </Link>
+                     ))
+                  )}
+               </div>
+            </div>
+         )}
+         {/* 신제품 출시! 나중에 상품 등록 되면 DB에서 어떻게 가져올지 보고 변경*/}
+         <h1 className="new-h1">신제품 출시 !</h1>
+         {loading && <div>로딩중...</div>}
+         {error && <div>{error}</div>}
+         <div style={{ display: 'flex' }}>
+            {(itemRecent?.items ?? []).map((item) => {
+               // 대표 이미지(조인) 하나만 내려온다고 가정 (rep_img_yn = true)
+               const repImg = (item.ItemImgs && item.ItemImgs[0]) || null
+=========
+>>>>>>>>> Temporary merge branch 2
 
          {/* 신제품 출시! */}
          <h1 className="new-h1">신제품 출시 !</h1>
