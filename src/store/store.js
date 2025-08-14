@@ -8,6 +8,11 @@ import followReducer from '../features/followSlice'
 import adminReducer from '../features/adminSlice'
 import reviewReducer from '../features/reviewSlice'
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 834bbd83aff5b0212a5a1d93d420ce1eecf0e346
 const store = configureStore({
    reducer: {
       auth: authReducer,
