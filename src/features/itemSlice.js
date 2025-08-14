@@ -38,6 +38,7 @@ const itemSlice = createSlice({
       loading: false,
       error: null,
       itemRecent: { items: [] },
+      itemPopular: { items: [] },
       item: null,
       items: null,
    },
@@ -74,7 +75,7 @@ const itemSlice = createSlice({
          })
          .addCase(itemPopularThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.itemRecent = action.payload
+            state.itemPopular = action.payload
          })
          .addCase(itemPopularThunk.rejected, (state, action) => {
             state.loading = false

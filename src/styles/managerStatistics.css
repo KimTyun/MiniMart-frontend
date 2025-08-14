@@ -1,0 +1,11 @@
+.recharts-wrapper {
+   margin: 0 20px;
+}
+
+.manager-statistics .recharts-responsive-container {
+   margin: 0 !important;
+}
+
+.recharts-default-legend {
+   background-color: aqua;
+}
