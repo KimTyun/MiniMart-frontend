@@ -87,7 +87,7 @@ export const checkCookieThunk = createAsyncThunk('auth/checkCookie', async (_, {
       const response = await checkCookie()
       return response
    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data?.message || '문제발생')
+      return rejectWithValue(error.response.data?.message || '문제발생')
    }
 })
 
