@@ -68,7 +68,7 @@ function Haeder() {
                {user ? (
                   <>
                      {user.role == 'ADMIN' ? <Button onClick={goToManager}>고객 관리</Button> : null}
-                     <img src={user.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} />
+                     <img src={user.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} referrerPolicy="no-referrer"/>
                      <p style={{ width: '60px', margin: '0 40px 0 20px' }}>{user.name}</p>
                      <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
                   </>

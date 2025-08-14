@@ -15,6 +15,7 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
+import { fetchFollowingSellersThunk } from '../../features/followSlice'
 
 // 백엔드 서버 주소 가져오기
 const API_URL = import.meta.env.VITE_API_URL
@@ -43,7 +44,15 @@ function Home() {
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
-   const { itemRecent, itemPopular, loading, error } = useSelector((state) => state.item)
+   const { followingList, loading } = useSelector((state) => state.follow)
+   const { itemRecent, itemPopular, error } = useSelector((state) => state.item)
+
+   useEffect(() => {
+      // 로그인한 유저일 경우에만 팔로잉 목록을 불러옵니다.
+      if (user) {
+         dispatch(fetchFollowingSellersThunk())
+      }
+   }, [dispatch, user])
 
    useEffect(() => {
       // 컴포넌트 마운트 시 최신, 인기 상품 모두 불러오기

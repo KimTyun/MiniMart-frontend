@@ -7,15 +7,6 @@ const api = axios.create({
    withCredentials: true,
 })
 
-export const getMyPage = () => {
-   return axios.get(`${API_BASE_URL}/mypage`, {
-      headers: {
-         Authorization: `Bearer ${token}`, // 토큰 포함 확인
-      },
-      withCredentials: true,
-   })
-}
-
 export const updateMyPage = (data) => {
    const token = localStorage.getItem('token')
    return axios.patch(`${API_BASE_URL}/mypage/edit`, data, {

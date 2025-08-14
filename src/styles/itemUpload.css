@@ -6,6 +6,10 @@
    background-color: white;
    padding: 30px 10px;
 }
+.item-upload-form .item_img_label {
+   text-align: center;
+   margin-right: 10px;
+}
 
 .item-upload-form * {
    margin: 0;
