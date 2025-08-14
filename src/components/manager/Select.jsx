@@ -4,7 +4,7 @@ function Select() {
    const navigate = useNavigate()
 
    const navStyle = {
-      marginRight: '20px',
+      marginRight: '50px',
       padding: '10px',
       backgroundColor: '#e2f53e',
       borderRadius: '5px',
@@ -12,12 +12,12 @@ function Select() {
    }
 
    return (
-      <div style={{ display: 'flex', margin: '50px' }}>
+      <div style={{ display: 'flex', padding: '50px' }}>
          <div style={navStyle} onClick={() => navigate('/manager')}>
-            승인
+            승인 관리
          </div>
          <div style={navStyle} onClick={() => navigate('/manager/product')}>
-            상품
+            상품 관리
          </div>
          <div style={navStyle} onClick={() => navigate('/manager/statistics')}>
             통계

@@ -17,6 +17,8 @@ import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
 import { fetchFollowingSellersThunk } from '../../features/followSlice'
 
+const VITE_API_URL = import.meta.env.VITE_API_URL
+
 function Home() {
    var settings = {
       dots: true,
@@ -25,7 +27,6 @@ function Home() {
       slidesToShow: 1,
       slidesToScroll: 1,
    }
-   // ✅ 상품 클릭 시 SearchPage로 이동하는 함수
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
@@ -79,15 +80,15 @@ function Home() {
          <h1 className="new-h1">신제품 출시 !</h1>
          {loading && <div>로딩중...</div>}
          {error && <div>{error}</div>}
-         <div style={{ display: 'flex' }}>
+         <div style={{ display: 'flex', overflowX: 'auto' }}>
             {(itemRecent?.items ?? []).map((item) => {
                // 대표 이미지(조인) 하나만 내려온다고 가정 (rep_img_yn = true)
                // const repImg = (item.ItemImgs && item.ItemImgs[0]) || null
 
                return (
-                  <Card key={item.id} sx={{ maxWidth: 345 }}>
+                  <Card className="new-card" key={item.id}>
                      <CardActionArea>
-                        <CardMedia sx={{ height: 500 }} component="img" src={`${item.ItemImgs[0]?.img_url}`} alt={item.name} />
+                        <CardMedia sx={{ height: 400 }} component="img" src={`${VITE_API_URL}${item.ItemImgs[0]?.img_url}`} alt={item.name} />
                         <CardContent>
                            <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
                               {item.name}
