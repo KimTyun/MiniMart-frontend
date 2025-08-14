@@ -17,14 +17,10 @@ import ManagerPage from './pages/ManagerPage'
 import SearchPage from './pages/SearchPage'
 import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
-<<<<<<< HEAD
 import SellerPage from './pages/SellerPage'
-=======
 import ItemDetail from './pages/item/ItemDetail'
 import QnAPage from './pages/item/QnAPage'
 import ReviewForm from './components/item/ReviewForm'
-
->>>>>>> 5120e062e9acef8726b095a8ee3da1d0ba2888b5
 
 function App() {
    const dispatch = useDispatch()
@@ -62,14 +58,11 @@ function App() {
             <Route path="/manager/*" element={<ManagerPage />}></Route>
             <Route path="/search" element={<SearchPage />} />
             <Route path="/customer-service" element={<CustomerService />} />
-<<<<<<< HEAD
             <Route path="/seller/:sellerId" element={<SellerPage />} />
-=======
             {/* 문의 페이지 */}
             <Route path="/qna" element={<QnAPage />} />
             {/* 리뷰 페이지 */}
             <Route path="/review" element={<ReviewForm />} />
->>>>>>> 5120e062e9acef8726b095a8ee3da1d0ba2888b5
          </Routes>
          <Footer />
       </>
