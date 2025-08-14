@@ -60,10 +60,12 @@ function Register() {
 
    const dispatch = useDispatch()
    const navigate = useNavigate()
+
    const { loading, error, user: authUser } = useSelector((state) => state.auth)
 
    // eslint-disable-next-line no-unused-vars
    const profileUrl = authUser?.profile_img || '/uploads/profile-images/default.png'
+
 
    const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
    const openDaumPostcode = useDaumPostcodePopup(scriptUrl)
