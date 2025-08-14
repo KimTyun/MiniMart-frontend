@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchOrderHistoryThunk, writeReviewThunk } from '../../features/mypageSlice'
+import { useNavigate } from 'react-router-dom'
 
 const OrderHistoryForm = () => {
    const dispatch = useDispatch()
@@ -28,14 +29,14 @@ const OrderHistoryForm = () => {
    // 배송 중 상품 주문 취소 기능
    const handleCancelOrder = (orderId) => {
       if (window.confirm('주문을 취소하시겠습니까?')) {
-         dispatch(cancelOrderThunk(orderId))
-            .unwrap()
-            .then(() => {
-               alert('주문이 취소되었습니다.')
-            })
-            .catch((err) => {
-               alert(`주문 취소 실패: ${err}`)
-            })
+         // dispatch(cancelOrderThunk(orderId))
+         //    .unwrap()
+         //    .then(() => {
+         //       alert('주문이 취소되었습니다.')
+         //    })
+         //    .catch((err) => {
+         //       alert(`주문 취소 실패: ${err}`)
+         //    })
       }
    }
 

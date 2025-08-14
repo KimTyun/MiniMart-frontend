@@ -10,7 +10,7 @@ const api = axios.create({
 export const getMyPage = () => {
    return axios.get(`${API_BASE_URL}/mypage`, {
       headers: {
-         Authorization: `Bearer ${token}`, // 토큰 포함 확인
+         // Authorization: `Bearer ${token}`, // 토큰 포함 확인
       },
       withCredentials: true,
    })
