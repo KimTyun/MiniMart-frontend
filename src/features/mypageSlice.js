@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { updateMyPage, unfollowSeller, cancelOrder } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
-// // 환경 변수를 사용하여 mock 데이터 사용 여부 결정
-// const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
+// 환경 변수를 사용하여 mock 데이터 사용 여부 결정
+const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
 
-// // 가상 주문정보 및 팔로워. 제출 시 삭제
-// import { getOrderHistory, getFollowedSellers } from '../mocks/fakeapi'
+// 가상 주문정보 및 팔로워. 제출 시 삭제
+import { getOrderHistory, getFollowedSellers } from '../mocks/fakeapi'
 
 // 내 정보 불러오기
 export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, thunkAPI) => {
@@ -21,6 +21,19 @@ export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_,
 
 //주문내역
 export const fetchOrderHistoryThunk = createAsyncThunk('mypage/fetchOrderHistory', async (_, thunkAPI) => {
+   // --- Mocks를 이용한 가상 주문내역. 제출 시 이 주석 블록 전체 삭제 ---
+   if (USE_MOCK_DATA) {
+      console.log('--- [개발용] Mock 데이터로 주문 내역 가져오기 ---')
+      try {
+         const response = await getOrderHistory()
+         return response.data
+      } catch (err) {
+         return thunkAPI.rejectWithValue(err.message || '개발용 주문 내역 불러오기 실패')
+      }
+   }
+   // --- 여기까지 드래그하고 삭제 ---
+
+   // 실제 주문 내역
    try {
       const response = await minimartApi.get('/orders')
       return response.data
@@ -33,15 +46,15 @@ export const fetchOrderHistoryThunk = createAsyncThunk('mypage/fetchOrderHistory
 //팔로우한 판매자 목록
 export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedSellers', async (_, thunkAPI) => {
    //Mocks이용한 가상 팔로워 목록. 나중에 제출 시 이 주석 블록 전체 삭제
-   // if (USE_MOCK_DATA) {
-   //    console.log('--- [개발용] Mock 데이터로 팔로잉 목록 가져오기 ---')
-   //    try {
-   //       const response = await getFollowedSellers()
-   //       return response.data
-   //    } catch (err) {
-   //       return thunkAPI.rejectWithValue(err.message || '개발용 팔로잉 목록 불러오기 실패')
-   //    }
-   // }
+   if (USE_MOCK_DATA) {
+      console.log('--- [개발용] Mock 데이터로 팔로잉 목록 가져오기 ---')
+      try {
+         const response = await getFollowedSellers()
+         return response.data
+      } catch (err) {
+         return thunkAPI.rejectWithValue(err.message || '개발용 팔로잉 목록 불러오기 실패')
+      }
+   }
    // //여기까지 드래그하고 삭제
 
    //팔로우한 판매자 목록
@@ -120,6 +133,8 @@ const mypageSlice = createSlice({
          .addCase(fetchMyPageThunk.rejected, (state, action) => {
             state.loading = false
             state.user = null
+            state.orders = []
+            state.followings = []
             state.error = action.payload
          })
          // 회원정보 수정

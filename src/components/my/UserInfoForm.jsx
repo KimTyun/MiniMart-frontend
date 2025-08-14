@@ -237,7 +237,7 @@ const UserInfoForm = () => {
                <label htmlFor="zipcode">우편번호</label>
                <div className="address-input-group">
                   <input id="zipcode" name="zipcode" type="text" value={formData.zipcode} readOnly placeholder="우편번호" />
-                  <button type="button" onClick={handleAddressSearch}>
+                  <button type="button" className="postcode-button" onClick={handleAddressSearch}>
                      우편번호 찾기
                   </button>
                </div>
