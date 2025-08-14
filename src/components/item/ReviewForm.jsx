@@ -1,25 +1,52 @@
 // src/components/ReviewForm.jsx
 
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import './ReviewForm.css' // ⭐⭐ 새로운 CSS 파일 import
+import { useNavigate, useLocation } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { writeReviewThunk } from '../../features/reviewSlice'
+import '../../styles/review.css'
 
-const ReviewForm = ({ order }) => {
+const ReviewForm = () => {
+   const navigate = useNavigate()
+   const location = useLocation()
+   const dispatch = useDispatch()
+   const { loading, error } = useSelector((state) => state.review)
+   const { order } = location.state || {}
+
    const [rating, setRating] = useState(0)
    const [reviewText, setReviewText] = useState('')
-   const navigate = useNavigate()
 
-   const handleSubmitReview = (e) => {
+   const reviewData = new FormData()
+
+   if (!order) {
+      navigate('/mypage')
+      return null
+   }
+
+   const handleSubmitReview = async (e) => {
       e.preventDefault()
+
       if (rating === 0 || reviewText.trim() === '') {
          alert('별점과 리뷰 내용을 모두 입력해주세요.')
          return
       }
 
-      // ⭐⭐ 실제 API 연동 로직은 여기에 추가
-      console.log(`주문 ID: ${order.orderId}, 상품: ${order.items[0].name}, 별점: ${rating}, 리뷰 내용: ${reviewText}`)
-      alert('리뷰가 성공적으로 제출되었습니다.')
-      navigate('/mypage') // 마이페이지로 돌아가기
+      reviewData.append('rating', rating)
+      reviewData.append('content', reviewText)
+
+      const resultAction = await dispatch(
+         writeReviewThunk({
+            productId: order.items[0].id,
+            reviewData,
+         })
+      )
+
+      if (writeReviewThunk.fulfilled.match(resultAction)) {
+         alert('리뷰가 성공적으로 등록되었습니다!')
+         navigate('/mypage')
+      } else {
+         alert(`리뷰 등록 실패: ${error}`)
+      }
    }
 
    return (
@@ -55,8 +82,8 @@ const ReviewForm = ({ order }) => {
                <button type="button" className="btn-cancel" onClick={() => navigate('/mypage')}>
                   취소
                </button>
-               <button type="submit" className="btn-submit">
-                  리뷰 등록
+               <button type="submit" className="btn-submit" disabled={loading}>
+                  {loading ? '등록 중...' : '리뷰 등록'}
                </button>
             </div>
          </form>

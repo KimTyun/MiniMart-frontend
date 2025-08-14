@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { registerUser, loginUser, logoutUser, checkAuthStatus, getKakaoLoginUrl, fetchUserInfo, checkCookie, deleteUser } from '../api/authApi'
+import { registerUser, loginUser, logoutUser, deleteUser, checkAuthStatus, getKakaoLoginUrl, fetchUserInfo, checkCookie } from '../api/authApi'
 
 //카카오 로그인 관련
 // 토큰으로 사용자 정보 가져오기
