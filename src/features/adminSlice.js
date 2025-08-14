@@ -37,7 +37,7 @@ export const getMonthThunk = createAsyncThunk('admin/getMonth', async (_, { reje
       const { data } = await getMonth()
       return data
    } catch (error) {
-      return rejectWithValue(err.response?.data?.message || '월별 데이터 가져오기 싪패했습니다.')
+      return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 싪패했습니다.')
    }
 })
 

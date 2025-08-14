@@ -1,4 +1,4 @@
-import { Cell, Pie, PieChart, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts'
+import { Cell, Pie, PieChart, Legend, ResponsiveContainer } from 'recharts'
 
 function ManagerStatistics() {
    const pieData = [
