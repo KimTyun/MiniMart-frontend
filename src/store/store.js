@@ -5,6 +5,7 @@ import itemReducer from '../features/itemSlice'
 import sellerReducer from '../features/sellerSlice'
 import mypageReducer from '../features/mypageSlice'
 import adminReducer from '../features/adminSlice'
+import reviewReducer from '../features/reviewSlice'
 const store = configureStore({
    reducer: {
       auth: authReducer,
@@ -13,6 +14,7 @@ const store = configureStore({
       seller: sellerReducer,
       mypage: mypageReducer,
       admin: adminReducer,
+      review: reviewReducer,
    },
 })
 

@@ -17,7 +17,7 @@ const MyPage = () => {
          const token = localStorage.getItem('token')
          if (!token) throw new Error('토큰 없음')
 
-         const res = await fetch(`${import.meta.env.VITE_API_URL}/mypage`, {
+         const res = await fetch(`${API_BASE_URL}/mypage`, {
             headers: { Authorization: `Bearer ${token}` },
          })
 

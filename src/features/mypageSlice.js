@@ -29,7 +29,6 @@ export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (ur
       const data = await response.json()
       return data
    } catch (err) {
-      // 에러 핸들링을 강화
       console.error('fetchMyPageThunk 에러:', err)
       return thunkAPI.rejectWithValue(err.message || '불러오기 실패')
    }
