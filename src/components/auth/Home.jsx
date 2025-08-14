@@ -35,7 +35,7 @@ function Home() {
    useEffect(() => {
       // 로그인한 유저일 경우에만 팔로잉 목록을 불러옵니다.
       if (user) {
-         dispatch(fetchFollowingSellersThunk())
+         // dispatch(fetchFollowingSellersThunk())
       }
    }, [dispatch, user])
 
