@@ -9,21 +9,6 @@ function ManagerStatistics() {
       { name: '50대', value: 10 },
    ]
 
-   const lineData = [
-      { month: '1월', value: 10 },
-      { month: '2월', value: 10 },
-      { month: '3월', value: 20 },
-      { month: '4월', value: 30 },
-      { month: '5월', value: 30 },
-      { month: '6월', value: 30 },
-      { month: '7월', value: 100 },
-      { month: '8월', value: 100 },
-      { month: '9월', value: 50 },
-      { month: '10월', value: 5 },
-      { month: '11월', value: 30 },
-      { month: '12월', value: 70 },
-   ]
-
    const COLORS = ['#4AB0C6', '#2D82B7', '#1A4882', '#5AC8C6', '#A3E4DB']
 
    const RADIAN = Math.PI / 180

@@ -135,6 +135,11 @@ ul {
 }
 
 /* 팔로잉한 상점들 */
+
+.follow-whole {
+   margin: 50px;
+}
+
 .follow {
    display: flex;
    gap: 20px;
