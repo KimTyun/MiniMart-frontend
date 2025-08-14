@@ -87,7 +87,7 @@ export const checkCookieThunk = createAsyncThunk('auth/checkCookie', async (_, {
       const response = await checkCookie()
       return response
    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data?.message || '문제발생')
+      return rejectWithValue(error.response.data?.message || '문제발생')
    }
 })
 
@@ -191,7 +191,7 @@ const authSlice = createSlice({
             state.loading = true
             state.error = null
          })
-         .addCase(logoutUserThunk.fulfilled, (state, action) => {
+         .addCase(logoutUserThunk.fulfilled, (state) => {
             state.loading = false
             state.isAuthenticated = false
             state.user = null //로그아웃 후 유저 정보 초기화

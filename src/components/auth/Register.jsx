@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { registerUserThunk } from '../../features/authSlice'
 import { useNavigate } from 'react-router-dom'
@@ -7,6 +7,23 @@ import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/.test(password)
+
+const currentYear = new Date().getFullYear()
+
+const Modal = ({ message, onClose }) => {
+   return (
+      <div className="modal-overlay">
+         <div className="modal-content">
+            <p>{message}</p>
+            <div className="modal-actions">
+               <button className="modal-close-btn" onClick={onClose}>
+                  확인
+               </button>
+            </div>
+         </div>
+      </div>
+   )
+}
 
 function Register() {
    const [form, setForm] = useState({
@@ -23,14 +40,33 @@ function Register() {
    })
    const [isRegisterComplete, setIsRegisterComplete] = useState(false)
 
+   const [modalState, setModalState] = useState({
+      show: false,
+      message: '',
+   })
+
+   const closeModal = () => {
+      setModalState({ show: false, message: '' })
+   }
+
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const { loading, error } = useSelector((state) => state.auth)
-   const user = useSelector((state) => state.auth.user)
-   const profileUrl = user?.profile_img || '/uploads/profile-images/default.png'
+   const { loading, error, user: authUser } = useSelector((state) => state.auth)
+
+   // eslint-disable-next-line no-unused-vars
+   const profileUrl = authUser?.profile_img || '/uploads/profile-images/default.png'
 
    const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
    const openDaumPostcode = useDaumPostcodePopup(scriptUrl)
+
+   useEffect(() => {
+      if (authUser) {
+         setModalState({ show: true, message: '이미 로그인되어 있습니다. 내 정보 화면으로 이동합니다.' })
+         setTimeout(() => {
+            navigate('/mypage')
+         }, 2000)
+      }
+   }, [authUser, navigate]) // authUser와 navigate가 변경될 때마다 실행
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -44,7 +80,7 @@ function Register() {
 
    const handleBirthYearChange = (e) => {
       const selYear = parseInt(e.target.value, 10)
-      const calAge = 2025 - selYear
+      const calAge = currentYear - selYear
       setForm((prevForm) => ({ ...prevForm, age: calAge.toString() }))
    }
 
@@ -75,12 +111,12 @@ function Register() {
          { condition: !validateEmail(email), message: '유효한 이메일 주소를 입력해주세요.' },
          { condition: !validatePassword(password), message: '비밀번호는 8자리 이상이고, 영문자와 특수문자를 포함해야 합니다.' },
          { condition: password !== confirmPassword, message: '비밀번호가 일치하지 않습니다.' },
-         { condition: age < 14, message: '만 14세 이상만 가입이 가능합니다.' },
+         { condition: parseInt(age, 10) < 14, message: '만 14세 이상만 가입이 가능합니다.' },
       ]
 
       for (const validation of validations) {
          if (validation.condition) {
-            alert(validation.message)
+            setModalState({ show: true, message: validation.message })
             return
          }
       }
@@ -88,7 +124,10 @@ function Register() {
       dispatch(registerUserThunk(form))
          .unwrap()
          .then(() => setIsRegisterComplete(true))
-         .catch((err) => console.error('회원가입 에러:', err))
+         .catch((err) => {
+            console.error('회원가입 에러:', err)
+            setModalState({ show: true, message: `회원가입 실패: ${err.message || '알 수 없는 오류가 발생했습니다.'}` })
+         })
    }
 
    if (isRegisterComplete) {
@@ -105,6 +144,7 @@ function Register() {
 
    return (
       <div className="register-container">
+         {modalState.show && <Modal message={modalState.message} onClose={closeModal} />}
          <h2>회원가입</h2>
          {error && <p className="register-error">{error}</p>}
 
@@ -130,9 +170,9 @@ function Register() {
 
          <div className="register-input">
             <label htmlFor="birthYear">출생년도</label>
-            <select id="birthYear" name="birthYear" className="birthyear-select" value={2025 - parseInt(form.age, 10)} onChange={handleBirthYearChange}>
-               {Array.from({ length: 2025 - 1899 + 1 }, (_, i) => {
-                  const year = 2025 - i
+            <select id="birthYear" name="birthYear" className="birthyear-select" value={currentYear - parseInt(form.age, 10)} onChange={handleBirthYearChange}>
+               {Array.from({ length: currentYear - 1899 + 1 }, (_, i) => {
+                  const year = currentYear - i
                   return (
                      <option key={year} value={year}>
                         {year}

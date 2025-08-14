@@ -44,7 +44,7 @@ const ReviewForm = ({ orderId, productId, imageUrl, productName, orderDate }) =>
    const handleImageChange = (e) => {
       const file = e.target.files[0]
       if (file) {
-         setImageFile(file)
+         setImg(file)
       }
    }
 

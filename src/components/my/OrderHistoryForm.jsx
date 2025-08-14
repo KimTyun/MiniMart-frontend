@@ -30,6 +30,7 @@ const OrderHistoryForm = () => {
    const renderActionButtons = (order) => {
       const isReviewable = order.status === 'SHIPPED'
       const isCancellable = order.status === 'PAID'
+      // eslint-disable-next-line no-unused-vars
       const isCanceled = order.status === 'CANCELED'
 
       const reviewButton = order.hasReview ? (

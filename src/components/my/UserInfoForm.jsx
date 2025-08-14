@@ -6,6 +6,26 @@ import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
+const Modal = ({ message, isConfirm, onClose, onConfirm }) => {
+   return (
+      <div className="modal-overlay">
+         <div className="modal-content">
+            <p>{message}</p>
+            <div className="modal-actions">
+               {isConfirm && (
+                  <button className="modal-confirm-btn" onClick={onConfirm}>
+                     확인
+                  </button>
+               )}
+               <button className="modal-close-btn" onClick={onClose}>
+                  {isConfirm ? '취소' : '확인'}
+               </button>
+            </div>
+         </div>
+      </div>
+   )
+}
+
 const UserInfoForm = () => {
    const fileInputRef = useRef(null)
    const dispatch = useDispatch()
@@ -26,6 +46,17 @@ const UserInfoForm = () => {
       profile_img: '',
    })
    const [originalData, setOriginalData] = useState(null)
+
+   const [modalState, setModalState] = useState({
+      show: false,
+      message: '',
+      isConfirm: false,
+      onConfirm: () => {},
+   })
+
+   const closeModal = () => {
+      setModalState({ show: false, message: '', isConfirm: false, onConfirm: () => {} })
+   }
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -90,7 +121,7 @@ const UserInfoForm = () => {
       if (loading) return
 
       if (!originalData) {
-         alert('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.')
+         console.error('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.')
          return
       }
 
@@ -116,17 +147,26 @@ const UserInfoForm = () => {
    }
 
    const handleDeleteAccount = async () => {
-      if (window.confirm('정말 회원탈퇴 하시겠습니까?')) {
-         try {
-            await dispatch(deleteAccountThunk()).unwrap()
-            alert('정상적으로 탈퇴 되었습니다.')
-            await dispatch(logoutUserThunk()).unwrap()
-            window.location.href = '/'
-         } catch (err) {
-            console.error('회원 탈퇴 실패:', err)
-            alert(`회원 탈퇴 실패: ${err.message || err}`)
-         }
-      }
+      setModalState({
+         show: true,
+         message: '정말 회원탈퇴 하시겠습니까?',
+         isConfirm: true,
+         onConfirm: async () => {
+            try {
+               await dispatch(deleteAccountThunk()).unwrap()
+               setModalState({ show: true, message: '정상적으로 탈퇴 되었습니다.', isConfirm: false })
+               await dispatch(logoutUserThunk()).unwrap()
+               window.location.href = '/'
+            } catch (err) {
+               console.error('회원 탈퇴 실패:', err)
+               setModalState({
+                  show: true,
+                  message: `회원 탈퇴 실패: ${err.message || '알 수 없는 오류가 발생했습니다.'}`,
+                  isConfirm: false,
+               })
+            }
+         },
+      })
    }
 
    const handleFileChange = async (e) => {
@@ -165,6 +205,7 @@ const UserInfoForm = () => {
    }
 
    if (loading && !user) return <p>로딩 중...</p>
+   if (error) return <p>에러 발생: {error.message || '데이터를 불러오는 데 실패했습니다.'}</p>
 
    return (
       <div className="user-info-box">
