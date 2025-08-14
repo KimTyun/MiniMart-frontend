@@ -10,13 +10,21 @@ const validatePassword = (password) => /^(?=.*[A-Za-z])(?=.*[!@#$%^&*])[A-Za-z\d
 
 const currentYear = new Date().getFullYear()
 
-const Modal = ({ message, onClose }) => {
+const Modal = ({ message, onClose, onNavigate }) => {
    return (
       <div className="modal-overlay">
          <div className="modal-content">
             <p>{message}</p>
             <div className="modal-actions">
-               <button className="modal-close-btn" onClick={onClose}>
+               <button
+                  className="modal-close-btn"
+                  onClick={() => {
+                     onClose()
+                     if (onNavigate) {
+                        onNavigate()
+                     }
+                  }}
+               >
                   확인
                </button>
             </div>
@@ -43,6 +51,7 @@ function Register() {
    const [modalState, setModalState] = useState({
       show: false,
       message: '',
+      onNavigate: null,
    })
 
    const closeModal = () => {
@@ -61,12 +70,13 @@ function Register() {
 
    useEffect(() => {
       if (authUser) {
-         setModalState({ show: true, message: '이미 로그인되어 있습니다. 내 정보 화면으로 이동합니다.' })
-         setTimeout(() => {
-            navigate('/mypage')
-         }, 2000)
+         setModalState({
+            show: true,
+            message: '이미 로그인되어 있습니다. 내 정보 페이지로 이동합니다.',
+            onNavigate: () => navigate('/mypage'),
+         })
       }
-   }, [authUser, navigate]) // authUser와 navigate가 변경될 때마다 실행
+   }, [authUser, navigate])
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -140,6 +150,10 @@ function Register() {
             </button>
          </div>
       )
+   }
+
+   if (authUser && modalState.show) {
+      return <Modal message={modalState.message} onClose={closeModal} onNavigate={modalState.onNavigate} />
    }
 
    return (
