@@ -24,13 +24,13 @@ function GoogleLoginSuccess() {
                   }
                })
          })
-   }, [dispatch, setisFirst, expired])
+   }, [dispatch, setisFirst, expired, navigate])
 
    useEffect(() => {
       if (!isFirst) {
          navigate('/')
       }
-   }, [isFirst])
+   }, [isFirst, navigate])
 
    function onGoTO(link) {
       return () => {
