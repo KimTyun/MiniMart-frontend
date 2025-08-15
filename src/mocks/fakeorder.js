@@ -1,39 +1,29 @@
 export const mockOrderHistory = [
    {
-      orderId: 'ORD_20250813_001',
-      date: '2025-08-13',
+      orderId: '20240814-001',
+      date: '2024-08-14',
       totalPrice: 48000,
       status: '배송 완료',
       items: [
-         {
-            itemId: 101,
-            name: '무선 블루투스 이어폰',
-            price: 35000,
-            quantity: 1,
-            imageUrl: 'https://cdn.pixabay.com/photo/2017/04/18/16/06/earphone-2239459_1280.jpg',
-         },
-         {
-            itemId: 102,
-            name: '휴대용 보조 배터리',
-            price: 13000,
-            quantity: 1,
-            imageUrl: 'https://cdn.pixabay.com/photo/2019/07/28/18/25/power-bank-4369719_1280.jpg',
-         },
+         { name: '핸드메이드 가죽 지갑', price: 25000, quantity: 1, img: '/images/wallet.jpg' },
+         { name: '디자이너 머그컵', price: 23000, quantity: 1, img: '/images/mug.jpg' },
       ],
    },
    {
-      orderId: 'ORD_20250812_002',
-      date: '2025-08-12',
-      totalPrice: 24000,
+      orderId: '20240812-002',
+      date: '2024-08-12',
+      totalPrice: 15000,
       status: '배송 중',
+      items: [{ name: '심플한 캔버스 에코백', price: 15000, quantity: 1, img: '/images/ecobag.jpg' }],
+   },
+   {
+      orderId: '20240810-003',
+      date: '2024-08-10',
+      totalPrice: 65000,
+      status: '주문 완료',
       items: [
-         {
-            itemId: 103,
-            name: '스마트폰 거치대',
-            price: 24000,
-            quantity: 1,
-            imageUrl: 'https://cdn.pixabay.com/photo/2018/09/20/19/27/smartphone-3691653_1280.jpg',
-         },
+         { name: '빈티지 은반지', price: 30000, quantity: 1, img: '/images/ring.jpg' },
+         { name: '수제 비누 세트', price: 35000, quantity: 1, img: '/images/soap.jpg' },
       ],
    },
 ]

@@ -37,10 +37,8 @@ export const registerUserThunk = createAsyncThunk('auth/registerUser', async (us
 export const loginUserThunk = createAsyncThunk('auth/loginUser', async (credentials, { rejectWithValue }) => {
    try {
       const response = await loginUser(credentials)
-      if (response.data.token) {
-         localStorage.setItem('token', response.data.token)
-      }
-      return response.data.user
+      localStorage.setItem('token', response.data.token)
+      return response.data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '로그인 실패')
    }
@@ -49,9 +47,11 @@ export const loginUserThunk = createAsyncThunk('auth/loginUser', async (credenti
 // 로그아웃
 export const logoutUserThunk = createAsyncThunk('auth/logoutUser', async (_, { rejectWithValue }) => {
    try {
-      const response = await logoutUser()
-      return response.data
+      await logoutUser()
+      localStorage.removeItem('token')
+      return null
    } catch (error) {
+      localStorage.removeItem('token')
       return rejectWithValue(error.response?.data?.message || '로그아웃 실패')
    }
 })
@@ -62,6 +62,7 @@ export const checkAuthStatusThunk = createAsyncThunk('auth/checkAuthStatus', asy
       const response = await checkAuthStatus()
       return response.data
    } catch (error) {
+      localStorage.removeItem('token')
       return rejectWithValue(error.response?.data?.message || '로그인 상태 확인 실패')
    }
 })
@@ -77,7 +78,8 @@ export const deleteUserThunk = createAsyncThunk('auth/deleteUser', async (_, thu
       thunkAPI.dispatch(logoutUserThunk())
       return true
    } catch (error) {
-      return thunkAPI.rejectWithValue(error.response.data?.message || '탈퇴 실패')
+      thunkAPI.dispatch(logoutUserThunk())
+      return thunkAPI.rejectWithValue(error.response?.data?.message || '탈퇴 실패')
    }
 })
 
@@ -96,7 +98,7 @@ const initialState = {
    loginUrl: '', // 카카오 로그인 URL
    user: null,
    isAuthenticated: false,
-   loading: false,
+   loading: true,
    error: null,
    loginLoading: false,
    kakaoLoading: false,
@@ -115,9 +117,10 @@ const authSlice = createSlice({
          localStorage.setItem('token', action.payload)
       },
       logout: (state) => {
-         state.token = null
          state.user = null
          state.isAuthenticated = false
+         state.loading = false
+         state.error = null
          localStorage.removeItem('token')
       },
    },
@@ -177,13 +180,17 @@ const authSlice = createSlice({
          })
          .addCase(loginUserThunk.fulfilled, (state, action) => {
             state.loginLoading = false
-            state.isAuthenticated = true
-            state.user = action.payload
             state.error = null
+            state.isAuthenticated = true
+            state.user = action.payload.user
+            state.token = action.payload.token
          })
          .addCase(loginUserThunk.rejected, (state, action) => {
             state.loginLoading = false
-            state.error = action.error.message || '로그인 실패'
+            state.error = action.payload
+            state.isAuthenticated = false
+            state.user = null
+            state.token = null
          })
 
          /* 로컬 로그아웃 */
@@ -191,12 +198,24 @@ const authSlice = createSlice({
             state.loading = true
             state.error = null
          })
-         .addCase(logoutUserThunk.fulfilled, (state, action) => {
+         .addCase(logoutUserThunk.fulfilled, (state) => {
+            authSlice.caseReducers.logout(state)
             state.loading = false
-            state.isAuthenticated = false
-            state.user = null //로그아웃 후 유저 정보 초기화
          })
          .addCase(logoutUserThunk.rejected, (state, action) => {
+            authSlice.caseReducers.logout(state)
+            state.loading = false
+            state.error = action.payload
+         })
+
+         /* 회원 탈퇴 */
+         .addCase(deleteUserThunk.pending, (state) => {
+            state.loading = true
+         })
+         .addCase(deleteUserThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteUserThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

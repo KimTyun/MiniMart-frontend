@@ -24,6 +24,7 @@ import CartPage from './pages/CartPage'
 import About from './pages/About'
 import Privacy from './pages/Privacy'
 import SearchResults from './pages/SearchResult'
+import Cart from './pages/item/Cart'
 
 function App() {
    const dispatch = useDispatch()
@@ -32,12 +33,8 @@ function App() {
    // 앱 시작 시 토큰이 있으면 사용자 정보 요청
    // 카카오 토큰이 없으면 로컬 로그인이 되어있는가 체크
    useEffect(() => {
-      if (token) {
-         dispatch(fetchUserInfoThunk())
-      } else {
-         dispatch(checkAuthStatusThunk())
-      }
-   }, [dispatch, token])
+      dispatch(checkAuthStatusThunk())
+   }, [dispatch])
 
    return (
       <>
@@ -70,6 +67,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="/cart/:id" element={<Cart />} />
          </Routes>
          <Footer />
       </>

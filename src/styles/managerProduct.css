@@ -1,0 +1,20 @@
+.table * {
+   border: 1px solid black;
+   width: 80px;
+}
+
+.table {
+   border-collapse: collapse;
+   width: 80%;
+   margin: 80px auto;
+}
+.table th {
+   padding: 10px;
+}
+
+.table tr td button {
+   background-color: pink;
+   border-radius: 5px;
+   font-size: 16px;
+   cursor: pointer;
+}
