@@ -21,6 +21,7 @@ import SellerPage from './pages/SellerPage'
 import ItemDetail from './pages/item/ItemDetail'
 import QnAPage from './pages/item/QnAPage'
 import ReviewForm from './components/item/ReviewForm'
+import Cart from './pages/item/Cart'
 
 function App() {
    const dispatch = useDispatch()
@@ -59,6 +60,7 @@ function App() {
             <Route path="/qna" element={<QnAPage />} />
             {/* 리뷰 페이지 */}
             <Route path="/review" element={<ReviewForm />} />
+            <Route path="/cart/:id" element={<Cart />} />
          </Routes>
          <Footer />
       </>
