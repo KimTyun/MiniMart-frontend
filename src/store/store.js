@@ -8,6 +8,7 @@ import followReducer from '../features/followSlice'
 import adminReducer from '../features/adminSlice'
 import reviewReducer from '../features/reviewSlice'
 
+
 const store = configureStore({
    reducer: {
       auth: authReducer,
@@ -18,6 +19,7 @@ const store = configureStore({
       follow: followReducer,
       admin: adminReducer,
       review: reviewReducer,
+
    },
 })
 
