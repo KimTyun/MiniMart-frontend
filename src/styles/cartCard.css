@@ -1,0 +1,135 @@
+.cart {
+   display: flex;
+   flex-direction: column;
+   gap: 50px;
+   margin: 100px 0;
+}
+
+.cart .cart-sum {
+   display: flex;
+   justify-content: flex-end;
+   gap: 30px;
+   width: 800px;
+}
+.cart .cart-sum > * {
+   margin: 0;
+}
+.cart .cart-sum > p {
+   font-weight: bold;
+   font-size: 2rem;
+}
+.cart .cart-sum > button {
+   margin: auto 0;
+   background-color: #2c2c2c;
+   width: 100px;
+   height: 40px;
+   color: white;
+}
+
+.cartCard-wrap {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   gap: 24px;
+   border: 2px solid #d9d9d9;
+   border-radius: 10px;
+   padding: 24px;
+   width: 800px;
+   height: 240px;
+   overflow: hidden;
+}
+.cartCard-wrap > :nth-last-of-type {
+   align-self: flex-start;
+}
+
+.cartCard-wrap > * {
+   margin: 0;
+}
+
+.cartCard-wrap .cartCard-img {
+   width: 160px;
+   height: 160px;
+}
+.cartCard-wrap .cartCard-img > img {
+   width: 160px;
+   height: 160px;
+}
+.cartCard-wrap .cartCard-info {
+   display: flex;
+   flex: 1;
+   flex-direction: column;
+   justify-content: flex-start;
+   align-self: flex-start;
+   gap: 5px;
+   height: 100%;
+   text-align: left;
+}
+.cartCard-wrap .cartCard-info > p {
+   margin: 0;
+   text-align: left;
+}
+
+.cartCard-wrap .cartCard-info > p:nth-of-type(1) {
+   font-weight: bold;
+   font-size: 2rem;
+}
+.cartCard-wrap .cartCard-info > p:nth-of-type(2) {
+   color: #757575;
+}
+.cartCard-wrap .cartCard-info > p:nth-of-type(3) {
+   color: black;
+   font-weight: bold;
+   font-size: 1.2rem;
+}
+
+.cartCard-wrap .cartCard-info > div {
+   display: flex;
+   justify-content: flex-start;
+   gap: 10px;
+   margin: 0;
+   border: 1px solid black;
+   width: 85px;
+   font-size: 1.2rem;
+}
+.cartCard-wrap .cartCard-info > div > * {
+   margin: 0;
+}
+.cartCard-wrap .cartCard-info > div > button {
+   cursor: pointer;
+   border: none;
+   background-color: none;
+   width: 20px;
+   height: 33px;
+   font-size: 1.5rem;
+}
+.cartCard-wrap .cartCard-info > div > button:nth-child(1) {
+   padding-bottom: 5px;
+}
+
+.cartCard-wrap .cartCard-info > div > button:hover {
+   color: #757575;
+}
+
+.cartCard-wrap .cartCard-info > button {
+   flex: 1;
+   margin: 0;
+
+   border: none;
+   border-radius: 10px;
+   background-color: #ef4444;
+   width: 100px;
+   height: 30px;
+   color: white;
+}
+
+.cartCard-wrap .cartCard-seller-info {
+   height: 100%;
+}
+.cartCard-wrap .cartCard-seller-info .seller-info-wrap {
+   display: flex;
+}
+
+.cartCard-wrap .cartCard-seller-info .seller-info-wrap > img {
+   width: 40px;
+   height: 40px;
+}
