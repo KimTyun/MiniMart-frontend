@@ -73,7 +73,7 @@ function Login() {
                   </a>
                )}
                <img
-                  src={`${import.meta.env.VITE_API_URL}/public/google-icon.png`}
+                  src={`/public/google-icon.png`}
                   alt="구글 로그인"
                   className="social-icon"
                   onClick={() => {
