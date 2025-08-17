@@ -66,7 +66,6 @@ function Register() {
    // eslint-disable-next-line no-unused-vars
    const profileUrl = authUser?.profile_img || '/uploads/profile-images/default.png'
 
-
    const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
    const openDaumPostcode = useDaumPostcodePopup(scriptUrl)
 
@@ -160,7 +159,6 @@ function Register() {
 
    return (
       <div className="register-container">
-         {modalState.show && <Modal message={modalState.message} onClose={closeModal} />}
          <h2>회원가입</h2>
          {error && <p className="register-error">{error}</p>}
 
@@ -227,6 +225,8 @@ function Register() {
                <input type="text" name="extraaddress" value={form.extraaddress} readOnly placeholder="참고항목" />
             </div>
          </div>
+
+         {modalState.show && <Modal message={modalState.message} onClose={closeModal} />}
 
          <div className="register-sns">
             <p className="sns-label">다른 방법으로 회원가입하기</p>
