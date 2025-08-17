@@ -89,6 +89,7 @@ function IteamCreateForm() {
          .then((result) => {
             alert('상품이 성공적으로 등록되었습니다!')
             navigate(`/item/${result.item.id}`)
+            window.scrollTo(0, 0)
          })
          .catch(() => {
             alert('서버 에러로 등록에 실패하였습니다.')

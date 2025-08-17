@@ -66,7 +66,6 @@ function Register() {
    // eslint-disable-next-line no-unused-vars
    const profileUrl = authUser?.profile_img || '/uploads/profile-images/default.png'
 
-
    const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
    const openDaumPostcode = useDaumPostcodePopup(scriptUrl)
 
@@ -231,8 +230,8 @@ function Register() {
          <div className="register-sns">
             <p className="sns-label">다른 방법으로 회원가입하기</p>
             <div className="sns-icons">
-               <img src="/icons/kakao-icon.png" alt="카카오 로그인" />
-               <img src="/icons/google-icon.png" alt="구글 로그인" />
+               <img src="/kakao_login_small.png" alt="카카오 로그인" />
+               <img src="/public/google-icon.png" alt="구글 로그인" />
             </div>
          </div>
 

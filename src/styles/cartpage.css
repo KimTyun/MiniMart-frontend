@@ -1,21 +1,21 @@
 .cartContainer {
-   max-width: 1000px;
    margin: 2rem auto;
    padding: 2rem;
+   max-width: 1000px;
 }
 
 .cartTitle {
-   font-size: 2rem;
-   font-weight: bold;
    margin-bottom: 2rem;
+   font-weight: bold;
+   font-size: 2rem;
    text-align: center;
 }
 
 .cartGrid {
    display: grid;
    grid-template-columns: 1fr 280px;
-   gap: 2rem;
    align-items: start;
+   gap: 2rem;
 }
 
 .cartItemsList {
@@ -26,19 +26,19 @@
 .cartItem {
    display: flex;
    align-items: center;
-   padding: 1.5rem;
    gap: 1rem;
    border-bottom: 1px solid #eee;
+   padding: 1.5rem;
 }
 .cartItem:last-child {
    border-bottom: none;
 }
 
 .cartItemImg {
+   border-radius: 8px;
    width: 100px;
    height: 100px;
    object-fit: cover;
-   border-radius: 8px;
 }
 
 .cartItemInfo {
@@ -51,9 +51,9 @@
 }
 
 .cartItemOption {
+   margin-top: 0.25rem;
    color: #666;
    font-size: 0.9rem;
-   margin-top: 0.25rem;
 }
 
 .cartItemActions {
@@ -63,27 +63,27 @@
 }
 
 .cartItemPrice {
-   font-size: 1.2rem;
-   font-weight: bold;
    margin-bottom: 1rem;
+   font-weight: bold;
+   font-size: 1.2rem;
 }
 
 .removeBtn {
-   background: none;
+   cursor: pointer;
    border: 1px solid #ddd;
    border-radius: 4px;
+   background: none;
    padding: 0.25rem 0.75rem;
-   cursor: pointer;
    font-size: 0.9rem;
 }
 
 .summaryBox {
-   border: 1px solid #4f46e5;
-   background-color: #f9fafb;
-   border-radius: 8px;
-   padding: 1.5rem;
    position: sticky;
    top: 2rem;
+   border: 1px solid #4f46e5;
+   border-radius: 8px;
+   background-color: #f9fafb;
+   padding: 1.5rem;
 }
 
 .summaryRow {
@@ -94,25 +94,25 @@
 }
 
 .summaryTotal {
-   padding-top: 1rem;
    border-top: 1px solid #ddd;
+   padding-top: 1rem;
+   color: #4f46e5;
    font-weight: bold;
    font-size: 1.3rem;
-   color: #4f46e5;
 }
 
 .checkoutBtn {
-   width: 100%;
-   background-color: #4f46e5;
-   color: white;
-   border: none;
-   padding: 1rem;
-   border-radius: 6px;
-   font-weight: bold;
-   cursor: pointer;
-   font-size: 1.1rem;
-   margin-top: 1rem;
    transition: background-color 0.3s;
+   cursor: pointer;
+   margin-top: 1rem;
+   border: none;
+   border-radius: 6px;
+   background-color: #4f46e5;
+   padding: 1rem;
+   width: 100%;
+   color: white;
+   font-weight: bold;
+   font-size: 1.1rem;
 }
 .checkoutBtn:hover {
    background-color: #4338ca;
