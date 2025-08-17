@@ -1,13 +1,32 @@
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getMonthThunk } from "../../features/adminSlice";
 import { Cell, Pie, PieChart, Legend, ResponsiveContainer } from "recharts";
 
 function ManagerStatistics() {
-  const pieData = [
-    { name: "10대", value: 300 },
-    { name: "20대", value: 200 },
-    { name: "30대", value: 100 },
-    { name: "40대", value: 50 },
-    { name: "50대", value: 10 },
-  ];
+  const dispatch = useDispatch();
+  const { monthData, loading, error } = useSelector((state) => state.admin);
+
+  useEffect(() => {
+    const now = new Date();
+    dispatch(
+      getMonthThunk({ year: now.getFullYear(), month: now.getMonth() + 1 })
+    );
+  }, [dispatch]);
+
+  const pieData = monthData?.length
+    ? monthData.map((item) => ({
+        name: item.name,
+        value: item.value,
+      }))
+    : [
+        { name: "10대", value: 0 },
+        { name: "20대", value: 0 },
+        { name: "30대", value: 0 },
+        { name: "40대", value: 0 },
+        { name: "50대", value: 0 },
+        { name: "60대", value: 0 },
+      ];
 
   const COLORS = ["#4AB0C6", "#2D82B7", "#1A4882", "#5AC8C6", "#A3E4DB"];
 
@@ -37,9 +56,11 @@ function ManagerStatistics() {
     );
   };
 
+  if (loading) return <p>로딩중...</p>;
+  if (error) return <p style={{ color: "red" }}>에러: {error}</p>;
+
   return (
     <div style={{ display: "flex", height: "400px" }}>
-      {/* Pie Chart */}
       <ResponsiveContainer width="100%" height="100%">
         <PieChart>
           <Pie
@@ -62,7 +83,6 @@ function ManagerStatistics() {
           <Legend type="file" verticalAlign="bottom" align="center" />
         </PieChart>
       </ResponsiveContainer>
-      <div></div>
     </div>
   );
 }
