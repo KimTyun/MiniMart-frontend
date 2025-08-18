@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, cancelOrder, writeReview } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, cancelOrder, writeReview, getSeller } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
 // 내 정보 불러오기
@@ -94,6 +94,15 @@ export const createReviewThunk = createAsyncThunk('mypage/createReview', async (
    }
 })
 
+export const getSellerThunk = createAsyncThunk('mypage/getSeller', async (_, { rejectWithValue }) => {
+   try {
+      const response = await getSeller()
+      return response
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '실패')
+   }
+})
+
 const mypageSlice = createSlice({
    name: 'mypage',
    initialState: {
@@ -102,6 +111,7 @@ const mypageSlice = createSlice({
       followings: [],
       loading: false,
       error: null,
+      seller: null,
       reviewStatus: null,
    },
    reducers: {},
@@ -190,6 +200,19 @@ const mypageSlice = createSlice({
             state.orders = state.orders.map((order) => (order.orderId === action.payload.orderId ? { ...order, hasReview: true } : order))
          })
          .addCase(createReviewThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         .addCase(getSellerThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getSellerThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.seller = action.payload.seller
+         })
+         .addCase(getSellerThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

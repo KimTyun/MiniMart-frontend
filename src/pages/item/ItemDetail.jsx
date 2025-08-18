@@ -213,8 +213,8 @@ function ItemDetail() {
                                           <div>
                                              <p>{e.name}</p>
                                              <div>
-                                                <img src={`${Seller.User.profile_img}`} alt="판매자" referrerPolicy="no-referrer" />
-                                                <p>{Seller.name}</p>
+                                                <img src={`${Seller?.User?.profile_img}`} alt="판매자" referrerPolicy="no-referrer" />
+                                                <p>{Seller?.name}</p>
                                              </div>
                                           </div>
                                           <div>
