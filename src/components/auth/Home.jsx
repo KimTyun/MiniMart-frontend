@@ -16,7 +16,6 @@ import CardActionArea from '@mui/material/CardActionArea'
 import { fetchFollowingSellersThunk } from '../../features/followSlice'
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
-
 function Home() {
    var settings = {
       dots: true,
