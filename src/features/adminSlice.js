@@ -32,13 +32,13 @@ export const rejectSellerThunk = createAsyncThunk('admin/rejectSeller', async (s
 })
 
 // 나이별 데이터 가져오기
-   try {
-      const { data } = await getMonth(year, month)
-      return data
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 실패했습니다.')
-   }
-})
+//    try {
+//       const { data } = await getMonth(year, month)
+//       return data
+//    } catch (error) {
+//       return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 실패했습니다.')
+//    }
+// })
 
 // 주문 목록 가져오기
 export const getAllOrdersThunk = createAsyncThunk('admin/orders', async (_, { rejectWithValue }) => {
@@ -119,18 +119,18 @@ const adminSlice = createSlice({
             state.error = action.payload
          })
          // 나이별 데이터 가져오기
-         .addCase(getMonthThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(getMonthThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.monthData = action.payload
-         })
-         .addCase(getMonthThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
+         // .addCase(getMonthThunk.pending, (state) => {
+         //    state.loading = true
+         //    state.error = null
+         // })
+         // .addCase(getMonthThunk.fulfilled, (state, action) => {
+         //    state.loading = false
+         //    state.monthData = action.payload
+         // })
+         // .addCase(getMonthThunk.rejected, (state, action) => {
+         //    state.loading = false
+         //    state.error = action.payload
+         // })
          // 주문 삭제
          .addCase(deleteOrderThunk.fulfilled, (state, action) => {
             state.orders = state.orders.filter((order) => order.id !== action.payload)
