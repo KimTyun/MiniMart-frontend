@@ -22,7 +22,6 @@ import QnAPage from './pages/QnAPage'
 import ReviewForm from './components/item/ReviewForm'
 import About from './pages/About'
 import Privacy from './pages/Privacy'
-import SearchResults from './pages/SearchResult'
 import Cart from './pages/item/Cart'
 
 function App() {
@@ -66,7 +65,6 @@ function App() {
 
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
-            <Route path="/search" element={<SearchResults />} />
          </Routes>
          <Footer />
       </>
