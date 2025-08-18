@@ -91,8 +91,8 @@ function IteamCreateForm() {
             navigate(`/item/${result.item.id}`)
             window.scrollTo(0, 0)
          })
-         .catch(() => {
-            alert('서버 에러로 등록에 실패하였습니다.')
+         .catch((e) => {
+            alert(e || '서버 에러로 등록에 실패하였습니다.')
          })
    }
 

@@ -14,10 +14,11 @@ const Modal = ({ message, onClose, onNavigate }) => {
    return (
       <div className="modal-overlay">
          <div className="modal-content">
-            <p>{message}</p>
-            <div className="modal-actions">
+            <h3>{message}</h3>
+            <div className="modal-buttons">
+               {' '}
                <button
-                  className="modal-close-btn"
+                  className="btn-small secondary"
                   onClick={() => {
                      onClose()
                      if (onNavigate) {
@@ -159,7 +160,6 @@ function Register() {
 
    return (
       <div className="register-container">
-         {modalState.show && <Modal message={modalState.message} onClose={closeModal} />}
          <h2>회원가입</h2>
          {error && <p className="register-error">{error}</p>}
 
@@ -226,6 +226,8 @@ function Register() {
                <input type="text" name="extraaddress" value={form.extraaddress} readOnly placeholder="참고항목" />
             </div>
          </div>
+
+         {modalState.show && <Modal message={modalState.message} onClose={closeModal} />}
 
          <div className="register-sns">
             <p className="sns-label">다른 방법으로 회원가입하기</p>

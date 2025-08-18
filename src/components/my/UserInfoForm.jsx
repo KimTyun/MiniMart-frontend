@@ -59,7 +59,10 @@ const UserInfoForm = () => {
    }
 
    const handleChange = (e) => {
-      const { name, value } = e.target
+      let { name, value } = e.target
+      if (name === 'phone_number') {
+         value = value.replace(/[^0-9]/g, '')
+      }
       setFormData((prev) => ({ ...prev, [name]: value }))
    }
 
@@ -81,7 +84,7 @@ const UserInfoForm = () => {
             profile_img: user.profile_img || '',
          })
 
-         const fullImageUrl = user.profile_img ? `${API_BASE_URL}${user.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`
+         const fullImageUrl = user.profile_img && user.profile_img.trim() !== '' ? (user.profile_img.startsWith('http') ? user.profile_img : `${API_BASE_URL}${user.profile_img}`) : `${API_BASE_URL}/uploads/profile-images/default.png`
          setPreviewImage(fullImageUrl)
       }
    }, [user])
@@ -126,9 +129,16 @@ const UserInfoForm = () => {
       }
 
       const updatedFields = Object.keys(formData).reduce((acc, key) => {
-         if (formData[key] !== originalData[key]) {
-            acc[key] = formData[key]
-         }
+         const newValue = formData[key]?.trim?.() ?? formData[key]
+         const oldValue = originalData[key] ?? ''
+
+         // 값 같으면 제외
+         if (newValue === oldValue) return acc
+
+         // 빈칸도 제외
+         if (newValue === '') return acc
+
+         acc[key] = formData[key]
          return acc
       }, {})
 
@@ -230,7 +240,7 @@ const UserInfoForm = () => {
 
             <div className="profile-row">
                <label htmlFor="email">이메일</label>
-               <input id="email" name="email" type="email" value={formData.email} placeholder="변경할 이메일" onChange={handleChange} />
+               <input id="email" name="email" type="email" value={formData.email} placeholder="가입시 입력한 이메일은 변경할 수 없습니다." readOnly />
             </div>
 
             <div className="profile-row">
@@ -247,14 +257,15 @@ const UserInfoForm = () => {
                <input id="address" name="address" type="text" value={formData.address} readOnly placeholder="주소" />
             </div>
             <div className="profile-row">
-               <label htmlFor="detail_address">상세 주소</label>
-               <input id="detail_address" name="detailaddress" type="text" value={formData.detailaddress} onChange={handleChange} placeholder="상세 주소" />
+               <label htmlFor="detailaddress">상세 주소</label>
+               <input id="detailaddress" name="detailaddress" type="text" value={formData.detailaddress} onChange={handleChange} placeholder="상세 주소" />
             </div>
             <div className="profile-row">
-               <label htmlFor="extra_address">참고항목</label>
-               <input id="extra_address" name="extraaddress" type="text" value={formData.extraaddress} readOnly placeholder="참고항목" />
+               <label htmlFor="extraaddress">참고항목</label>
+               <input id="extraaddress" name="extraaddress" type="text" value={formData.extraaddress} readOnly placeholder="참고항목" />
             </div>
 
+            {modalState.show && <Modal message={modalState.message} isConfirm={modalState.isConfirm} onClose={closeModal} onConfirm={modalState.onConfirm} />}
             <button className="btn btn-save" onClick={handleSave} disabled={loading}>
                {loading ? '저장 중...' : '정보 수정'}
             </button>

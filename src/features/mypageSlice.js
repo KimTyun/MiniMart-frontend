@@ -1,70 +1,51 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, cancelOrder } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, writeReview, getSeller } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
-// 환경 변수를 사용하여 mock 데이터 사용 여부 결정
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
-
-// 가상 주문정보 및 팔로워. 제출 시 삭제
-import { getOrderHistory, getFollowedSellers } from '../mocks/fakeapi'
+// dummyDb는 가상의 주문내역과 팔로워입니다. 이 부분을 보강하거나, 실제 제출 시엔 삭제하고 DB에 저장된 값 불러오는 거 테스트햐봐야 합니다.
+const dummyDb = {
+   orders: [
+      {
+         orderId: 'ORD001',
+         date: '2023.10.26',
+         status: 'DELIVERED',
+         hasReview: false,
+         seller: { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
+         items: [
+            { itemId: 1, name: '프리미엄 커피 원두 200g', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' },
+            { itemId: 2, name: '수제 마카롱 세트', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' },
+         ],
+      },
+      {
+         orderId: 'ORD002',
+         date: '2023.10.24',
+         status: 'PAID', // 이 주문을 취소할 예정
+         hasReview: false,
+         seller: { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
+         items: [{ itemId: 3, name: '유기농 수제잼', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Jam' }],
+      },
+   ],
+   followings: [
+      { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
+      { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
+   ],
+}
 
 // 내 정보 불러오기
-export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, thunkAPI) => {
-   try {
-      const response = await minimartApi.get('/mypage')
-      return response.data
-   } catch (err) {
-      console.error('fetchMyPageThunk 에러:', err.response)
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '불러오기 실패')
-   }
+export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async () => {
+   // 실제 API 호출 대신 더미 데이터를 Promise로 반환하여 비동기 상황을 시뮬레이션
+   return Promise.resolve(dummyDb)
 })
 
-//주문내역
-export const fetchOrderHistoryThunk = createAsyncThunk('mypage/fetchOrderHistory', async (_, thunkAPI) => {
-   // --- Mocks를 이용한 가상 주문내역. 제출 시 이 주석 블록 전체 삭제 ---
-   if (USE_MOCK_DATA) {
-      console.log('--- [개발용] Mock 데이터로 주문 내역 가져오기 ---')
-      try {
-         const response = await getOrderHistory()
-         return response.data
-      } catch (err) {
-         return thunkAPI.rejectWithValue(err.message || '개발용 주문 내역 불러오기 실패')
-      }
-   }
-   // --- 여기까지 드래그하고 삭제 ---
-
-   // 실제 주문 내역
-   try {
-      const response = await minimartApi.get('/orders')
-      return response.data
-   } catch (err) {
-      console.error('fetchOrderHistoryThunk 에러:', err.response)
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '주문 내역 불러오기 실패')
-   }
-})
-
-//팔로우한 판매자 목록
-export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedSellers', async (_, thunkAPI) => {
-   //Mocks이용한 가상 팔로워 목록. 나중에 제출 시 이 주석 블록 전체 삭제
-   if (USE_MOCK_DATA) {
-      console.log('--- [개발용] Mock 데이터로 팔로잉 목록 가져오기 ---')
-      try {
-         const response = await getFollowedSellers()
-         return response.data
-      } catch (err) {
-         return thunkAPI.rejectWithValue(err.message || '개발용 팔로잉 목록 불러오기 실패')
-      }
-   }
-   // //여기까지 드래그하고 삭제
-
-   //팔로우한 판매자 목록
-   try {
-      const response = await minimartApi.get('/mypage/followings')
-      return response.data
-   } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '팔로잉 목록 불러오기 실패')
-   }
-})
+// 내 정보 불러오기
+// export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, { rejectWithValue }) => {
+//    try {
+//       const response = await minimartApi.get('/mypage', { withCredentials: true })
+//       return response.data
+//    } catch (err) {
+//       return rejectWithValue(err.response?.data || err.message)
+//    }
+// })
 
 // 내 정보 수정
 export const updateMyPageThunk = createAsyncThunk('mypage/updateMyPage', async (formData, thunkAPI) => {
@@ -87,16 +68,43 @@ export const deleteAccountThunk = createAsyncThunk('mypage/deleteAccount', async
    }
 })
 
-//주문취소
-export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
+// 더미 주문취소
+export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, { rejectWithValue }) => {
    try {
-      const response = await cancelOrder(orderId)
-      return response.data
-   } catch (error) {
-      console.error('cancelOrderThunk 에러:', error.response)
-      return thunkAPI.rejectWithValue(error.response?.data?.message || '주문 취소 실패')
+      // 전달받은 orderId를 콘솔에 출력하여 확인합니다.
+      console.log('Attempting to cancel order with ID:', orderId)
+
+      // 더미 데이터에서 해당 주문을 찾습니다.
+      const order = dummyDb.orders.find((o) => o.orderId === orderId)
+
+      // 찾은 주문의 상태를 확인합니다.
+      console.log('Found order status:', order?.status)
+
+      // 주문이 존재하지 않거나, 이미 배송 완료된 주문이라면 실패를 시뮬레이션합니다.
+      if (!order || order.status === 'DELIVERED') {
+         // 이 블록이 실행될 때도 콘솔에 로그를 남깁니다.
+         console.log('Rejection condition met for order:', orderId, ' - Rejecting thunk.')
+         return rejectWithValue({ message: '주문을 찾을 수 없거나 이미 배송이 시작되어 취소할 수 없습니다.' })
+      }
+
+      // 더미 데이터를 직접 수정하는 대신, 성공 응답을 반환하여 리듀서에서 상태를 변경하게 합니다.
+      return Promise.resolve({ message: '주문이 성공적으로 취소되었습니다.', orderId })
+   } catch (err) {
+      console.error('An unexpected error occurred during order cancellation:', err)
+      return rejectWithValue({ message: '주문 취소 실패' })
    }
 })
+
+// // 주문취소
+// export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
+//    try {
+//       const response = await cancelOrder(orderId)
+//       return response.data
+//    } catch (error) {
+//       console.error('cancelOrderThunk 에러:', error.response)
+//       return thunkAPI.rejectWithValue(error.response?.data?.message || '주문 취소 실패')
+//    }
+// })
 
 // 팔로잉 취소 (sellerId 받음)
 export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', async (sellerId, thunkAPI) => {
@@ -108,6 +116,25 @@ export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', asy
    }
 })
 
+// 리뷰 작성
+export const createReviewThunk = createAsyncThunk('mypage/createReview', async (reviewData, thunkAPI) => {
+   try {
+      const response = await writeReview(reviewData)
+      return { ...response.data, orderId: reviewData.orderId }
+   } catch (err) {
+      return thunkAPI.rejectWithValue(err.message || '리뷰 작성 실패')
+   }
+})
+
+export const getSellerThunk = createAsyncThunk('mypage/getSeller', async (_, { rejectWithValue }) => {
+   try {
+      const response = await getSeller()
+      return response
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '실패')
+   }
+})
+
 const mypageSlice = createSlice({
    name: 'mypage',
    initialState: {
@@ -116,27 +143,43 @@ const mypageSlice = createSlice({
       followings: [],
       loading: false,
       error: null,
+      seller: null,
+      reviewStatus: null,
+      status: 'idle',
    },
    reducers: {},
    extraReducers: (builder) => {
       builder
-         // 내 정보 불러오기
-         .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.user = action.payload
-            state.error = null
-         })
+         // 더미 내 정보 불러오기 (fetchMyPageThunk)
          .addCase(fetchMyPageThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
+            state.status = 'loading'
+         })
+         .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
+            state.status = 'succeeded'
+            // 당신의 dummyDb 구조에 맞게 수정
+            state.orders = action.payload.orders
+            state.followings = action.payload.followings
          })
          .addCase(fetchMyPageThunk.rejected, (state, action) => {
-            state.loading = false
-            state.user = null
-            state.orders = []
-            state.followings = []
-            state.error = action.payload
+            state.status = 'failed'
+            state.error = action.payload || action.error.message
          })
+         // // 내 정보 불러오기
+         // .addCase(fetchMyPageThunk.pending, (state) => {
+         //    state.loading = true
+         //    state.error = null
+         // })
+         // .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
+         //    state.loading = false
+         //    state.user = action.payload
+         //    state.orders = action.payload.orders
+         //    state.followings = action.payload.followings
+         //    state.error = null
+         // })
+         // .addCase(fetchMyPageThunk.rejected, (state, action) => {
+         //    state.status = 'failed'
+         //    state.error = action.payload || action.error.message
+         // })
          // 회원정보 수정
          .addCase(updateMyPageThunk.pending, (state) => {
             state.loading = true
@@ -162,46 +205,38 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         // 주문내역
-         .addCase(fetchOrderHistoryThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(fetchOrderHistoryThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.orders = action.payload
-         })
-         .addCase(fetchOrderHistoryThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         //주문취소
+         // 더미 주문취소
          .addCase(cancelOrderThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
+            state.status = 'loading'
          })
          .addCase(cancelOrderThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.error = null
-            state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: 'CANCELED' } : order))
+            state.status = 'succeeded'
+            // 불변성을 지키기 위해 map을 사용하여 새로운 배열을 반환합니다.
+            const updatedOrders = state.orders.map((order) =>
+               order.orderId === action.payload.orderId
+                  ? { ...order, status: 'CANCELED' } // 새로운 객체를 만들어 상태를 변경
+                  : order
+            )
+            state.orders = updatedOrders
          })
          .addCase(cancelOrderThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
+            state.status = 'failed'
+            state.error = action.payload?.message || action.error.message
          })
-         // 팔로우한 판매자 목록
-         .addCase(fetchFollowedSellersThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(fetchFollowedSellersThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.followings = action.payload
-         })
-         .addCase(fetchFollowedSellersThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
+         // // 주문취소
+         // .addCase(cancelOrderThunk.pending, (state) => {
+         //    state.loading = true
+         //    state.error = null
+         // })
+         // .addCase(cancelOrderThunk.fulfilled, (state, action) => {
+         //    state.loading = false
+         //    state.error = null
+         //    state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: 'CANCELED' } : order))
+         // })
+         // .addCase(cancelOrderThunk.rejected, (state, action) => {
+         //    state.loading = false
+         //    state.error = action.payload
+         // })
          // 팔로잉 취소
          .addCase(unfollowSellerThunk.pending, (state) => {
             state.loading = true
@@ -214,6 +249,32 @@ const mypageSlice = createSlice({
             }
          })
          .addCase(unfollowSellerThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         //리뷰 작성
+         .addCase(createReviewThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(createReviewThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.orders = state.orders.map((order) => (order.orderId === action.payload.orderId ? { ...order, hasReview: true } : order))
+         })
+         .addCase(createReviewThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         .addCase(getSellerThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getSellerThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.seller = action.payload.seller
+         })
+         .addCase(getSellerThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

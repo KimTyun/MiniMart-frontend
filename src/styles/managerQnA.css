@@ -1,0 +1,147 @@
+.manager-qna-container {
+   width: 80%;
+   max-width: 960px;
+   margin: 40px auto;
+   padding: 20px;
+   background-color: #f9f9f9;
+   border-radius: 8px;
+   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.manager-qna-container h1 {
+   text-align: center;
+   margin-bottom: 30px;
+   color: #333;
+}
+
+.qna-item {
+   background-color: #fff;
+   border: 1px solid #e0e0e0;
+   border-radius: 8px;
+   margin-bottom: 20px;
+   padding: 20px;
+   transition: box-shadow 0.3s ease;
+}
+
+.qna-item:hover {
+   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.qna-header {
+   display: flex;
+   align-items: center;
+   gap: 15px;
+   margin-bottom: 15px;
+   border-bottom: 1px solid #eee;
+   padding-bottom: 15px;
+}
+
+.status {
+   padding: 5px 10px;
+   border-radius: 12px;
+   font-size: 0.8rem;
+   font-weight: bold;
+   color: #fff;
+}
+
+.status.answered {
+   background-color: #28a745; /* 초록색 */
+}
+
+.status.pending {
+   background-color: #dc3545; /* 빨간색 */
+}
+
+.qna-title {
+   font-size: 1.2rem;
+   color: #333;
+   flex-grow: 1;
+}
+
+.qna-author,
+.qna-date {
+   font-size: 0.9rem;
+   color: #777;
+}
+
+.qna-content .question {
+   line-height: 1.6;
+   color: #555;
+   padding: 10px 0;
+}
+
+.answer-section {
+   background-color: #f7f7f7;
+   border-top: 1px dashed #ccc;
+   padding: 15px;
+   margin-top: 15px;
+}
+
+.answer-label {
+   font-weight: bold;
+   color: #007bff;
+   margin-bottom: 5px;
+}
+
+.answer {
+   color: #444;
+   line-height: 1.6;
+}
+
+.answer-section button,
+.reply-form button {
+   background-color: #007bff;
+   color: white;
+   border: none;
+   padding: 8px 15px;
+   border-radius: 5px;
+   cursor: pointer;
+   font-size: 0.9rem;
+   margin-top: 10px;
+   transition: background-color 0.2s ease;
+}
+
+.answer-section button:hover,
+.reply-form button:hover {
+   background-color: #0056b3;
+}
+
+.reply-form {
+   margin-top: 15px;
+   padding-top: 15px;
+   border-top: 1px dashed #ccc;
+}
+
+.reply-form textarea {
+   width: 100%;
+   min-height: 120px;
+   padding: 10px;
+   border: 1px solid #ccc;
+   border-radius: 5px;
+   font-size: 1rem;
+   line-height: 1.5;
+   resize: vertical;
+}
+
+.form-buttons {
+   display: flex;
+   justify-content: flex-end;
+   gap: 10px;
+   margin-top: 10px;
+}
+
+.form-buttons button[type='button'] {
+   background-color: #6c757d;
+}
+
+.form-buttons button[type='button']:hover {
+   background-color: #5a6268;
+}
+
+.loading,
+.error {
+   text-align: center;
+   font-size: 1.2rem;
+   padding: 50px;
+   color: #555;
+}
