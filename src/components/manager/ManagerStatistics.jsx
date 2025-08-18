@@ -40,7 +40,6 @@ function ManagerStatistics() {
    return (
       <>
          <h3>올해 연령대별 가입자 통계</h3>
-         <div style={{ height: '400px', textAlign: 'left' }}>
             <ResponsiveContainer width="100%" height="100%">
                <PieChart>
                   <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} fill="#0d00ff" dataKey="value">

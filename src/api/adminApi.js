@@ -18,5 +18,4 @@ export const getMonth = (year, month) =>
 // 주문 목록 가져오기
 export const getAllOrders = () => minimartApi.get('/admin/orders')
 
-// 주문 삭제하기(관리git 자)
 export const deleteOrder = (id) => minimartApi.post(`/admin/orders/delete/${id}`)
