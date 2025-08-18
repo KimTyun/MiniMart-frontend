@@ -8,7 +8,7 @@ function Select() {
       padding: '10px',
       backgroundColor: '#e2f53e',
       borderRadius: '5px',
-      cursor: 'pointer', // 마우스 커서 바뀌도록
+      cursor: 'pointer',
    }
 
    return (

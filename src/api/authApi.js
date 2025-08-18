@@ -16,6 +16,7 @@ export const getKakaoLoginUrl = async () => {
 export const fetchUserInfo = async () => {
    try {
       const response = await minimartApi.get('/auth/me')
+
       return response.data
    } catch (error) {
       if (error.response?.status === 401) {

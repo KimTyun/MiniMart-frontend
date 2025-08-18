@@ -20,3 +20,9 @@ export const unfollowSeller = (sellerId) => {
 export const cancelOrder = (orderId) => {
    return minimartApi.patch(`/orders/${orderId}/cancel`, {})
 }
+
+// 판매자 내정보 가져오기
+export const getSeller = async () => {
+   const response = await minimartApi.get('/mypage/seller')
+   return response.data
+}
