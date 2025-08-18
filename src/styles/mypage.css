@@ -177,7 +177,7 @@
 .order-item {
    display: flex;
    flex-direction: column;
-   align-items: flex-start; /* 모든 요소를 왼쪽으로 정렬 */
+   align-items: flex-start;
    position: relative;
    border: 1px solid #eee;
    padding: 14px;
@@ -187,7 +187,7 @@
    height: auto;
 }
 
-/* 주문 정보와 판매자 프로필을 한 줄에 표시하기 위한 새로운 컨테이너 */
+/* 주문 정보와 판매자 프로필*/
 .order-header {
    display: flex;
    gap: 16px;
@@ -227,18 +227,21 @@
    display: flex;
    flex-direction: column;
    gap: 6px;
+   text-align: left;
 }
 
 .order-item .info .title {
    font-size: 15px;
    font-weight: 700;
    color: #222;
+   text-align: left;
 }
 
 .order-item .info .meta {
    font-size: 13px;
    color: #666;
    line-height: 1.4;
+   text-align: left;
 }
 
 /* 판매자 미니 프로필 */
@@ -247,10 +250,10 @@
    top: 14px;
    right: 14px;
    display: flex;
-   flex-direction: column;
+   flex-direction: row;
    align-items: center;
    gap: 6px;
-   width: 60px;
+   width: 130px;
    text-align: center;
 }
 
@@ -265,16 +268,20 @@
    font-size: 12px;
    color: #666;
    margin: 0;
+   max-width: 60px;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
 }
 
-/* 버튼들을 담는 액션 컨테이너 */
+/* 버튼 */
 .actions {
-   width: 300px;
    margin: 0;
    display: flex;
    justify-content: flex-start;
    align-self: flex-start;
    gap: 8px;
+   width: fit-content;
 }
 
 .btn-small {
@@ -309,7 +316,6 @@
    background: #f5f5f5;
 }
 
-/* 리뷰 완료 버튼은 색상을 회색으로 변경 */
 .btn-small:disabled {
    background: #ccc;
    color: #666;
@@ -336,6 +342,8 @@
    flex-direction: column;
    align-items: center;
    gap: 8px;
+   position: relative;
+   padding-top: 40px;
 }
 
 .following-thumbnail {
@@ -357,27 +365,45 @@
    color: #666;
 }
 
-/* 팔로잉 취소 버튼 */
+/* 언팔 버튼 */
 .unfollow-button {
-   margin-top: 8px;
+   display: flex;
    background: #222;
    color: #fff;
    border: none;
    padding: 8px 12px;
    border-radius: 6px;
    font-weight: 700;
+   justify-content: center;
    cursor: pointer;
+   position: absolute;
+   top: 8px;
+   right: 8px;
+   width: fit-content;
+   margin-top: 0;
 }
 
 /* 판매자 등록 버튼 */
 .register-seller-btn {
-   display: inline-block;
+   display: flex;
+   justify-content: center;
+   align-items: center;
    margin: 28px auto 0;
+   width: fit-content;
    background: #f0d85a;
-   padding: 10px 18px;
-   border-radius: 20px;
+   padding: 10px 24px;
+   border-radius: 6px;
    color: #111;
-   font-weight: 800;
+   font-weight: 700;
+   font-size: 14px;
+   cursor: pointer;
+   text-decoration: none;
+   border: none;
+   transition: background 0.2s ease;
+}
+
+.register-seller-btn:hover {
+   background: #e6c84c;
 }
 
 /*상태/메시지*/
