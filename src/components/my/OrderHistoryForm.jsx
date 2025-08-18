@@ -7,25 +7,45 @@ const OrderHistoryForm = () => {
    const dispatch = useDispatch()
    const { orders, loading, error } = useSelector((state) => state.mypage)
 
-   // 모달
+   // 모달 상태 관리
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedOrderId, setSelectedOrderId] = useState(null)
    const [reviewText, setReviewText] = useState('')
+
+   // 알림 모달 상태 관리
+   const [isAlertModalOpen, setIsAlertModalOpen] = useState(false)
+   const [alertMessage, setAlertMessage] = useState('')
+   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false)
+   const [confirmMessage, setConfirmMessage] = useState('')
+   const [confirmCallback, setConfirmCallback] = useState(null)
 
    useEffect(() => {
       dispatch(fetchMyPageThunk())
    }, [dispatch])
 
+   // 커스텀 알림 모달 열기
+   const showAlert = (message) => {
+      setAlertMessage(message)
+      setIsAlertModalOpen(true)
+   }
+
+   // 커스텀 확인 모달 열기
+   const showConfirm = (message, callback) => {
+      setConfirmMessage(message)
+      setConfirmCallback(() => callback)
+      setIsConfirmModalOpen(true)
+   }
+
    // 주문 취소
-   const handleCancelOrder = async (orderId) => {
-      if (window.confirm('정말 주문을 취소하시겠습니까?')) {
+   const handleCancelOrder = (orderId) => {
+      showConfirm('정말 주문을 취소하시겠습니까?', async () => {
          try {
             await dispatch(cancelOrderThunk(orderId)).unwrap()
-            alert('주문이 취소되었습니다.')
+            showAlert('주문이 취소되었습니다.')
          } catch (err) {
-            alert(`주문 취소 실패: ${err.message || '알 수 없는 오류'}`)
+            showAlert(`주문 취소 실패: ${err.message || '알 수 없는 오류'}`)
          }
-      }
+      })
    }
 
    // 리뷰 작성 버튼 클릭 시 모달 열기
@@ -44,7 +64,6 @@ const OrderHistoryForm = () => {
    // 리뷰 작성
    const handleSubmitReview = async () => {
       if (!reviewText.trim()) {
-         // alert() 대신 커스텀 메시지를 표시
          console.error('리뷰 내용을 입력해주세요.')
          return
       }
@@ -118,6 +137,45 @@ const OrderHistoryForm = () => {
                      </button>
                      <button className="btn-small primary" onClick={handleSubmitReview}>
                         제출
+                     </button>
+                  </div>
+               </div>
+            </div>
+         )}
+
+         {/* 커스텀 알림 모달 */}
+         {isAlertModalOpen && (
+            <div className="modal-overlay">
+               <div className="modal-content">
+                  <p>{alertMessage}</p>
+                  <div className="modal-buttons">
+                     <button className="btn-small primary" onClick={() => setIsAlertModalOpen(false)}>
+                        확인
+                     </button>
+                  </div>
+               </div>
+            </div>
+         )}
+
+         {/* 커스텀 확인 모달 */}
+         {isConfirmModalOpen && (
+            <div className="modal-overlay">
+               <div className="modal-content">
+                  <p>{confirmMessage}</p>
+                  <div className="modal-buttons">
+                     <button className="btn-small secondary" onClick={() => setIsConfirmModalOpen(false)}>
+                        취소
+                     </button>
+                     <button
+                        className="btn-small primary"
+                        onClick={() => {
+                           setIsConfirmModalOpen(false)
+                           if (confirmCallback) {
+                              confirmCallback()
+                           }
+                        }}
+                     >
+                        확인
                      </button>
                   </div>
                </div>
