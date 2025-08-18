@@ -79,29 +79,17 @@ const OrderHistoryForm = () => {
 
    // 리뷰 작성
    const handleSubmitReview = async () => {
-      if (rating === 0) {
-         setFormMessage('별점을 선택해주세요.')
-         return
-      }
-      if (!content.trim()) {
-         setFormMessage('리뷰 내용을 입력해주세요.')
-         return
-      }
-
-      setFormMessage('리뷰를 등록 중입니다...')
-
       try {
          const reviewData = {
-            rating,
+            orderId: reviewingOrder.orderId,
+            productId: reviewingOrder.items[0].id,
             content,
-            image: reviewImg, // 이미지는 필요에 따라 처리
          }
-         await dispatch(
-            createReviewThunk({
-               orderId: reviewingOrder.orderId,
-               reviewData,
-            })
-         ).unwrap()
+
+         console.log('Sending review data:', reviewData)
+
+         await dispatch(createReviewThunk(reviewData)).unwrap()
+
          showAlert('리뷰가 성공적으로 등록되었습니다.')
          handleCloseModal()
       } catch (err) {
@@ -159,9 +147,6 @@ const OrderHistoryForm = () => {
             <div className="modal-overlay">
                <div className="modal-content">
                   <h3 className="modal-title">리뷰 작성</h3>
-                  <button onClick={handleCloseModal} className="modal-close-btn">
-                     &times;
-                  </button>
 
                   {formMessage && <div className="form-message">{formMessage}</div>}
 
