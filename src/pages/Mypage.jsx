@@ -35,6 +35,11 @@ const MyPage = () => {
 
          {/* 팔로잉 판매자 */}
          <FollowForm />
+
+         {/* 판매자 등록 */}
+         <button className="register-seller-btn" onClick={() => navigate('/seller-register')}>
+            판매자 등록 신청하기
+         </button>
       </div>
    )
 }

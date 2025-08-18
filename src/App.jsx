@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { checkAuthStatusThunk, fetchUserInfoThunk } from './features/authSlice'
+import { checkAuthStatusThunk } from './features/authSlice'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import MainPage from './pages/MainPage'
 import LoginSuccess from './pages/LoginSuccess'
@@ -18,8 +18,6 @@ import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
 import SellerPage from './pages/SellerPage'
 import ItemDetail from './pages/item/ItemDetail'
-import QnAPage from './pages/QnAPage'
-import ReviewForm from './components/item/ReviewForm'
 import About from './pages/About'
 import Privacy from './pages/Privacy'
 import Cart from './pages/item/Cart'
@@ -57,10 +55,6 @@ function App() {
             <Route path="/search" element={<SearchPage />} />
             <Route path="/customer-service" element={<CustomerService />} />
             <Route path="/seller/:sellerId" element={<SellerPage />} />
-            {/* 문의 페이지 */}
-            <Route path="/qna" element={<QnAPage />} />
-            {/* 리뷰 페이지 */}
-            <Route path="/review" element={<ReviewForm />} />
             <Route path="/cart" element={<Cart />} />
 
             <Route path="/about" element={<About />} />
