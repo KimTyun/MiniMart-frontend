@@ -10,10 +10,9 @@ const Footer = () => {
    return (
       <footer className="footer">
          <div className="footer-container">
-            {/* FASHION 섹션 */}
             <div className="footer-section">
-               <h3 className="footer-main-title">FASHION</h3>
-               <p className="footer-description">Complete your style with awesome clothes from us.</p>
+               <h3 className="footer-main-title">MINIMART</h3>
+               <p className="footer-description">MINIMART와 함께 artisan을 만나보세요.</p>
                <div className="footer-social-icons">
                   <FacebookIcon />
                   <InstagramIcon />
@@ -22,7 +21,6 @@ const Footer = () => {
                </div>
             </div>
 
-            {/* 제품 목록 섹션 */}
             <div className="footer-section">
                <h3 className="footer-title">제품 목록</h3>
                <Link to="/about" className="footer-link">
@@ -39,7 +37,6 @@ const Footer = () => {
                </Link>
             </div>
 
-            {/* 고객 서비스 섹션 */}
             <div className="footer-section">
                <h3 className="footer-title">고객 서비스</h3>
                <Link to="/orders" className="footer-link">
@@ -56,7 +53,6 @@ const Footer = () => {
                </Link>
             </div>
 
-            {/* Company 섹션 */}
             <div className="footer-section">
                <h3 className="footer-title">Company</h3>
                <Link to="/terms" className="footer-link">

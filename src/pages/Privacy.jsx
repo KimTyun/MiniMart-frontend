@@ -7,7 +7,7 @@ const Privacy = () => {
          <div className="privacy-header">
             <h1>개인정보처리방침</h1>
             <p>MINIMART에서는 고객님의 개인정보를 소중히 여기며 안전하게 보호하고 있습니다.</p>
-            <div className="privacy-date">최종 업데이트: 2024년 8월</div>
+            <div className="privacy-date">최종 업데이트: 2025년 8월</div>
          </div>
 
          <div className="privacy-content">

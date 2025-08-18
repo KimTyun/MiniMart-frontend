@@ -107,7 +107,6 @@ const QnA = () => {
                isSecret: false,
                images: [],
             })
-            // 파일 input 초기화
             document.getElementById('image-input').value = ''
          } else {
             alert(data.message || '문의 등록에 실패했습니다.')
