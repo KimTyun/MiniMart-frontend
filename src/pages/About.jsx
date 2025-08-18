@@ -4,8 +4,8 @@ const About = () => {
    return (
       <div className="about-container">
          <div className="about-hero">
-            <h1 className="about-title">artisan</h1>
-            <p className="about-subtitle">Complete your style with awesome clothes from us</p>
+            <h1 className="about-title">MINIMART</h1>
+            <p className="about-subtitle">MINIMART와 함께 artisan을 만나보세요.</p>
          </div>
 
          <div className="about-content">
