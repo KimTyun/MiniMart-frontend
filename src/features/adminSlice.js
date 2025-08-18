@@ -32,7 +32,6 @@ export const rejectSellerThunk = createAsyncThunk('admin/rejectSeller', async (s
 })
 
 // 나이별 데이터 가져오기
-export const getMonthThunk = createAsyncThunk('admin/getMonth', async ({ year, month }, { rejectWithValue }) => {
    try {
       const { data } = await getMonth(year, month)
       return data

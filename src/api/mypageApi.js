@@ -10,7 +10,7 @@ export const deleteAccount = () => {
 }
 // 리뷰 작성
 export const writeReview = (formData) => {
-   return minimartApi.post('/orders/review', formData)
+   return minimartApi.post('/mypage/review', formData)
 }
 // 팔로잉 취소
 export const unfollowSeller = (sellerId) => {
@@ -19,4 +19,10 @@ export const unfollowSeller = (sellerId) => {
 // 주문 취소
 export const cancelOrder = (orderId) => {
    return minimartApi.patch(`/mypage/orders/${orderId}/cancel`, {})
+}
+
+// 판매자 내정보 가져오기
+export const getSeller = async () => {
+   const response = await minimartApi.get('/mypage/seller')
+   return response.data
 }

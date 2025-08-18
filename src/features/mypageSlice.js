@@ -1,15 +1,45 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, cancelOrder, writeReview } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, cancelOrder, writeReview, getSeller } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
 // 내 정보 불러오기
 export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, { rejectWithValue }) => {
-   try {
-      const response = await minimartApi.get('/mypage', { withCredentials: true })
-      return response.data
-   } catch (err) {
-      return rejectWithValue(err.response?.data || err.message)
+   const dummyData = {
+      orders: [
+         {
+            orderId: 'ORD001',
+            date: '2023.10.26',
+            status: 'DELIVERED',
+            hasReview: false,
+            seller: { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
+            items: [
+               { itemId: 1, name: '프리미엄 커피 원두 200g', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' },
+               { itemId: 2, name: '수제 마카롱 세트', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' },
+            ],
+         },
+         {
+            orderId: 'ORD002',
+            date: '2023.10.24',
+            status: 'PAID',
+            hasReview: false,
+            seller: { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
+            items: [{ itemId: 3, name: '유기농 수제잼', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Jam' }],
+         },
+      ],
+      followings: [
+         { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
+         { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
+      ],
    }
+
+   // 실제 API 호출 대신 더미 데이터를 Promise로 반환하여 비동기 상황을 시뮬레이션
+   return Promise.resolve(dummyData)
+   // try {
+   //    const response = await minimartApi.get('/mypage', { withCredentials: true })
+   //    return response.data
+   // } catch (err) {
+   //    return rejectWithValue(err.response?.data || err.message)
+   // }
 })
 
 // 내 정보 수정
@@ -53,13 +83,23 @@ export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', asy
       return thunkAPI.rejectWithValue(err.response?.data?.message || '팔로잉 취소 실패')
    }
 })
+
 // 리뷰 작성
 export const createReviewThunk = createAsyncThunk('mypage/createReview', async (reviewData, thunkAPI) => {
    try {
       const response = await writeReview(reviewData)
-      return response
+      return { ...response.data, orderId: reviewData.orderId }
    } catch (err) {
       return thunkAPI.rejectWithValue(err.message || '리뷰 작성 실패')
+   }
+})
+
+export const getSellerThunk = createAsyncThunk('mypage/getSeller', async (_, { rejectWithValue }) => {
+   try {
+      const response = await getSeller()
+      return response
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '실패')
    }
 })
 
@@ -71,6 +111,8 @@ const mypageSlice = createSlice({
       followings: [],
       loading: false,
       error: null,
+      seller: null,
+      reviewStatus: null,
    },
    reducers: {},
    extraReducers: (builder) => {
@@ -152,16 +194,27 @@ const mypageSlice = createSlice({
          .addCase(createReviewThunk.pending, (state) => {
             state.loading = true
             state.error = null
-            state.success = false
          })
-         .addCase(createReviewThunk.fulfilled, (state) => {
+         .addCase(createReviewThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.success = true
+            state.orders = state.orders.map((order) => (order.orderId === action.payload.orderId ? { ...order, hasReview: true } : order))
          })
          .addCase(createReviewThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
-            state.success = false
+         })
+
+         .addCase(getSellerThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getSellerThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.seller = action.payload.seller
+         })
+         .addCase(getSellerThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
          })
    },
 })
