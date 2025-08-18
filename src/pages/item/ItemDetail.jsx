@@ -82,7 +82,7 @@ function ItemDetail() {
       dispatch(addCartThunk({ item: { item_id: id, item_option_id: option }, count: number }))
          .unwrap()
          .then(() => {
-            const result = confirm('장바구니로 이동하시겠습니까?')
+            const result = confirm('장바구니에 담았습니다. 장바구니로 이동하시겠습니까?')
             console.log(result)
             if (result) navigate('/cart')
          })
@@ -209,7 +209,7 @@ function ItemDetail() {
                               .map((e, i) => {
                                  return (
                                     <SwiperSlide key={Date.now() + i}>
-                                       <div className="another-item-card">
+                                       <div className="another-item-card" onClick={() => navigate(`/item/${e.id}`)}>
                                           <div>
                                              <p>{e.name}</p>
                                              <div>
@@ -226,7 +226,7 @@ function ItemDetail() {
                               })}
                      </Swiper>
                   }
-                  <Link id="seller-more" to={'/'}>
+                  <Link id="seller-more" to={`/seller/${Seller?.id}`}>
                      더보기
                   </Link>
                </div>
