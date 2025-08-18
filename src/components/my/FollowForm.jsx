@@ -1,18 +1,12 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fetchFollowedSellersThunk, unfollowSellerThunk } from '../../features/mypageSlice'
+import { unfollowSellerThunk } from '../../features/mypageSlice'
 
 const FollowForm = () => {
    const dispatch = useDispatch()
-   // Redux 스토어에서 팔로우 목록, 로딩 상태, 에러 상태를 가져옴
    const { followings, loading, error } = useSelector((state) => state.mypage)
 
-   // 컴포넌트가 처음 렌더링될 때 팔로우 목록을 불러옴
-   useEffect(() => {
-      dispatch(fetchFollowedSellersThunk())
-   }, [dispatch])
-
-   // 팔로우 취소 핸들러
+   //언팔
    const handleUnfollow = (sellerId) => {
       if (window.confirm('정말 팔로우를 취소하시겠습니까?')) {
          dispatch(unfollowSellerThunk(sellerId))

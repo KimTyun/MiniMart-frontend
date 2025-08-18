@@ -1,68 +1,14 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, cancelOrder } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, cancelOrder, writeReview } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
-// 환경 변수를 사용하여 mock 데이터 사용 여부 결정
-const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_DATA === 'true'
-
-// 가상 주문정보 및 팔로워. 제출 시 삭제
-import { getOrderHistory, getFollowedSellers } from '../mocks/fakeapi'
-
 // 내 정보 불러오기
-export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, thunkAPI) => {
+export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, { rejectWithValue }) => {
    try {
-      const response = await minimartApi.get('/mypage')
+      const response = await minimartApi.get('/mypage', { withCredentials: true })
       return response.data
    } catch (err) {
-      console.error('fetchMyPageThunk 에러:', err.response)
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '불러오기 실패')
-   }
-})
-
-//주문내역
-export const fetchOrderHistoryThunk = createAsyncThunk('mypage/fetchOrderHistory', async (_, thunkAPI) => {
-   // --- Mocks를 이용한 가상 주문내역. 제출 시 이 주석 블록 전체 삭제 ---
-   if (USE_MOCK_DATA) {
-      console.log('--- [개발용] Mock 데이터로 주문 내역 가져오기 ---')
-      try {
-         const response = await getOrderHistory()
-         return response.data
-      } catch (err) {
-         return thunkAPI.rejectWithValue(err.message || '개발용 주문 내역 불러오기 실패')
-      }
-   }
-   // --- 여기까지 드래그하고 삭제 ---
-
-   // 실제 주문 내역
-   try {
-      const response = await minimartApi.get('/orders')
-      return response.data
-   } catch (err) {
-      console.error('fetchOrderHistoryThunk 에러:', err.response)
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '주문 내역 불러오기 실패')
-   }
-})
-
-//팔로우한 판매자 목록
-export const fetchFollowedSellersThunk = createAsyncThunk('mypage/fetchFollowedSellers', async (_, thunkAPI) => {
-   //Mocks이용한 가상 팔로워 목록. 나중에 제출 시 이 주석 블록 전체 삭제
-   if (USE_MOCK_DATA) {
-      console.log('--- [개발용] Mock 데이터로 팔로잉 목록 가져오기 ---')
-      try {
-         const response = await getFollowedSellers()
-         return response.data
-      } catch (err) {
-         return thunkAPI.rejectWithValue(err.message || '개발용 팔로잉 목록 불러오기 실패')
-      }
-   }
-   // //여기까지 드래그하고 삭제
-
-   //팔로우한 판매자 목록
-   try {
-      const response = await minimartApi.get('/mypage/followings')
-      return response.data
-   } catch (err) {
-      return thunkAPI.rejectWithValue(err.response?.data?.message || '팔로잉 목록 불러오기 실패')
+      return rejectWithValue(err.response?.data || err.message)
    }
 })
 
@@ -87,7 +33,7 @@ export const deleteAccountThunk = createAsyncThunk('mypage/deleteAccount', async
    }
 })
 
-//주문취소
+// 주문취소
 export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
    try {
       const response = await cancelOrder(orderId)
@@ -107,6 +53,15 @@ export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', asy
       return thunkAPI.rejectWithValue(err.response?.data?.message || '팔로잉 취소 실패')
    }
 })
+// 리뷰 작성
+export const createReviewThunk = createAsyncThunk('mypage/createReview', async (reviewData, thunkAPI) => {
+   try {
+      const response = await writeReview(reviewData)
+      return response
+   } catch (err) {
+      return thunkAPI.rejectWithValue(err.message || '리뷰 작성 실패')
+   }
+})
 
 const mypageSlice = createSlice({
    name: 'mypage',
@@ -124,6 +79,8 @@ const mypageSlice = createSlice({
          .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
             state.loading = false
             state.user = action.payload
+            state.orders = action.payload.orders
+            state.followings = action.payload.followings
             state.error = null
          })
          .addCase(fetchMyPageThunk.pending, (state) => {
@@ -162,20 +119,7 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         // 주문내역
-         .addCase(fetchOrderHistoryThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(fetchOrderHistoryThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.orders = action.payload
-         })
-         .addCase(fetchOrderHistoryThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         //주문취소
+         // 주문취소
          .addCase(cancelOrderThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -186,19 +130,6 @@ const mypageSlice = createSlice({
             state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: 'CANCELED' } : order))
          })
          .addCase(cancelOrderThunk.rejected, (state, action) => {
-            state.loading = false
-            state.error = action.payload
-         })
-         // 팔로우한 판매자 목록
-         .addCase(fetchFollowedSellersThunk.pending, (state) => {
-            state.loading = true
-            state.error = null
-         })
-         .addCase(fetchFollowedSellersThunk.fulfilled, (state, action) => {
-            state.loading = false
-            state.followings = action.payload
-         })
-         .addCase(fetchFollowedSellersThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
@@ -216,6 +147,21 @@ const mypageSlice = createSlice({
          .addCase(unfollowSellerThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
+         })
+         //리뷰 작성
+         .addCase(createReviewThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+            state.success = false
+         })
+         .addCase(createReviewThunk.fulfilled, (state) => {
+            state.loading = false
+            state.success = true
+         })
+         .addCase(createReviewThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+            state.success = false
          })
    },
 })
