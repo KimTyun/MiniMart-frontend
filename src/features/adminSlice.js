@@ -45,7 +45,6 @@ export const getMonthThunk = createAsyncThunk('admin/getMonth', async ({ year, m
 export const getAllOrdersThunk = createAsyncThunk('admin/orders', async (_, { rejectWithValue }) => {
    try {
       const { data } = await getAllOrders()
-      console.log(data)
       return data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '주문목록 데이터 가져오기 싪패했습니다.')
