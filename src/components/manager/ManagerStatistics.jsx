@@ -1,19 +1,19 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-// import { getMonthThunk } from '../../features/adminSlice'
+import { getYearThunk } from '../../features/adminSlice'
 import { Cell, Pie, PieChart, Legend, ResponsiveContainer } from 'recharts'
 
 function ManagerStatistics() {
    const dispatch = useDispatch()
-   const { monthData, loading, error } = useSelector((state) => state.admin)
+   const { yearData, loading, error } = useSelector((state) => state.admin)
 
-   // useEffect(() => {
-   //    const now = new Date()
-   //    dispatch(getMonthThunk({ year: now.getFullYear(), month: now.getMonth() + 1 }))
-   // }, [dispatch])
+   useEffect(() => {
+      const now = new Date()
+      dispatch(getYearThunk())
+   }, [dispatch])
 
-   const pieData = monthData?.length
-      ? monthData.map((item) => ({
+   const pieData = yearData?.length
+      ? yearData.map((item) => ({
            name: item.name,
            value: item.value,
         }))
@@ -39,18 +39,20 @@ function ManagerStatistics() {
 
    return (
       <>
-         <h3>올해 연령대별 가입자 통계</h3>
          <div>
-            <ResponsiveContainer width="100%" height="100%">
-               <PieChart>
-                  <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} fill="#0d00ff" dataKey="value">
-                     {pieData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                     ))}
-                  </Pie>
-                  <Legend iconSize={30} layout="vertical" type="file" verticalAlign="middle" align="center" wrapperStyle={{ paddingLeft: 320 }} />
-               </PieChart>
-            </ResponsiveContainer>
+            <h3>올해 연령대별 가입자 통계</h3>
+            <div style={{ width: '100%', height: 400 }}>
+               <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                     <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} fill="#0d00ff" dataKey="value">
+                        {pieData.map((entry, index) => (
+                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                        ))}
+                     </Pie>
+                     <Legend iconSize={30} layout="vertical" type="file" verticalAlign="middle" align="center" wrapperStyle={{ paddingLeft: 320 }} />
+                  </PieChart>
+               </ResponsiveContainer>
+            </div>
          </div>
       </>
    )

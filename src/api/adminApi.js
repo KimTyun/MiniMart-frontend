@@ -10,10 +10,7 @@ export const approveSeller = (id) => minimartApi.post(`/admin/sellers/approve/${
 export const rejectSeller = (id) => minimartApi.post(`/admin/sellers/reject/${id}`)
 
 // 나이별 데이터 가져오기
-export const getMonth = (year, month) =>
-   minimartApi.get('/admin/user/month', {
-      params: { year, month },
-   })
+export const getYear = () => minimartApi.get('/admin/user/year')
 
 // 주문 목록 가져오기
 export const getAllOrders = () => minimartApi.get('/admin/orders')
