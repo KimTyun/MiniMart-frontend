@@ -21,6 +21,7 @@ import About from './pages/About'
 import Privacy from './pages/Privacy'
 import Cart from './pages/item/Cart'
 import SellerMyPage from './pages/seller/SellerMyPage'
+import SellerPage from './pages/seller/SellerPage'
 
 function App() {
    const dispatch = useDispatch()
@@ -60,6 +61,7 @@ function App() {
 
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
+            <Route path="/seller/:id" element={<SellerPage />} />
          </Routes>
          <Footer />
       </>
