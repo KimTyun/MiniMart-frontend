@@ -1,8 +1,11 @@
 * {
    width: 100%;
    text-align: center;
-   margin: 0 auto;
 }
 ul {
    list-style-type: none;
+}
+/* 슬라이더 버튼 부분 */
+.slick-next {
+   right: 0;
 }

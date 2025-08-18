@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getAllOrdersThunk } from '../../features/adminSlice'
+import { getAllOrdersThunk, deleteOrderThunk } from '../../features/adminSlice'
 import '../../styles/managerProduct.css'
 
 function ManagerProduct() {
@@ -11,7 +11,10 @@ function ManagerProduct() {
       dispatch(getAllOrdersThunk())
    }, [dispatch])
 
-   
+   // 삭제 버튼
+   const handleDelete = (id) => {
+      dispatch(deleteOrderThunk(id))
+   }
 
    return (
       <div>
@@ -45,7 +48,7 @@ function ManagerProduct() {
                      <td>{e.User.address}</td>
                      <td>{e.Order_item?.count}</td>
                      <td>
-                        <button>주문 취소</button>
+                        <button onClick={() => handleDelete(e.id)}>주문 취소</button>
                      </td>
                   </tr>
                ))}
