@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 
-// --- 스타일 객체 ---
 const styles = {
    container: { maxWidth: '1000px', margin: '2rem auto', padding: '0 2rem', fontFamily: 'sans-serif' },
    title: { fontSize: '2rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '2rem' },
@@ -17,7 +16,6 @@ const styles = {
    submitButton: { padding: '1rem', backgroundColor: 'black', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1rem' },
 }
 
-// --- 가짜 데이터 (나중에 API로 실제 데이터를 가져와야 합니다) ---
 const noticesData = [
    { id: 1, title: '미니마트 시스템 점검 안내 (08/15 02:00 ~ 04:00)', date: '2025-08-14' },
    { id: 2, title: '추석 연휴 배송 지연 안내', date: '2025-08-12' },
@@ -29,8 +27,6 @@ const faqData = [
    { q: '교환/반품 정책은 어떻게 되나요?', a: '상품 수령 후 7일 이내에 신청 가능하며, 제품의 택이 제거되지 않은 상태여야 합니다.' },
    { q: '회원가입은 어떻게 하나요?', a: '우측 상단의 로그인 버튼을 클릭하여 회원가입 페이지로 이동할 수 있습니다.' },
 ]
-
-// --- 각 탭에 해당하는 컨텐츠 컴포넌트 ---
 
 const Notices = () => (
    <div>
@@ -75,7 +71,6 @@ const QnA = () => (
    </form>
 )
 
-// --- 고객센터 메인 컴포넌트 ---
 export default function CustomerService() {
    const [activeTab, setActiveTab] = useState('notices')
 

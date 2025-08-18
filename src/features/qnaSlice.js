@@ -1,7 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { createQna } from '../api/qnaApi' // Assumed API function for creating Q&A
+import { createQna } from '../api/qnaApi'
 
-// 문의 작성
 export const createQnaThunk = createAsyncThunk('qna/createQna', async (formData, { rejectWithValue }) => {
    try {
       const res = await createQna(formData)

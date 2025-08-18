@@ -16,7 +16,6 @@ import CardActionArea from '@mui/material/CardActionArea'
 import { fetchFollowingSellersThunk } from '../../features/followSlice'
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
-
 function Home() {
    var settings = {
       dots: true,
@@ -33,9 +32,8 @@ function Home() {
    const { itemRecent, error } = useSelector((state) => state.item)
 
    useEffect(() => {
-      // 로그인한 유저일 경우에만 팔로잉 목록을 불러옵니다.
       if (user) {
-         // dispatch(fetchFollowingSellersThunk())
+         dispatch(fetchFollowingSellersThunk())
       }
    }, [dispatch, user])
 
@@ -142,25 +140,22 @@ function Home() {
          </div>
 
          {/*팔로잉한 상점들 섹션 */}
-         {user && ( // 로그인한 유저에게만 보여줍니다.
+         {user && (
             <div className="follow-whole">
                <h1>팔로잉한 상점들</h1>
                <div className="follow">
-                  {loading ? (
-                     <p>로딩 중...</p>
-                  ) : (
-                     followingList.map((seller) => (
-                        <Link to={`/seller/${seller.id}`} key={seller.id} className="follow-card" style={{ textDecoration: 'none' }}>
-                           <div>{seller.name}</div>
-                           <div>
-                              <div className="follow-pro">
-                                 <img src={seller.profile_img || '/none_profile_img.webp'} alt={seller.name} />
-                                 <p>{seller.name}</p>
-                              </div>
-                           </div>
-                        </Link>
-                     ))
-                  )}
+                  {loading && <p>로딩 중...</p>}
+
+                  {!loading && followingList && followingList.length > 0
+                     ? followingList.map((seller) => (
+                          <Link to={`/seller/${seller.id}`} key={seller.id} className="follow-card" style={{ textDecoration: 'none' }}>
+                             <div className="follow-pro">
+                                <img src={seller.profile_img || '/none_profile_img.webp'} alt={seller.name} />
+                                <p>{seller.name}</p>
+                             </div>
+                          </Link>
+                       ))
+                     : !loading && <p>팔로우하는 상점이 없습니다.</p>}
                </div>
             </div>
          )}
