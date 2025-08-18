@@ -1,67 +1,67 @@
-// src/components/ReviewForm.jsx
-
-import React, { useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { writeReviewThunk } from '../../features/reviewSlice'
+import { createReviewThunk, resetReviewState } from '../../features/reviewSlice'
 import '../../styles/review.css'
 
-const ReviewForm = () => {
-   const navigate = useNavigate()
-   const location = useLocation()
+const ReviewForm = ({ orderId, productId, imageUrl, productName, orderDate }) => {
    const dispatch = useDispatch()
-   const { loading, error } = useSelector((state) => state.review)
-   const { order } = location.state || {}
+   const { loading, success, error } = useSelector((state) => state.review)
 
+   const [content, setContent] = useState('')
    const [rating, setRating] = useState(0)
-   const [reviewText, setReviewText] = useState('')
+   const [img, setImg] = useState(null)
 
-   const reviewData = new FormData()
+   useEffect(() => {
+      if (success) {
+         alert('리뷰가 성공적으로 등록되었습니다.')
+         setContent('')
+         setRating(0)
+         setImg(null)
+         dispatch(resetReviewState())
+      }
+   }, [success, dispatch])
 
-   if (!order) {
-      navigate('/mypage')
-      return null
-   }
-
-   const handleSubmitReview = async (e) => {
+   const handleSubmit = (e) => {
       e.preventDefault()
 
-      if (rating === 0 || reviewText.trim() === '') {
-         alert('별점과 리뷰 내용을 모두 입력해주세요.')
+      if (!content.trim() || rating === 0) {
+         alert('내용과 평점은 필수 입력 사항입니다.')
          return
       }
 
-      reviewData.append('rating', rating)
-      reviewData.append('content', reviewText)
+      const formData = new FormData()
+      formData.append('orderId', orderId)
+      formData.append('productId', productId)
+      formData.append('content', content)
+      formData.append('rating', rating)
+      if (img) {
+         formData.append('image', img)
+      }
 
-      const resultAction = await dispatch(
-         writeReviewThunk({
-            productId: order.items[0].id,
-            reviewData,
-         })
-      )
+      dispatch(createReviewThunk(formData))
+   }
 
-      if (writeReviewThunk.fulfilled.match(resultAction)) {
-         alert('리뷰가 성공적으로 등록되었습니다!')
-         navigate('/mypage')
-      } else {
-         alert(`리뷰 등록 실패: ${error}`)
+   const handleImageChange = (e) => {
+      const file = e.target.files[0]
+      if (file) {
+         setImg(file)
       }
    }
 
    return (
       <div className="review-form-container">
-         <h2 className="review-form-header">리뷰 작성</h2>
+         <h3 className="review-form-header">리뷰 작성</h3>
+         {error && <p style={{ color: 'red' }}>{error}</p>}
 
          <div className="product-review-info">
-            <img src={order.items[0].imageUrl} alt={order.items[0].name} className="product-review-image" />
+            <img className="product-review-image" src={imageUrl} alt={productName} />
             <div className="product-review-details">
-               <p className="product-review-name">{order.items[0].name}</p>
-               <p className="product-review-date">구매일: {order.date}</p>
+               <p className="product-review-name">{productName}</p>
+               <p className="product-review-date">주문일: {orderDate}</p>
             </div>
          </div>
 
-         <form onSubmit={handleSubmitReview} className="review-form">
+         <form onSubmit={handleSubmit} className="review-form">
             <div className="rating-section">
                <label>별점:</label>
                <div className="stars">
@@ -75,11 +75,22 @@ const ReviewForm = () => {
 
             <div className="review-text-section">
                <label>리뷰 내용:</label>
-               <textarea value={reviewText} onChange={(e) => setReviewText(e.target.value)} placeholder="상품에 대한 솔직한 리뷰를 작성해주세요." />
+               <textarea placeholder="상품에 대한 솔직한 리뷰를 작성해주세요." value={content} onChange={(e) => setContent(e.target.value)} required />
+            </div>
+
+            <div className="image-upload-section">
+               <label htmlFor="review-image">이미지 첨부:</label>
+               <input id="review-image" type="file" accept="image/*" onChange={handleImageChange} />
             </div>
 
             <div className="form-actions">
-               <button type="button" className="btn-cancel" onClick={() => navigate('/mypage')}>
+               <button
+                  type="button"
+                  className="btn-cancel"
+                  onClick={() => {
+                     /* 취소 로직 */
+                  }}
+               >
                   취소
                </button>
                <button type="submit" className="btn-submit" disabled={loading}>

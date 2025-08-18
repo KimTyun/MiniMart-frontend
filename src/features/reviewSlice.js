@@ -1,9 +1,7 @@
-// src/features/reviewSlice.js
-
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { writeReview } from '../api/reviewApi'
 
-export const writeReviewThunk = createAsyncThunk('review/writeReview', async (reviewData, thunkAPI) => {
+export const createReviewThunk = createAsyncThunk('review/createReview', async (reviewData, thunkAPI) => {
    try {
       const response = await writeReview(reviewData)
       return response
@@ -17,23 +15,32 @@ const reviewSlice = createSlice({
    initialState: {
       loading: false,
       error: null,
+      success: false,
    },
-   reducers: {},
+   reducers: {
+      resetReviewState: (state) => {
+         state.success = false
+         state.error = null
+      },
+   },
    extraReducers: (builder) => {
       builder
-         .addCase(writeReviewThunk.pending, (state) => {
+         .addCase(createReviewThunk.pending, (state) => {
             state.loading = true
             state.error = null
+            state.success = false
          })
-         .addCase(writeReviewThunk.fulfilled, (state) => {
+         .addCase(createReviewThunk.fulfilled, (state) => {
             state.loading = false
+            state.success = true
          })
-         .addCase(writeReviewThunk.rejected, (state, action) => {
+         .addCase(createReviewThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
+            state.success = false
          })
    },
 })
 
-export const { actions, reducer } = reviewSlice
-export default reducer
+export const { resetReviewState } = reviewSlice.actions
+export default reviewSlice.reducer

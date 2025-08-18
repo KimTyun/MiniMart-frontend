@@ -1,39 +1,23 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { fetchOrderHistoryThunk, cancelOrderThunk } from '../../features/mypageSlice'
+import { createReviewThunk } from '../../features/mypageSlice'
 
 const OrderHistoryForm = () => {
    const dispatch = useDispatch()
    const { orders, loading, error } = useSelector((state) => state.mypage)
-   const navigate = useNavigate()
 
-   useEffect(() => {
-      dispatch(fetchOrderHistoryThunk())
-   }, [dispatch])
-
-   // 내정보 페이지에서 리뷰 작성(임시)
-   const handleWriteReview = (order) => {
-      // ReviewForm으로 이동하며 주문 정보를 state로 전달
-      navigate('/review', { state: { order } })
-   }
-
-   const handleEditReview = (order) => {
-      // TODO: 나중에 리뷰 수정 페이지로 이동하는 로직을 추가
-      alert(`리뷰 수정 기능 (주문 ID: ${order.orderId})`)
-   }
-
-   // 배송 중 상품 주문 취소 기능
-   const handleCancelOrder = (orderId) => {
-      if (window.confirm('주문을 취소하시겠습니까?')) {
-         // dispatch(cancelOrderThunk(orderId))
-         //    .unwrap()
-         //    .then(() => {
-         //       alert('주문이 취소되었습니다.')
-         //    })
-         //    .catch((err) => {
-         //       alert(`주문 취소 실패: ${err}`)
-         //    })
+   // 리뷰 작성
+   const handleWriteReview = (orderId) => {
+      const reviewContent = window.prompt('리뷰 내용을 입력하세요:') // 모달로 대체하면 더 좋음
+      if (reviewContent) {
+         dispatch(createReviewThunk({ orderId, reviewData: { content: reviewContent } }))
+            .unwrap()
+            .then(() => {
+               alert('리뷰가 등록되었습니다.')
+            })
+            .catch((err) => {
+               alert(`리뷰 등록 실패: ${err}`)
+            })
       }
    }
 
@@ -49,46 +33,24 @@ const OrderHistoryForm = () => {
             <div className="order-list">
                {orders.map((order) => (
                   <div className="order-item" key={order.orderId}>
-                     <div className="order-info-header">
-                        <p>주문 번호: {order.orderId}</p>
-                        <p>주문 날짜: {order.date}</p>
-                        <p>총 결제 금액: {order.totalPrice}원</p>
-                        <p>배송 상태: {order.status}</p>
-                     </div>
-                     <div className="order-item-details">
-                        {order.items.map((item) => (
-                           <div key={item.itemId} className="item-card">
+                     {' '}
+                     {order.items.map((item) => (
+                        <div key={item.itemId} className="item-details">
+                           <div className="thumb">
                               <img src={item.imageUrl || '/default-product.png'} alt={item.name} />
-                              <div className="item-info">
-                                 <p className="item-name">{item.name}</p>
-                                 <p className="item-price">
-                                    {item.price}원 ({item.quantity}개)
-                                 </p>
-                              </div>
                            </div>
-                        ))}
-                     </div>
-                     <div className="actions">
-                        {order.status === '배송 완료' && (
-                           <>
-                              {order.hasReview ? (
-                                 <button className="btn-small primary" onClick={() => handleEditReview(order)} disabled={loading}>
-                                    리뷰 수정
-                                 </button>
-                              ) : (
-                                 <button className="btn-small primary" onClick={() => handleWriteReview(order)} disabled={loading}>
-                                    리뷰 작성
-                                 </button>
-                              )}
-                           </>
-                        )}
-                        {/* 배송 중 상태일 때만 주문 취소 버튼 표시 */}
-                        {order.status === '배송 중' && (
-                           <button className="btn-small danger" onClick={() => handleCancelOrder(order.orderId)} disabled={loading}>
-                              주문 취소
-                           </button>
-                        )}
-                     </div>
+                           <div className="info">
+                              <p className="title">{item.name}</p>
+                              <p className="meta">{order.date}</p>
+                              <p className="meta">{order.status}</p>
+                           </div>
+                           <div className="actions">
+                              <button className="btn-small primary" onClick={() => handleWriteReview(order.orderId)} disabled={loading}>
+                                 리뷰 작성
+                              </button>
+                           </div>
+                        </div>
+                     ))}
                   </div>
                ))}
             </div>

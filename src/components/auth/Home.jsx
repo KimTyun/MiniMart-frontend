@@ -5,19 +5,17 @@ import { fetchUserInfoThunk } from '../../features/authSlice'
 import { itemPopularThunk, itemRecentThunk } from '../../features/itemSlice'
 import { Link } from 'react-router-dom'
 import SearchBar from '../shared/SearchBar'
-
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
-
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
 import { fetchFollowingSellersThunk } from '../../features/followSlice'
-
 const VITE_API_URL = import.meta.env.VITE_API_URL
+
 
 function Home() {
    var settings = {
@@ -27,6 +25,7 @@ function Home() {
       slidesToShow: 1,
       slidesToScroll: 1,
    }
+
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)

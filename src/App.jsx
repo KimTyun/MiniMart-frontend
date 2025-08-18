@@ -1,4 +1,3 @@
-import React from 'react'
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuthStatusThunk, fetchUserInfoThunk } from './features/authSlice'
@@ -19,8 +18,12 @@ import Navbar from './components/shared/Navbar'
 import CustomerService from './pages/CustomerService'
 import SellerPage from './pages/SellerPage'
 import ItemDetail from './pages/item/ItemDetail'
-import QnAPage from './pages/item/QnAPage'
+import QnAPage from './pages/QnAPage'
 import ReviewForm from './components/item/ReviewForm'
+import About from './pages/About'
+import Privacy from './pages/Privacy'
+import SearchResults from './pages/SearchResult'
+import Cart from './pages/item/Cart'
 
 function App() {
    const dispatch = useDispatch()
@@ -29,12 +32,8 @@ function App() {
    // 앱 시작 시 토큰이 있으면 사용자 정보 요청
    // 카카오 토큰이 없으면 로컬 로그인이 되어있는가 체크
    useEffect(() => {
-      if (token) {
-         dispatch(fetchUserInfoThunk())
-      } else {
-         dispatch(checkAuthStatusThunk())
-      }
-   }, [dispatch, token])
+      dispatch(checkAuthStatusThunk())
+   }, [dispatch])
 
    return (
       <>
@@ -63,6 +62,11 @@ function App() {
             <Route path="/qna" element={<QnAPage />} />
             {/* 리뷰 페이지 */}
             <Route path="/review" element={<ReviewForm />} />
+            <Route path="/cart" element={<Cart />} />
+
+            <Route path="/about" element={<About />} />
+            <Route path="/privacy" element={<Privacy />} />
+            <Route path="/search" element={<SearchResults />} />
          </Routes>
          <Footer />
       </>

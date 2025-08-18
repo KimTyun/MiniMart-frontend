@@ -8,34 +8,36 @@ import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import { useDispatch, useSelector } from 'react-redux'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import Accordion from '@mui/material/Accordion'
 import AccordionSummary from '@mui/material/AccordionSummary'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import Typography from '@mui/material/Typography'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { getItemThunk, getSellerItemsThunk } from '../../features/itemSlice'
+import { addCartThunk } from '../../features/orderSlice'
 
 function ItemDetail() {
    const { loading, item, items } = useSelector((s) => s.item)
-
+   const { isAuthenticated } = useSelector((s) => s.auth)
    const { name, price, stock_number, description, status, is_sale, sale, ItemImgs, ItemOptions, Seller } = item ?? {}
    const dispatch = useDispatch()
    const id = useParams().id
    const [imgs, setImgs] = useState({})
    const [option, setOption] = useState('')
    const [number, setNumber] = useState('')
+   const navigate = useNavigate()
 
    useEffect(() => {
       dispatch(getItemThunk(id))
          .unwrap()
          .then((result) => {
-            dispatch(getSellerItemsThunk(result.item.Seller.id))
+            dispatch(getSellerItemsThunk(result?.item?.Seller?.id))
          })
    }, [dispatch, id])
 
    useEffect(() => {
-      if (!item) return
+      if (!ItemImgs) return
       const repImg = ItemImgs.find((v) => v.rep_img_yn)
       const detailsImg = ItemImgs.find((v) => v.details_img_yn)
       const otherImgs = ItemImgs.filter((v) => !(v.details_img_yn || v.rep_img_yn))
@@ -62,6 +64,29 @@ function ItemDetail() {
    }, [basePrice, is_sale, sale])
 
    if (loading) <p>로딩중...</p>
+
+   function OnaddCart() {
+      if (!isAuthenticated) {
+         const result = confirm('로그인이 필요한 기능입니다 로그인 하시겠습니까?')
+         result ? navigate('/login') : ''
+      }
+      if (!number) {
+         alert('개수를 선택해 주세요')
+         return
+      }
+      if (!option) {
+         alert('옵션을 선택해 주세요')
+         return
+      }
+
+      dispatch(addCartThunk({ item: { item_id: id, item_option_id: option }, count: number }))
+         .unwrap()
+         .then(() => {
+            const result = confirm('장바구니로 이동하시겠습니까?')
+            console.log(result)
+            if (result) navigate('/cart')
+         })
+   }
 
    return (
       item && (
@@ -133,7 +158,7 @@ function ItemDetail() {
                               <MenuItem value="">
                                  <em>옵션을 선택하세요</em>
                               </MenuItem>
-                              {ItemOptions.map((e, i) => {
+                              {ItemOptions?.map((e, i) => {
                                  return (
                                     <MenuItem value={e.id} key={`${Date.now()}${i}`}>
                                        {e.name}
@@ -158,7 +183,7 @@ function ItemDetail() {
                         </div>
                      </div>
                      <p>남은 재고 : {stock_number}</p>
-                     <Button variant="contained" sx={{ backgroundColor: '#2c2c2c', marginBottom: '10px' }}>
+                     <Button variant="contained" sx={{ backgroundColor: '#2c2c2c', marginBottom: '10px' }} onClick={OnaddCart}>
                         {status === 'FOR_SALE' ? '장바구니 담기' : status === 'SOLD_OUT' ? '매진' : '판매종료'}
                      </Button>
 
@@ -206,11 +231,6 @@ function ItemDetail() {
                   </Link>
                </div>
                <div className="item-detail__description-img">{imgs.detailsImg && <img src={`${import.meta.env.VITE_API_URL}${imgs.detailsImg.img_url}`} alt="대표 상품 이미지" />}</div>
-               <div className="item-detail__review-wrap">
-                  <div>
-                     <p>최근 리뷰</p>
-                  </div>
-               </div>
             </div>
          </>
       )
