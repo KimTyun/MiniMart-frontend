@@ -1,0 +1,80 @@
+.seller_wrap {
+   max-width: 1800px;
+}
+
+.seller_wrap .seller_navbar {
+   display: flex;
+   border: 1px solid black;
+   margin: 10px auto;
+}
+
+.seller_wrap .seller_navbar > a {
+   text-decoration: none;
+   color: black;
+   font-size: 2rem;
+   border: 1px solid black;
+}
+
+.seller-myInfo__form-wrap {
+   max-width: 1200px;
+
+   border: 2px solid #c3c3c3;
+   padding: 10px;
+   background-color: white;
+   border-radius: 10px;
+}
+
+.seller-myInfo__form-wrap input {
+   height: 40px;
+   border-radius: 10px;
+   margin-bottom: 10px;
+}
+
+.seller-myInfo__form-wrap input:read-only {
+   background-color: #ccc;
+}
+
+.seller-myItem__wrap {
+   max-width: 1200px;
+   border: 2px solid #c3c3c3;
+   background-color: white;
+   border-radius: 10px;
+   margin-bottom: 10px;
+   padding-bottom: 30px;
+   min-height: 800px;
+}
+
+.seller-myItem__wrap > button {
+   background-color: rgb(250, 204, 21);
+   color: white;
+   font-weight: bold;
+   font-size: 1.5rem;
+   margin-bottom: 30px;
+}
+
+.seller-myItem__wrap .seller-myItem__itemCards {
+   display: flex;
+   flex-direction: column;
+   gap: 10px;
+}
+
+.itemCard__wrap {
+   border: 1px solid black;
+   max-width: 800px;
+   border-radius: 10px;
+   display: flex;
+   align-items: center;
+}
+
+.itemCard__wrap > div > button:nth-of-type(2) {
+   color: red;
+}
+
+.sellerStatistics .recharts-responsive-container {
+   width: 100%;
+   height: 800px;
+}
+
+.seller_pages {
+   margin-bottom: 30px;
+}

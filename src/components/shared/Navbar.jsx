@@ -50,6 +50,11 @@ function Haeder() {
    const goToManager = () => {
       navigate('/manager')
    }
+
+   const goSellerMyPage = () => {
+      navigate('/seller/mypage')
+   }
+
    return (
       <div>
          <div style={{ display: 'flex', width: '100%', height: '89px' }}>
@@ -68,7 +73,9 @@ function Haeder() {
                {user ? (
                   <>
                      {user.role == 'ADMIN' ? <Button onClick={goToManager}>고객 관리</Button> : null}
-                     <img src={user.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} referrerPolicy="no-referrer"/>
+                     {user.role == 'SELLER' ? <Button onClick={goSellerMyPage}>상점 관리</Button> : null}
+
+                     <img src={user.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} referrerPolicy="no-referrer" />
                      <p style={{ width: '60px', margin: '0 40px 0 20px' }}>{user.name}</p>
                      <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
                   </>
