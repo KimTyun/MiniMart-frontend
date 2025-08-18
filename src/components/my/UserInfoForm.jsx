@@ -129,9 +129,16 @@ const UserInfoForm = () => {
       }
 
       const updatedFields = Object.keys(formData).reduce((acc, key) => {
-         if (formData[key] !== originalData[key]) {
-            acc[key] = formData[key]
-         }
+         const newValue = formData[key]?.trim?.() ?? formData[key]
+         const oldValue = originalData[key] ?? ''
+
+         // 값 같으면 제외
+         if (newValue === oldValue) return acc
+
+         // 빈칸도 제외
+         if (newValue === '') return acc
+
+         acc[key] = formData[key]
          return acc
       }, {})
 
