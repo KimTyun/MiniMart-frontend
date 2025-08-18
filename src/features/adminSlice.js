@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getPendingSellers, approveSeller, rejectSeller, getMonth, getAllOrders, deleteOrder } from '../api/adminApi'
+import { getPendingSellers, approveSeller, rejectSeller, getYear, getAllOrders, deleteOrder } from '../api/adminApi'
 
 // Thunk: 승인 대기 목록 조회
 export const fetchPendingSellers = createAsyncThunk('admin/fetchPendingSellers', async (_, { rejectWithValue }) => {
@@ -32,8 +32,9 @@ export const rejectSellerThunk = createAsyncThunk('admin/rejectSeller', async (s
 })
 
 // 나이별 데이터 가져오기
+export const getYearThunk = createAsyncThunk('admin/getYear', async (_, { rejectWithValue }) => {
    try {
-      const { data } = await getMonth(year, month)
+      const { data } = await getYear()
       return data
    } catch (error) {
       return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 실패했습니다.')
@@ -63,7 +64,7 @@ export const deleteOrderThunk = createAsyncThunk('admin/orderDelete', async (id,
 const initialState = {
    sellers: [], // 승인 대기 목록
    orders: [], // 주문 목록
-   monthData: [], // 나이별 데이터 저장
+   yearData: [], // 나이별 데이터 저장
    loading: false,
    error: null,
 }
@@ -118,15 +119,15 @@ const adminSlice = createSlice({
             state.error = action.payload
          })
          // 나이별 데이터 가져오기
-         .addCase(getMonthThunk.pending, (state) => {
+         .addCase(getYearThunk.pending, (state) => {
             state.loading = true
             state.error = null
          })
-         .addCase(getMonthThunk.fulfilled, (state, action) => {
+         .addCase(getYearThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.monthData = action.payload
+            state.yearData = action.payload
          })
-         .addCase(getMonthThunk.rejected, (state, action) => {
+         .addCase(getYearThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
