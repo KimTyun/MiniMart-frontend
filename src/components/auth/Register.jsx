@@ -14,10 +14,11 @@ const Modal = ({ message, onClose, onNavigate }) => {
    return (
       <div className="modal-overlay">
          <div className="modal-content">
-            <p>{message}</p>
-            <div className="modal-actions">
+            <h3>{message}</h3>
+            <div className="modal-buttons">
+               {' '}
                <button
-                  className="modal-close-btn"
+                  className="btn-small secondary"
                   onClick={() => {
                      onClose()
                      if (onNavigate) {
