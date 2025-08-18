@@ -16,7 +16,6 @@ import CardActionArea from '@mui/material/CardActionArea'
 import { fetchFollowingSellersThunk } from '../../features/followSlice'
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
-
 function Home() {
    var settings = {
       dots: true,
@@ -39,10 +38,12 @@ function Home() {
       }
    }, [dispatch, user])
 
+   // 최근 등록된 아이템 가져오기
    useEffect(() => {
       dispatch(itemRecentThunk())
    }, [dispatch])
 
+   // 인기 있는 아이템 가져오기(count)
    useEffect(() => {
       dispatch(itemPopularThunk())
    }, [dispatch])
@@ -108,7 +109,7 @@ function Home() {
          </div>
          {/* 지금 인기있는 제품들 */}
          <h1 className="popular-h1">지금 인기있는 제품들</h1>
-         <div style={{ display: 'flex' }}>
+         <div className="popular-whole" style={{ display: 'flex' }}>
             <Card sx={{ maxWidth: 510 }}>
                <CardActionArea>
                   <CardMedia sx={{ height: 525 }} component="img" height="140" image="/인기제품/popular1.png" alt="신제품1" />

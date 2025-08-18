@@ -16,6 +16,7 @@ export const getKakaoLoginUrl = async () => {
 export const fetchUserInfo = async () => {
    try {
       const response = await minimartApi.get('/auth/me')
+
       return response.data
    } catch (error) {
       if (error.response?.status === 401) {
@@ -27,15 +28,16 @@ export const fetchUserInfo = async () => {
    }
 }
 
-// // 카카오 로그아웃
-// export const KakaoLogout = async () => {
-//    try {
-//       await minimartApi.post('/auth/kakao/logout', {})
-//    } catch (_) {
-//    } finally {
-//       localStorage.removeItem('token')
-//    }
-// }
+// 카카오 로그아웃
+export const KakaoLogout = async () => {
+   try {
+      await minimartApi.post('/auth/kakao/logout', {})
+   } catch (error) {
+      console.error('카카오 로그아웃 오류:', error)
+   } finally {
+      localStorage.removeItem('token')
+   }
+}
 
 // 회원가입
 export const registerUser = async (userData) => {

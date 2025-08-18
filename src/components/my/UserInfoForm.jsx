@@ -190,7 +190,7 @@ const UserInfoForm = () => {
             const uploadedImageUrl = await uploadProfileImage(file)
             setFormData((prev) => ({ ...prev, profile_img: uploadedImageUrl }))
          } catch (error) {
-            alert('이미지 업로드 실패')
+            alert('이미지 업로드 실패: ', error)
             setPreviewImage(originalData.profile_img ? `${API_BASE_URL}${originalData.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`)
          }
       } else {

@@ -1,169 +1,127 @@
-.pageContainer {
+/* 전체 페이지 레이아웃 */
+.search-page-container {
    display: flex;
+   gap: 2rem;
    max-width: 1400px;
    margin: 2rem auto;
    padding: 0 2rem;
-   gap: 2rem;
+   font-family: sans-serif;
 }
 
-.filterSection {
+/* 왼쪽 필터 영역 */
+.search-filter-section {
    width: 280px;
    flex-shrink: 0;
 }
 
-.filterBox {
-   border: 1px solid #eee;
-   border-radius: 8px;
+.filter-box {
+   background-color: white;
    padding: 1.5rem;
-   position: sticky;
+   border: 1px solid #e5e7eb;
+   border-radius: 12px;
+   position: sticky; /* 스크롤해도 필터는 상단에 고정 */
    top: 2rem;
 }
 
-.filterTitle {
+.filter-title {
    font-size: 1.1rem;
    font-weight: bold;
    margin-bottom: 1rem;
+   border-bottom: 1px solid #e5e7eb;
    padding-bottom: 1rem;
-   border-bottom: 1px solid #eee;
-}
-
-.tagContainer {
-   display: flex;
-   flex-wrap: wrap;
-   gap: 0.5rem;
-   margin-bottom: 1rem;
-}
-
-.filterTag {
-   display: flex;
-   align-items: center;
-   background-color: #eef2ff;
-   color: #4338ca;
-   padding: 0.5rem 1rem;
-   border-radius: 16px;
-   font-size: 0.9rem;
-}
-
-.filterTag button {
-   background: none;
-   border: none;
-   color: #4338ca;
-   margin-left: 0.5rem;
-   cursor: pointer;
-   font-weight: bold;
-}
-
-.priceRangeContainer {
-   margin-top: 2rem;
-}
-
-.priceInputContainer {
-   display: flex;
-   justify-content: space-between;
-   align-items: center;
-   margin-top: 0.5rem;
-}
-
-.priceInput {
-   width: 45%;
-   padding: 0.5rem;
-   border: 1px solid #ddd;
-   border-radius: 4px;
-   text-align: right;
-}
-
-.priceInput::-webkit-inner-spin-button,
-.priceInput::-webkit-outer-spin-button {
-   -webkit-appearance: none;
-   margin: 0;
-}
-
-.resultsSection {
-   flex-grow: 1;
-}
-
-.resultsTitle {
-   font-size: 1.8rem;
-   font-weight: bold;
-   margin-bottom: 1rem;
 }
 
 .highlight {
    color: #4338ca;
+   font-weight: bold;
+   font-size: 1.2rem;
 }
 
-.resultsGrid {
+.price-range-display {
+   display: flex;
+   justify-content: space-between;
+   font-size: 0.9rem;
+   color: #6b7280;
+   margin-top: 0.5rem;
+}
+
+/* 오른쪽 검색 결과 영역 */
+.search-results-section {
+   flex-grow: 1;
+}
+
+.results-title {
+   font-size: 1.8rem;
+   font-weight: bold;
+   margin-bottom: 1.5rem;
+}
+
+.results-count {
+   color: #6b7280;
+   font-size: 1.2rem;
+}
+
+/* 검색 결과 그리드 */
+.results-grid {
    display: grid;
-   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
    gap: 1.5rem;
 }
 
-.productCard {
-   border: 1px solid #eee;
-   border-radius: 8px;
+.product-card {
+   border: 1px solid #e5e7eb;
+   border-radius: 12px;
    overflow: hidden;
-   display: flex;
-   flex-direction: column;
-   transition: box-shadow 0.3s;
-}
-.productCard:hover {
-   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-.productLink {
    text-decoration: none;
    color: inherit;
+   background-color: white;
+   transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-.productImage {
+.product-card:hover {
+   transform: translateY(-5px);
+   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+}
+
+.product-image {
    width: 100%;
    height: 240px;
    object-fit: cover;
-   background-color: #f0f0f0;
+   background-color: #f3f4f6;
 }
 
-.productInfo {
+.product-info {
    padding: 1rem;
-   flex-grow: 1;
-   display: flex;
-   flex-direction: column;
 }
 
-.sellerName {
-   color: #666;
+.product-seller {
+   color: #6b7280;
    font-size: 0.9rem;
+   margin-bottom: 0.25rem;
 }
 
-.itemName {
+.product-name {
    font-weight: bold;
    font-size: 1.1rem;
-   margin-top: 0.25rem;
-   flex-grow: 1;
+   margin: 0;
 }
 
-.price {
+.product-price {
    font-weight: bold;
    font-size: 1.2rem;
    text-align: right;
    margin-top: 0.5rem;
 }
 
-.cardFooter {
-   padding: 0 1rem 1rem;
+/* 결과 없음 / 로딩 메시지 */
+.no-results,
+.error-message {
+   text-align: center;
+   padding: 4rem 2rem;
+   background-color: white;
+   border: 1px solid #e5e7eb;
+   border-radius: 12px;
 }
-
-.addToCartBtn {
-   width: 100%;
-   background-color: #4f46e5;
-   color: white;
-   border: none;
-   padding: 0.75rem;
-   border-radius: 6px;
-   font-weight: bold;
-   cursor: pointer;
-   transition: background-color 0.3s;
-}
-
-.addToCartBtn:hover {
-   background-color: #4338ca;
+.no-results h2 {
+   margin-bottom: 0.5rem;
 }

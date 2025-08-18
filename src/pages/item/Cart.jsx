@@ -10,6 +10,7 @@ function Cart() {
    const { carts, loading } = useSelector((s) => s.order)
    const [isAuthenticated, setIsAuthenticated] = useState(null) // 👈 초기값 null
    const [authLoading, setLoading] = useState(true)
+   const [emptyCart, setEmptyCart] = useState(false)
    const navigate = useNavigate()
    const dispatch = useDispatch()
    const totalPrice = useMemo(() => {
@@ -24,6 +25,13 @@ function Cart() {
          })
 
       dispatch(getCartsThunk())
+         .unwrap()
+         .then()
+         .catch((err) => {
+            if (err === '장바구니 없음') {
+               setEmptyCart(true)
+            }
+         })
    }, [dispatch, setIsAuthenticated, setLoading])
 
    useEffect(() => {
@@ -37,13 +45,26 @@ function Cart() {
       }
    }, [isAuthenticated])
 
-   if (authLoading || loading) <p>'로딩중...'</p>
-
+   if (emptyCart || carts?.CartItems?.length == 0) {
+      return (
+         <div className="cart">
+            <h2>장바구니가 비어있습니다.</h2>
+            <Button
+               className="goShopping_btn"
+               sx={{ color: 'white', backgroundColor: 'rgb(250, 204, 21)', fontWeight: 'bold', width: '200px', margin: '0 auto' }}
+               onClick={() => {
+                  navigate('/search')
+               }}
+            >
+               지금 쇼핑하러 가기
+            </Button>
+         </div>
+      )
+   }
    return (
       <>
          <div className="cart">
             {carts && carts?.CartItems?.map((cartItem) => <CartCard cartItem={cartItem} key={Date.now() + cartItem.id} />)}
-
             <div className="cart-sum">
                <p>합계 금액 : {carts ? totalPrice?.toLocaleString() : '0'}</p>
                <Button>주문하기</Button>

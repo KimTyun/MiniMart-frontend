@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { getPendingSellers, approveSeller, rejectSeller, getMonth, getAllOrders } from '../api/adminApi'
+import { getPendingSellers, approveSeller, rejectSeller, getMonth, getAllOrders, deleteOrder } from '../api/adminApi'
 
 // Thunk: 승인 대기 목록 조회
 export const fetchPendingSellers = createAsyncThunk('admin/fetchPendingSellers', async (_, { rejectWithValue }) => {
@@ -31,13 +31,13 @@ export const rejectSellerThunk = createAsyncThunk('admin/rejectSeller', async (s
    }
 })
 
-// 월별 데이터 가져오기
-export const getMonthThunk = createAsyncThunk('admin/getMonth', async (_, { rejectWithValue }) => {
+// 나이별 데이터 가져오기
+export const getMonthThunk = createAsyncThunk('admin/getMonth', async ({ year, month }, { rejectWithValue }) => {
    try {
-      const { data } = await getMonth()
+      const { data } = await getMonth(year, month)
       return data
    } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 싪패했습니다.')
+      return rejectWithValue(error.response?.data?.message || '월별 데이터 가져오기 실패했습니다.')
    }
 })
 
@@ -52,9 +52,20 @@ export const getAllOrdersThunk = createAsyncThunk('admin/orders', async (_, { re
    }
 })
 
+// 주문 목록 삭제하기
+export const deleteOrderThunk = createAsyncThunk('admin/orderDelete', async (id, rejectWithValue) => {
+   try {
+      await deleteOrder(id)
+      return id
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '상품 삭제에 싪패했습니다.')
+   }
+})
+
 const initialState = {
    sellers: [], // 승인 대기 목록
    orders: [], // 주문 목록
+   monthData: [], // 나이별 데이터 저장
    loading: false,
    error: null,
 }
@@ -84,7 +95,6 @@ const adminSlice = createSlice({
             state.sellers = state.sellers.filter((seller) => seller.id !== action.payload)
          })
          .addCase(approveSellerThunk.rejected, (state, action) => {
-            // 실패 시 에러 처리 (예: alert, toast 등)
             state.error = action.payload
          })
          // 판매자 거절
@@ -107,6 +117,26 @@ const adminSlice = createSlice({
          })
          .addCase(getAllOrdersThunk.rejected, (state, action) => {
             state.loading = false
+            state.error = action.payload
+         })
+         // 나이별 데이터 가져오기
+         .addCase(getMonthThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getMonthThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.monthData = action.payload
+         })
+         .addCase(getMonthThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 주문 삭제
+         .addCase(deleteOrderThunk.fulfilled, (state, action) => {
+            state.orders = state.orders.filter((order) => order.id !== action.payload)
+         })
+         .addCase(deleteOrderThunk.rejected, (state, action) => {
             state.error = action.payload
          })
    },

@@ -15,7 +15,6 @@ const minimartApi = axios.create({
 
 minimartApi.interceptors.request.use((config) => {
    const token = localStorage.getItem('token')
-   console.log('인터셉터 토큰:', token)
    if (token && token !== '') {
       config.headers.Authorization = `Bearer ${token}`
    }

@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, writeReview } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, writeReview, getSeller } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
 // dummyDb는 가상의 주문내역과 팔로워입니다. 이 부분을 보강하거나, 실제 제출 시엔 삭제하고 DB에 저장된 값 불러오는 거 테스트햐봐야 합니다.
@@ -126,6 +126,16 @@ export const createReviewThunk = createAsyncThunk('mypage/createReview', async (
    }
 })
 
+// 판매자 신청
+export const getSellerThunk = createAsyncThunk('mypage/getSeller', async (_, { rejectWithValue }) => {
+   try {
+      const response = await getSeller()
+      return response
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '실패')
+   }
+})
+
 const mypageSlice = createSlice({
    name: 'mypage',
    initialState: {
@@ -134,6 +144,7 @@ const mypageSlice = createSlice({
       followings: [],
       loading: false,
       error: null,
+      seller: null,
       reviewStatus: null,
       status: 'idle',
    },
@@ -252,6 +263,19 @@ const mypageSlice = createSlice({
             state.orders = state.orders.map((order) => (order.orderId === action.payload.orderId ? { ...order, hasReview: true } : order))
          })
          .addCase(createReviewThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         .addCase(getSellerThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(getSellerThunk.fulfilled, (state, action) => {
+            state.loading = false
+            state.seller = action.payload.seller
+         })
+         .addCase(getSellerThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })
