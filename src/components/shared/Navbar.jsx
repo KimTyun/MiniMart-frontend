@@ -57,7 +57,7 @@ function Haeder() {
 
    return (
       <div>
-         <div style={{ display: 'flex', width: '100%', height: '89px' }}>
+         <div style={{ display: 'flex', width: '100%', height: '89px', justifyContent: 'space-between' }}>
             <div style={{ width: '315px', height: '80px', marginLeft: '30px' }}>
                <Link to="/">
                   <img src="/Logo.png" alt="미니마트 로고" />
@@ -74,7 +74,6 @@ function Haeder() {
                   <>
                      {user.role == 'ADMIN' ? <Button onClick={goToManager}>고객 관리</Button> : null}
                      {user.role == 'SELLER' ? <Button onClick={goSellerMyPage}>상점 관리</Button> : null}
-
                      <img src={user.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} referrerPolicy="no-referrer" />
                      <p style={{ width: '60px', margin: '0 40px 0 20px' }}>{user.name}</p>
                      <LoginButton onClick={handleLogout}>로그아웃</LoginButton>

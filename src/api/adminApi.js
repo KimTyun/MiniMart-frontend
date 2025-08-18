@@ -10,7 +10,13 @@ export const approveSeller = (id) => minimartApi.post(`/admin/sellers/approve/${
 export const rejectSeller = (id) => minimartApi.post(`/admin/sellers/reject/${id}`)
 
 // 월별 데이터 가져오기
-export const getMonth = () => minimartApi.get('/admin/user/month')
+export const getMonth = (year, month) =>
+   minimartApi.get('/admin/user/month', {
+      params: { year, month },
+   })
 
 // 주문 목록 가져오기
 export const getAllOrders = () => minimartApi.get('/admin/orders')
+
+// 주문 삭제하기(관리자)
+export const deleteOrder = (id) => minimartApi.post(`/admin/orders/delete/${id}`)

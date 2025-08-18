@@ -8,7 +8,7 @@ function Select() {
       padding: '10px',
       backgroundColor: '#e2f53e',
       borderRadius: '5px',
-      cursor: 'pointer', // 마우스 커서 바뀌도록
+      cursor: 'pointer',
    }
 
    return (
@@ -21,6 +21,9 @@ function Select() {
          </div>
          <div style={navStyle} onClick={() => navigate('/manager/statistics')}>
             통계
+         </div>
+         <div style={navStyle} onClick={() => navigate('/manager/qna')}>
+            문의 관리
          </div>
       </div>
    )
