@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, writeReview } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, writeReview, getSeller } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
 // dummyDb는 가상의 주문내역과 팔로워입니다. 이 부분을 보강하거나, 실제 제출 시엔 삭제하고 DB에 저장된 값 불러오는 거 테스트햐봐야 합니다.
