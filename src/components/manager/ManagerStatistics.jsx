@@ -39,7 +39,7 @@ function ManagerStatistics() {
 
    return (
       <>
-         <h3>연령대별 가입자 통계</h3>
+         <h3>올해 연령대별 가입자 통계</h3>
          <div style={{ height: '400px', textAlign: 'left' }}>
             <ResponsiveContainer width="100%" height="100%">
                <PieChart>

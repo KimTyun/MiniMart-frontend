@@ -1,6 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import { registerUser, loginUser, logoutUser, deleteUser, checkAuthStatus, getKakaoLoginUrl, fetchUserInfo, checkCookie } from '../api/authApi'
-
 //카카오 로그인 관련
 // 토큰으로 사용자 정보 가져오기
 export const fetchUserInfoThunk = createAsyncThunk('auth/fetchUserInfo', async (_, { rejectWithValue }) => {
@@ -8,6 +7,9 @@ export const fetchUserInfoThunk = createAsyncThunk('auth/fetchUserInfo', async (
       const data = await fetchUserInfo()
       return data
    } catch (error) {
+      if (error.response?.status === 401) {
+         return null
+      }
       return rejectWithValue(error.response?.data?.message || '카카오 사용자 정보 불러오기 실패')
    }
 })
@@ -199,6 +201,8 @@ const authSlice = createSlice({
             state.error = null
          })
          .addCase(logoutUserThunk.fulfilled, (state) => {
+            state.user = null
+            state.token = null
             authSlice.caseReducers.logout(state)
             state.loading = false
          })

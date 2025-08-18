@@ -31,7 +31,7 @@ export const rejectSellerThunk = createAsyncThunk('admin/rejectSeller', async (s
    }
 })
 
-// 월별 데이터 가져오기
+// 나이별 데이터 가져오기
 export const getMonthThunk = createAsyncThunk('admin/getMonth', async ({ year, month }, { rejectWithValue }) => {
    try {
       const { data } = await getMonth(year, month)
@@ -65,7 +65,7 @@ export const deleteOrderThunk = createAsyncThunk('admin/orderDelete', async (id,
 const initialState = {
    sellers: [], // 승인 대기 목록
    orders: [], // 주문 목록
-   monthData: [], // 월별 데이터 저장
+   monthData: [], // 나이별 데이터 저장
    loading: false,
    error: null,
 }
@@ -119,7 +119,7 @@ const adminSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         // 월별 데이터 가져오기
+         // 나이별 데이터 가져오기
          .addCase(getMonthThunk.pending, (state) => {
             state.loading = true
             state.error = null
