@@ -28,11 +28,11 @@ const reviewSlice = createSlice({
          .addCase(createReviewThunk.pending, (state) => {
             state.loading = true
             state.error = null
-            state.success = false // 새로운 요청 시 success 상태 초기화
+            state.success = false
          })
          .addCase(createReviewThunk.fulfilled, (state) => {
             state.loading = false
-            state.success = true // 성공 시 success 상태를 true로 설정
+            state.success = true
          })
          .addCase(createReviewThunk.rejected, (state, action) => {
             state.loading = false
