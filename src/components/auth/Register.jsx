@@ -231,8 +231,8 @@ function Register() {
          <div className="register-sns">
             <p className="sns-label">다른 방법으로 회원가입하기</p>
             <div className="sns-icons">
-               <img src="/icons/kakao-icon.png" alt="카카오 로그인" />
-               <img src="/icons/google-icon.png" alt="구글 로그인" />
+               <img src="/kakao_login_small.png" alt="카카오 로그인" />
+               <img src="/public/google-icon.png" alt="구글 로그인" />
             </div>
          </div>
 

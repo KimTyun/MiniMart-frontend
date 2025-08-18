@@ -17,6 +17,7 @@
 .cart .cart-sum > p {
    font-weight: bold;
    font-size: 2rem;
+   text-align: right;
 }
 .cart .cart-sum > button {
    margin: auto 0;
@@ -123,13 +124,24 @@
 }
 
 .cartCard-wrap .cartCard-seller-info {
+   width: auto;
    height: 100%;
 }
 .cartCard-wrap .cartCard-seller-info .seller-info-wrap {
    display: flex;
 }
 
+.cartCard-wrap .cartCard-seller-info .seller-info-wrap > * {
+   margin: 0;
+}
 .cartCard-wrap .cartCard-seller-info .seller-info-wrap > img {
+   border-radius: 40px;
    width: 40px;
    height: 40px;
+}
+
+.cartCard-wrap .cartCard-seller-info .seller-info-wrap > p {
+   padding: 5px;
+   width: auto;
+   font-size: 1.1rem;
 }

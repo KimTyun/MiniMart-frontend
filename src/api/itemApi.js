@@ -1,5 +1,4 @@
 import minimartApi from './axiosApi'
-const API_URL = import.meta.env.VITE_API_URL
 
 //상품 추가
 export const itemCreate = async (data) => {
