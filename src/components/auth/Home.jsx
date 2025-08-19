@@ -3,7 +3,8 @@ import '../../styles/minipage.css'
 import { useSelector, useDispatch } from 'react-redux'
 import { fetchUserInfoThunk } from '../../features/authSlice'
 import { itemPopularThunk, itemRecentThunk } from '../../features/itemSlice'
-import { Link } from 'react-router-dom'
+import { getSellerThunk } from '../../features/sellerSlice'
+import { Link, useNavigate } from 'react-router-dom'
 import SearchBar from '../shared/SearchBar'
 import Slider from 'react-slick'
 import 'slick-carousel/slick/slick.css'
@@ -24,11 +25,13 @@ function Home() {
       slidesToShow: 1,
       slidesToScroll: 1,
    }
+   const navigator = useNavigate()
 
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
    const { itemRecent, loading, error } = useSelector((state) => state.item)
+   const sellers = useSelector((state) => state.seller.sellers)
 
    // 최근 등록된 아이템 가져오기
    useEffect(() => {
@@ -45,6 +48,16 @@ function Home() {
          dispatch(fetchUserInfoThunk())
       }
    }, [dispatch, token, user])
+
+   // 판매자 조회
+   useEffect(() => {
+      dispatch(getSellerThunk())
+         .unwrap()
+         .then()
+         .catch((error) => {
+            console.log('Thunk error:', error)
+         })
+   }, [dispatch])
 
    return (
       <div style={{ width: '100%' }}>
@@ -67,16 +80,19 @@ function Home() {
                </div>
             </Slider>
          </div>
-
          {/* 신제품 출시 */}
          <h1 className="new-h1">신제품 출시 !</h1>
          {loading && <div>로딩중...</div>}
          {error && <div>{error}</div>}
-         <div style={{ display: 'flex', overflowX: 'auto' }}>
+         <div className="new-whole">
             {(itemRecent?.items ?? []).map((item) => {
                return (
                   <Card className="new-card" key={item.id}>
-                     <CardActionArea>
+                     <CardActionArea
+                        onClick={() => {
+                           navigator(`/item/${item.id}`)
+                        }}
+                     >
                         <CardMedia sx={{ height: 400 }} component="img" src={`${VITE_API_URL}${item.ItemImgs[0]?.img_url}`} alt={item.name} />
                         <CardContent>
                            <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
@@ -96,7 +112,29 @@ function Home() {
                )
             })}
          </div>
-
+         {/* 판매자 목록? */}
+         <h1 className="seller-h1">판매자 목록</h1>
+         <div className="seller-whole">
+            {sellers && sellers.length > 0 ? (
+               sellers.map((seller) => {
+                  return (
+                     <div key={seller.id} className="seller-card">
+                        <div className="seller-left">
+                           <img src={`${seller.User.profile_img}`} alt="" />
+                           <h3>{seller.name}</h3>
+                           <p>{seller.introduce}</p>
+                        </div>
+                        <div className="seller-right">
+                           <p>주요 상품: {seller.main_products}</p>
+                           {seller.banner_img && <img src={seller.banner_img} alt={seller.name} />}
+                        </div>
+                     </div>
+                  )
+               })
+            ) : (
+               <div>판매자가 없습니다.</div>
+            )}
+         </div>
          {/* 지금 인기있는 제품들 */}
          <h1 className="popular-h1">지금 인기있는 제품들</h1>
          <div className="popular-whole" style={{ display: 'flex' }}>
