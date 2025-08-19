@@ -1,5 +1,6 @@
 .seller_wrap {
    max-width: 1800px;
+   margin: 10px auto;
 }
 
 .seller_wrap .seller_navbar {
@@ -17,6 +18,7 @@
 
 .seller-myInfo__form-wrap {
    max-width: 1200px;
+   margin: 0 auto;
 
    border: 2px solid #c3c3c3;
    padding: 10px;
@@ -42,6 +44,7 @@
    margin-bottom: 10px;
    padding-bottom: 30px;
    min-height: 800px;
+   margin: 0 auto;
 }
 
 .seller-myItem__wrap > button {
@@ -56,6 +59,8 @@
    display: flex;
    flex-direction: column;
    gap: 10px;
+   justify-content: center;
+   align-items: center;
 }
 
 .itemCard__wrap {
@@ -64,6 +69,14 @@
    border-radius: 10px;
    display: flex;
    align-items: center;
+}
+.itemCard__wrap > p:nth-of-type(2) {
+   cursor: pointer;
+}
+
+.itemCard__wrap > p:nth-of-type(2):hover {
+   background-color: #c3c3c3;
+   border-radius: 5px;
 }
 
 .itemCard__wrap > div > button:nth-of-type(2) {

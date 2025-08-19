@@ -22,7 +22,7 @@ import Privacy from './pages/Privacy'
 import Cart from './pages/item/Cart'
 import SellerMyPage from './pages/seller/SellerMyPage'
 import SellerPage from './pages/seller/SellerPage'
-
+import ItemUpdatePage from './pages/item/ItemUpdatePage'
 function App() {
    const dispatch = useDispatch()
    const { token } = useSelector((state) => state.auth)
@@ -62,6 +62,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/privacy" element={<Privacy />} />
             <Route path="/seller/:id" element={<SellerPage />} />
+            <Route path="/item/update/:id" element={<ItemUpdatePage />} />
          </Routes>
          <Footer />
       </>
