@@ -117,15 +117,16 @@ export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', asy
 })
 
 // 리뷰 작성
-export const createReviewThunk = createAsyncThunk('mypage/createReview', async (reviewData, thunkAPI) => {
+export const createReviewThunk = createAsyncThunk('mypage/createReview', async (reviewData, { rejectWithValue }) => {
    try {
       const response = await writeReview(reviewData)
-      return { ...response.data, orderId: reviewData.orderId }
+      return response.data
    } catch (err) {
-      return thunkAPI.rejectWithValue(err.message || '리뷰 작성 실패')
+      return rejectWithValue(err.response?.data?.message || err.message || '알 수 없는 오류')
    }
 })
 
+// 판매자 신청
 export const getSellerThunk = createAsyncThunk('mypage/getSeller', async (_, { rejectWithValue }) => {
    try {
       const response = await getSeller()
@@ -245,7 +246,7 @@ const mypageSlice = createSlice({
          })
          .addCase(createReviewThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.orders = state.orders.map((order) => (order.orderId === action.payload.orderId ? { ...order, hasReview: true } : order))
+            state.orders = state.orders.map((order) => (order.orderId === action.meta.arg.orderId ? { ...order, hasReview: true } : order))
          })
          .addCase(createReviewThunk.rejected, (state, action) => {
             state.loading = false

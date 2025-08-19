@@ -9,8 +9,11 @@ const OrderHistoryForm = () => {
 
    // 모달 상태 관리
    const [isModalOpen, setIsModalOpen] = useState(false)
-   const [selectedOrderId, setSelectedOrderId] = useState(null)
-   const [reviewText, setReviewText] = useState('')
+   const [reviewingOrder, setReviewingOrder] = useState(null)
+   const [rating, setRating] = useState(0)
+   const [content, setContent] = useState('')
+   const [reviewImg, setReviewImg] = useState(null)
+   const [formMessage, setFormMessage] = useState('')
 
    // 알림 모달 상태 관리
    const [isAlertModalOpen, setIsAlertModalOpen] = useState(false)
@@ -49,36 +52,48 @@ const OrderHistoryForm = () => {
    }
 
    // 리뷰 작성 버튼 클릭 시 모달 열기
-   const handleOpenModal = (orderId) => {
-      setSelectedOrderId(orderId)
+   const handleOpenReviewModal = (order) => {
+      setReviewingOrder(order)
       setIsModalOpen(true)
+      // 모달이 열릴 때 상태 초기화
+      setRating(0)
+      setContent('')
+      setReviewImg(null)
+      setFormMessage('')
    }
 
    // 모달 닫기
    const handleCloseModal = () => {
       setIsModalOpen(false)
-      setReviewText('')
-      setSelectedOrderId(null)
+      setReviewingOrder(null)
+      setRating(0)
+      setContent('')
+      setReviewImg(null)
+      setFormMessage('')
+   }
+
+   // 별점 클릭 핸들러
+   const handleRatingClick = (newRating) => {
+      setRating(newRating)
    }
 
    // 리뷰 작성
    const handleSubmitReview = async () => {
-      if (!reviewText.trim()) {
-         console.error('리뷰 내용을 입력해주세요.')
-         return
-      }
-
       try {
-         await dispatch(
-            createReviewThunk({
-               orderId: selectedOrderId,
-               reviewData: { content: reviewText },
-            })
-         ).unwrap()
-         console.log('리뷰가 성공적으로 등록되었습니다.')
-         handleCloseModal() // 리뷰 제출 후 모달 닫기
+         const reviewData = {
+            orderId: reviewingOrder.orderId,
+            productId: reviewingOrder.items[0].id,
+            content,
+         }
+
+         console.log('Sending review data:', reviewData)
+
+         await dispatch(createReviewThunk(reviewData)).unwrap()
+
+         showAlert('리뷰가 성공적으로 등록되었습니다.')
+         handleCloseModal()
       } catch (err) {
-         console.error(`리뷰 등록 실패: ${err.message || '알 수 없는 오류'}`)
+         showAlert(`리뷰 등록 실패: ${err.message || '알 수 없는 오류'}`)
       }
    }
 
@@ -96,14 +111,16 @@ const OrderHistoryForm = () => {
                   <div className="order-item" key={order.orderId}>
                      <div className="item-details">
                         <div className="thumb">
-                           <img src={order.items[0].imageUrl || '/default-product.png'} alt={order.items[0].name} />
+                           <img src={order.items[0].imageUrl || 'https://placehold.co/100x100'} alt={order.items[0].name} className="product-image" />
                         </div>
                         <div className="info">
-                           <p className="title">
-                              {order.items[0].name} {order.items.length > 1 ? `외 ${order.items.length - 1}개` : ''}
-                           </p>
                            <p className="meta">주문일: {order.date}</p>
-                           <p className="meta">상태: {order.status}</p>
+                           <h3 className="item-title">
+                              {order.items[0].name} {order.items.length > 1 ? `외 ${order.items.length - 1}개` : ''}
+                           </h3>
+                           <p className="meta">
+                              상태: <span className={`status-text status-${order.status.toLowerCase()}`}>{order.status}</span>
+                           </p>
                         </div>
                      </div>
                      <div className="seller-mini">
@@ -112,11 +129,11 @@ const OrderHistoryForm = () => {
                      </div>
                      <div className="actions">
                         {/* 주문 취소 */}
-                        <button className="btn-small secondary" onClick={() => handleCancelOrder(order.orderId)} disabled={loading || order.status !== 'PAID'}>
+                        <button className="btn-small btn-secondary" onClick={() => handleCancelOrder(order.orderId)} disabled={loading || order.status !== 'PAID'}>
                            주문 취소
                         </button>
                         {/* 리뷰 */}
-                        <button className="btn-small primary" onClick={() => handleOpenModal(order.orderId)} disabled={loading || order.hasReview || order.status !== 'DELIVERED'}>
+                        <button className="btn-small btn-primary" onClick={() => handleOpenReviewModal(order)} disabled={loading || order.hasReview || order.status !== 'DELIVERED'}>
                            {order.hasReview ? '리뷰 완료' : '리뷰 작성'}
                         </button>
                      </div>
@@ -126,16 +143,35 @@ const OrderHistoryForm = () => {
          )}
 
          {/* 리뷰 모달 */}
-         {isModalOpen && (
+         {isModalOpen && reviewingOrder && (
             <div className="modal-overlay">
                <div className="modal-content">
-                  <h3>리뷰 작성</h3>
-                  <textarea value={reviewText} onChange={(e) => setReviewText(e.target.value)} placeholder="리뷰 내용을 입력하세요..." />
+                  <h3 className="modal-title">리뷰 작성</h3>
+
+                  {formMessage && <div className="form-message">{formMessage}</div>}
+
+                  <p className="review-for-item">
+                     <span className="item-name">{reviewingOrder.items[0].name}</span>에 대한 리뷰를 작성합니다.
+                  </p>
+                  <div className="star-rating">
+                     {[1, 2, 3, 4, 5].map((star) => (
+                        <span key={star} className={`star ${rating >= star ? 'filled' : ''}`} onClick={() => handleRatingClick(star)}>
+                           ★
+                        </span>
+                     ))}
+                  </div>
+                  <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="상품에 대한 솔직한 리뷰를 남겨주세요." className="review-textarea" rows="4" />
+                  <div className="file-upload-container">
+                     <label htmlFor="review-img-upload" className="file-upload-label">
+                        이미지 업로드 (선택)
+                     </label>
+                     <input id="review-img-upload" type="file" accept="image/*" onChange={(e) => setReviewImg(e.target.files[0])} className="file-input" />
+                  </div>
                   <div className="modal-buttons">
-                     <button className="btn-small secondary" onClick={handleCloseModal}>
+                     <button className="btn btn-secondary" onClick={handleCloseModal}>
                         취소
                      </button>
-                     <button className="btn-small primary" onClick={handleSubmitReview}>
+                     <button className="btn btn-primary" onClick={handleSubmitReview}>
                         제출
                      </button>
                   </div>
@@ -146,10 +182,10 @@ const OrderHistoryForm = () => {
          {/* 커스텀 알림 모달 */}
          {isAlertModalOpen && (
             <div className="modal-overlay">
-               <div className="modal-content">
-                  <p>{alertMessage}</p>
+               <div className="modal-content small-modal">
+                  <p className="modal-message">{alertMessage}</p>
                   <div className="modal-buttons">
-                     <button className="btn-small primary" onClick={() => setIsAlertModalOpen(false)}>
+                     <button className="btn btn-primary" onClick={() => setIsAlertModalOpen(false)}>
                         확인
                      </button>
                   </div>
@@ -160,14 +196,14 @@ const OrderHistoryForm = () => {
          {/* 커스텀 확인 모달 */}
          {isConfirmModalOpen && (
             <div className="modal-overlay">
-               <div className="modal-content">
-                  <p>{confirmMessage}</p>
+               <div className="modal-content small-modal">
+                  <p className="modal-message">{confirmMessage}</p>
                   <div className="modal-buttons">
-                     <button className="btn-small secondary" onClick={() => setIsConfirmModalOpen(false)}>
+                     <button className="btn btn-secondary" onClick={() => setIsConfirmModalOpen(false)}>
                         취소
                      </button>
                      <button
-                        className="btn-small primary"
+                        className="btn btn-primary"
                         onClick={() => {
                            setIsConfirmModalOpen(false)
                            if (confirmCallback) {
