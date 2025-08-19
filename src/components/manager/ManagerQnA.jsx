@@ -8,7 +8,7 @@ const ManagerQnA = () => {
    const [error, setError] = useState(null)
    const [editingId, setEditingId] = useState(null)
    const [replyContent, setReplyContent] = useState('')
-   const [adminId, setAdminId] = useState(1) // 관리자 ID는 로그인 상태에 따라 동적으로 할당 필요
+   const adminId = useState(1) // 관리자 ID는 로그인 상태에 따라 동적으로 할당 필요
 
    // Q&A 데이터
    const fetchQnaData = useCallback(async () => {

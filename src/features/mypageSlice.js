@@ -11,18 +11,41 @@ const dummyDb = {
          status: 'DELIVERED',
          hasReview: false,
          seller: { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
-         items: [
-            { itemId: 1, name: '프리미엄 커피 원두 200g', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' },
-            { itemId: 2, name: '수제 마카롱 세트', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' },
+         OrderItems: [
+            {
+               count: 1,
+               Item: {
+                  id: 1,
+                  name: '프리미엄 커피 원두 200g',
+                  ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' }],
+               },
+            },
+            {
+               count: 1,
+               Item: {
+                  id: 2,
+                  name: '수제 마카롱 세트',
+                  ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' }],
+               },
+            },
          ],
       },
       {
          orderId: 'ORD002',
          date: '2023.10.24',
-         status: 'PAID', // 이 주문을 취소할 예정
+         status: 'PAID',
          hasReview: false,
          seller: { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
-         items: [{ itemId: 3, name: '유기농 수제잼', imageUrl: 'https://placehold.co/150x150/f0d85a/000000?text=Jam' }],
+         OrderItems: [
+            {
+               count: 1,
+               Item: {
+                  id: 3,
+                  name: '유기농 수제잼',
+                  ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Jam' }],
+               },
+            },
+         ],
       },
    ],
    followings: [
