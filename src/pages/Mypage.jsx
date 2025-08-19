@@ -28,7 +28,7 @@ const MyPage = () => {
    return (
       <div className="mypage-container">
          {/* 상단 사용자 정보 */}
-         <UserInfoForm user={user} />
+         <UserInfoForm />
 
          {/* 구매 내역 */}
          <OrderHistoryForm />
