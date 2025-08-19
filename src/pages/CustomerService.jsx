@@ -3,17 +3,12 @@ import React, { useState } from 'react'
 const styles = {
    container: { maxWidth: '1000px', margin: '2rem auto', padding: '0 2rem', fontFamily: 'sans-serif' },
    title: { fontSize: '2rem', fontWeight: 'bold', textAlign: 'center', marginBottom: '2rem' },
-   tabContainer: { display: 'flex', borderBottom: '2px solid #eee', marginBottom: '2rem' },
-   tabButton: { padding: '1rem 1.5rem', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem', fontWeight: 'bold', color: '#888' },
-   activeTab: { color: 'black', borderBottom: '2px solid black' },
+   tabContainer: { display: 'flex', marginBottom: '2rem' },
+   tabButton: { padding: '1rem 1.5rem', border: 'none', background: 'none', cursor: 'pointer', fontSize: '1rem', fontWeight: 'bold' },
+   activeTab: { color: 'black', background: '#d4d4d4eb' },
    // FAQ 아코디언 스타일
    faqItem: { border: '1px solid #eee', borderRadius: '8px', marginBottom: '0.5rem' },
    faqQuestion: { padding: '1rem', cursor: 'pointer', fontWeight: 'bold', display: 'flex', justifyContent: 'space-between' },
-   // 1:1 문의 폼 스타일
-   form: { display: 'flex', flexDirection: 'column', gap: '1rem', border: '1px solid #eee', padding: '2rem', borderRadius: '8px' },
-   input: { padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px', fontSize: '1rem' },
-   textarea: { padding: '0.8rem', border: '1px solid #ddd', borderRadius: '4px', minHeight: '150px', fontSize: '1rem', fontFamily: 'sans-serif' },
-   submitButton: { padding: '1rem', backgroundColor: 'black', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer', fontSize: '1rem' },
 }
 
 const noticesData = [
@@ -31,7 +26,7 @@ const faqData = [
 const Notices = () => (
    <div>
       {noticesData.map((notice) => (
-         <div key={notice.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0', borderBottom: '1px solid #eee' }}>
+         <div key={notice.id} style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem 0' }}>
             <span>{notice.title}</span>
             <span style={{ color: '#888' }}>{notice.date}</span>
          </div>
@@ -47,28 +42,10 @@ const FAQ = () => (
                <span>{item.q}</span>
                <span>▼</span>
             </summary>
-            <div style={{ padding: '1rem', borderTop: '1px solid #eee', color: '#555', lineHeight: '1.6' }}>{item.a}</div>
+            <div style={{ padding: '1rem', color: '#555', lineHeight: '1.6' }}>{item.a}</div>
          </details>
       ))}
    </div>
-)
-
-const QnA = () => (
-   <form style={styles.form}>
-      <h3 style={{ margin: 0 }}>무엇을 도와드릴까요?</h3>
-      <select style={styles.input}>
-         <option>문의 유형을 선택하세요</option>
-         <option>배송</option>
-         <option>주문/결제</option>
-         <option>취소/교환/반품</option>
-         <option>기타</option>
-      </select>
-      <input type="text" placeholder="제목을 입력하세요" style={styles.input} />
-      <textarea placeholder="문의 내용을 입력하세요" style={styles.textarea}></textarea>
-      <button type="submit" style={styles.submitButton}>
-         문의하기
-      </button>
-   </form>
 )
 
 export default function CustomerService() {
@@ -89,9 +66,6 @@ export default function CustomerService() {
             </button>
             <button style={{ ...styles.tabButton, ...(activeTab === 'faq' && styles.activeTab) }} onClick={() => setActiveTab('faq')}>
                자주 묻는 질문
-            </button>
-            <button style={{ ...styles.tabButton, ...(activeTab === 'qna' && styles.activeTab) }} onClick={() => setActiveTab('qna')}>
-               1:1 문의
             </button>
          </div>
          <div>{renderContent()}</div>

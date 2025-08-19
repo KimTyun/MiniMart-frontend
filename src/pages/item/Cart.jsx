@@ -2,15 +2,16 @@ import React, { useEffect, useMemo, useState } from 'react'
 import CartCard from '../../components/item/CartCard'
 import Button from '@mui/material/Button'
 import { useDispatch, useSelector } from 'react-redux'
-import { getCartsThunk } from '../../features/orderSlice'
+import { addOrderThunk, getCartsThunk } from '../../features/orderSlice'
 import { useNavigate } from 'react-router-dom'
 import { checkAuthStatusThunk } from '../../features/authSlice'
 
 function Cart() {
-   const { carts, loading } = useSelector((s) => s.order)
-   const [isAuthenticated, setIsAuthenticated] = useState(null) // 👈 초기값 null
-   const [authLoading, setLoading] = useState(true)
+   const { carts } = useSelector((s) => s.order)
+   const { user } = useSelector((s) => s.auth)
+   const [isAuthenticated, setIsAuthenticated] = useState(null)
    const [emptyCart, setEmptyCart] = useState(false)
+
    const navigate = useNavigate()
    const dispatch = useDispatch()
    const totalPrice = useMemo(() => {
@@ -21,7 +22,6 @@ function Cart() {
          .unwrap()
          .then((result) => {
             setIsAuthenticated(result.isAuthenticated)
-            setLoading(false)
          })
 
       dispatch(getCartsThunk())
@@ -32,7 +32,7 @@ function Cart() {
                setEmptyCart(true)
             }
          })
-   }, [dispatch, setIsAuthenticated, setLoading])
+   }, [dispatch, setIsAuthenticated])
 
    useEffect(() => {
       if (isAuthenticated === null) return
@@ -43,7 +43,17 @@ function Cart() {
             navigate('/')
          }
       }
-   }, [isAuthenticated])
+   }, [isAuthenticated, navigate])
+
+   function handleOrder() {
+      const data = { id: user.id, items: carts?.CartItems }
+      dispatch(addOrderThunk(data))
+         .unwrap()
+         .then(() => {
+            alert('주문이 완료되었습니다')
+            navigate('/')
+         })
+   }
 
    if (emptyCart || carts?.CartItems?.length == 0) {
       return (
@@ -67,7 +77,7 @@ function Cart() {
             {carts && carts?.CartItems?.map((cartItem) => <CartCard cartItem={cartItem} key={Date.now() + cartItem.id} />)}
             <div className="cart-sum">
                <p>합계 금액 : {carts ? totalPrice?.toLocaleString() : '0'}</p>
-               <Button>주문하기</Button>
+               {carts && <Button onClick={handleOrder}>주문하기</Button>}
             </div>
          </div>
       </>

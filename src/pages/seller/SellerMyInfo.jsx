@@ -3,11 +3,15 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getSellerThunk } from '../../features/mypageSlice'
 import { useState } from 'react'
 import Button from '@mui/material/Button'
+import { updateSellerThunk } from '../../features/sellerSlice'
+import { useNavigate } from 'react-router-dom'
 
 function SellerMyInfo() {
    const dispatch = useDispatch()
+   const navigate = useNavigate()
    const { seller } = useSelector((s) => s.mypage)
    const [data, setData] = useState({ name: '', introduce: '', phone_number: '' })
+   const { user } = useSelector((s) => s.auth)
 
    useEffect(() => {
       dispatch(getSellerThunk())
@@ -20,7 +24,12 @@ function SellerMyInfo() {
 
    function onChangeSellerInfo(e) {
       e.preventDefault()
-      alert('수정되었습니다!')
+      dispatch(updateSellerThunk({ id: user.id, name: data.name, introduce: data.introduce, phone_number: data.phone_number }))
+         .unwrap()
+         .then(() => {
+            alert('수정되었습니다!')
+            navigate(0)
+         })
    }
 
    return (

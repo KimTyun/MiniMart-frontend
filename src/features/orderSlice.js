@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { addCart, deleteCartItem, getCarts, updateCartItem } from '../api/orderApi'
+import { addCart, addOrder, deleteCartItem, getCarts, updateCartItem } from '../api/orderApi'
 
 export const addCartThunk = createAsyncThunk('order/addCart', async (item, { rejectWithValue }) => {
    try {
@@ -36,6 +36,14 @@ export const deleteCartItemThunk = createAsyncThunk('order/deleteCartItem', asyn
       return rejectWithValue(err.response?.data?.message || '장바구니 삭제 실패')
    }
 })
+export const addOrderThunk = createAsyncThunk('order/addOrder', async (data, { rejectWithValue }) => {
+   try {
+      const response = await addOrder(data)
+      return response
+   } catch (err) {
+      return rejectWithValue(err.response?.data?.message || '장바구니 삭제 실패')
+   }
+})
 
 const orderSlice = createSlice({
    name: 'order',
@@ -43,7 +51,7 @@ const orderSlice = createSlice({
       user: null,
       carts: [],
       orders: [],
-
+      order: null,
       loading: false,
       error: null,
    },
@@ -91,6 +99,18 @@ const orderSlice = createSlice({
             s.loading = false
          })
          .addCase(deleteCartItemThunk.rejected, (s, a) => {
+            s.error = a.payload
+            s.loading = false
+         })
+
+         .addCase(addOrderThunk.pending, (s) => {
+            s.loading = true
+         })
+         .addCase(addOrderThunk.fulfilled, (s, a) => {
+            s.loading = false
+            s.order = a.payload.order
+         })
+         .addCase(addOrderThunk.rejected, (s, a) => {
             s.error = a.payload
             s.loading = false
          })
