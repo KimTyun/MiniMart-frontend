@@ -34,7 +34,7 @@ const FollowForm = () => {
 
          setMessage('판매자를 언팔로우했습니다.')
       } catch (error) {
-         setMessage('언팔로우 실패: 네트워크 오류가 발생했습니다.')
+         setMessage('언팔로우 실패: 네트워크 오류가 발생했습니다.: ', error)
       } finally {
          setLoading(false) // 로딩 상태 종료
          setSelectedSeller(null)

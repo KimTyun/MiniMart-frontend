@@ -1,21 +1,42 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loginUserThunk, getKakaoLoginUrlThunk } from '../../features/authSlice'
-import { useNavigate } from 'react-router-dom'
-import { Link } from 'react-router-dom'
-
+import { useNavigate, Link } from 'react-router-dom'
 import '../../styles/register.css'
+
+const Modal = ({ message, onClose }) => (
+   <div className="modal-overlay">
+      <div className="modal-content">
+         <p>{message}</p>
+         <div className="modal-actions">
+            <button className="modal-close-btn" onClick={onClose}>
+               확인
+            </button>
+         </div>
+      </div>
+   </div>
+)
 
 function Login() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
    const { loading, error, loginUrl } = useSelector((state) => state.auth)
+   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
 
    const [formData, setFormData] = useState({
       email: '',
       password: '',
    })
+
+   const [showModal, setShowModal] = useState(false)
+
+   useEffect(() => {
+      if (isAuthenticated) {
+         setShowModal(true)
+      }
+      dispatch(getKakaoLoginUrlThunk())
+   }, [isAuthenticated, dispatch])
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -31,7 +52,7 @@ function Login() {
       const { email, password } = formData
 
       if (!email || !password) {
-         alert('이메일과 비밀번호를 모두 입력해주세요.')
+         setShowModal(true)
          return
       }
 
@@ -39,6 +60,15 @@ function Login() {
 
       if (loginUserThunk.fulfilled.match(resultAction)) {
          navigate('/')
+      } else {
+         setShowModal(true)
+      }
+   }
+
+   const handleModalClose = () => {
+      setShowModal(false)
+      if (isAuthenticated) {
+         navigate('/mypage')
       }
    }
 
@@ -48,6 +78,7 @@ function Login() {
 
    return (
       <div className="login-container">
+         {showModal && <Modal message={isAuthenticated ? '이미 로그인 되어있습니다. 내 정보 페이지로 이동합니다.' : error || '이메일과 비밀번호를 모두 입력해주세요.'} onClose={handleModalClose} />}
          <form className="login-form-box" onSubmit={handleSubmit}>
             <h2 className="login-title">로그인</h2>
 
