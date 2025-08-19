@@ -11,6 +11,7 @@ function ItemCreatePage() {
       dispatch(checkAuthStatusThunk())
          .unwrap()
          .then((result) => {
+            console.log(result)
             if (!result.isAuthenticated || result.user.role !== 'SELLER') {
                alert('허가되지 않은 접근입니다.')
                navigate('/')

@@ -56,19 +56,18 @@ function Haeder() {
    }
 
    return (
-      <div>
-         <div style={{ display: 'flex', width: '100%', height: '89px', justifyContent: 'space-between' }}>
+      <div style={{ width: '100%' }}>
+         <div style={{ display: 'flex', height: '89px', justifyContent: 'space-between' }}>
             <div style={{ width: '315px', height: '80px', marginLeft: '30px' }}>
                <Link to="/">
-                  <img src="/Logo.png" alt="미니마트 로고" />
+                  <img style={{ width: '300px' }} src="/Logo.png" alt="미니마트 로고" />
                </Link>
             </div>
-            <div style={{ width: '600px', height: '89px', display: 'flex', alignItems: 'center', marginRight: '50px' }}>
+            <div style={{ width: '600px', height: '89px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: '40px' }}>
                <button style={{ fontSize: '14px', border: 'none', borderRadius: '6px', marginRight: '10px', width: '100px', height: '32px', backgroundColor: '#FACC15', color: 'white' }} onClick={() => navigate('/orders')}>
                   상품 주문
                </button>
                <Button onClick={() => navigate('/cart')}>장바구니</Button>
-               <Button onClick={() => navigate('/chat')}>채팅</Button>
                <Button onClick={() => navigate('/customer-service')}>고객센터</Button>
                {user ? (
                   <>
