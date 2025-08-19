@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchMyPageThunk, updateMyPageThunk, deleteAccountThunk } from '../../features/mypageSlice'
 import { logoutUserThunk } from '../../features/authSlice'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
+import '../../styles/mypage.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
@@ -30,11 +31,9 @@ const UserInfoForm = () => {
    const fileInputRef = useRef(null)
    const dispatch = useDispatch()
    const { user, loading, error } = useSelector((state) => state.mypage)
-   const [previewImage, setPreviewImage] = useState('')
-   const token = localStorage.getItem('token')
-   const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
-   const open = useDaumPostcodePopup(scriptUrl)
 
+   const [previewImage, setPreviewImage] = useState('')
+   const [originalData, setOriginalData] = useState(null)
    const [formData, setFormData] = useState({
       name: '',
       phone_number: '',
@@ -45,7 +44,10 @@ const UserInfoForm = () => {
       extraaddress: '',
       profile_img: '',
    })
-   const [originalData, setOriginalData] = useState(null)
+
+   const token = localStorage.getItem('token')
+   const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
+   const open = useDaumPostcodePopup(scriptUrl)
 
    const [modalState, setModalState] = useState({
       show: false,
@@ -53,18 +55,7 @@ const UserInfoForm = () => {
       isConfirm: false,
       onConfirm: () => {},
    })
-
-   const closeModal = () => {
-      setModalState({ show: false, message: '', isConfirm: false, onConfirm: () => {} })
-   }
-
-   const handleChange = (e) => {
-      let { name, value } = e.target
-      if (name === 'phone_number') {
-         value = value.replace(/[^0-9]/g, '')
-      }
-      setFormData((prev) => ({ ...prev, [name]: value }))
-   }
+   const closeModal = () => setModalState({ show: false, message: '', isConfirm: false, onConfirm: () => {} })
 
    useEffect(() => {
       dispatch(fetchMyPageThunk('/mypage'))
@@ -89,9 +80,48 @@ const UserInfoForm = () => {
       }
    }, [user])
 
-   const handleImageClick = () => {
-      fileInputRef.current?.click()
+   const handleChange = (e) => {
+      let { name, value } = e.target
+      if (name === 'phone_number') value = value.replace(/[^0-9]/g, '')
+      setFormData((prev) => ({ ...prev, [name]: value }))
    }
+
+   const uploadProfileImage = async (file) => {
+      const fd = new FormData()
+      fd.append('profileImage', file)
+
+      const response = await fetch(`${API_BASE_URL}/mypage/uploads/profile-images`, {
+         method: 'POST',
+         headers: { Authorization: `Bearer ${token}` },
+         body: fd,
+         credentials: 'include',
+      })
+
+      if (!response.ok) throw new Error('업로드 실패')
+      const data = await response.json()
+      return data.url
+   }
+
+   const handleFileChange = async (e) => {
+      const file = e.target.files[0]
+      if (!file || !file.type.startsWith('image/')) {
+         return setModalState({ show: true, message: '이미지 파일만 선택해주세요.', isConfirm: false })
+      }
+
+      const reader = new FileReader()
+      reader.onloadend = () => setPreviewImage(reader.result)
+      reader.readAsDataURL(file)
+
+      try {
+         const uploadedImageUrl = await uploadProfileImage(file)
+         setFormData((prev) => ({ ...prev, profile_img: uploadedImageUrl }))
+      } catch (error) {
+         setModalState({ show: true, message: '이미지 업로드 실패', isConfirm: false })
+         setPreviewImage(originalData?.profile_img ? `${API_BASE_URL}${originalData.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`)
+      }
+   }
+
+   const handleImageClick = () => fileInputRef.current?.click()
 
    const handleAddressSearch = () => {
       open({
@@ -99,15 +129,9 @@ const UserInfoForm = () => {
             let roadAddr = data.roadAddress
             let extraAddr = ''
 
-            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) {
-               extraAddr += data.bname
-            }
-            if (data.buildingName !== '' && data.apartment === 'Y') {
-               extraAddr += extraAddr !== '' ? ', ' + data.buildingName : data.buildingName
-            }
-            if (extraAddr !== '') {
-               extraAddr = `(${extraAddr})`
-            }
+            if (data.bname !== '' && /[동|로|가]$/g.test(data.bname)) extraAddr += data.bname
+            if (data.buildingName !== '' && data.apartment === 'Y') extraAddr += extraAddr !== '' ? ', ' + data.buildingName : data.buildingName
+            if (extraAddr !== '') extraAddr = `(${extraAddr})`
 
             setFormData((prev) => ({
                ...prev,
@@ -121,42 +145,33 @@ const UserInfoForm = () => {
    }
 
    const handleSave = async () => {
-      if (loading) return
-
-      if (!originalData) {
-         console.error('사용자 정보를 불러오는 중입니다. 잠시 후 다시 시도해 주세요.')
-         return
-      }
+      if (loading || !originalData) return
 
       const updatedFields = Object.keys(formData).reduce((acc, key) => {
          const newValue = formData[key]?.trim?.() ?? formData[key]
          const oldValue = originalData[key] ?? ''
-
-         // 값 같으면 제외
-         if (newValue === oldValue) return acc
-
-         // 빈칸도 제외
-         if (newValue === '') return acc
-
+         if (newValue === oldValue || newValue === '') return acc
          acc[key] = formData[key]
          return acc
       }, {})
 
       if (Object.keys(updatedFields).length === 0) {
-         alert('변경된 내용이 없습니다.')
-         return
+         return setModalState({ show: true, message: '변경된 내용이 없습니다.', isConfirm: false })
       }
 
       try {
          await dispatch(updateMyPageThunk(updatedFields)).unwrap()
-         alert('수정사항이 성공적으로 적용되었습니다.')
+         setModalState({ show: true, message: '수정사항이 성공적으로 적용되었습니다.', isConfirm: false })
       } catch (error) {
-         console.error('업데이트 실패 에러:', error)
-         alert(`수정 실패: ${error.message || error.data?.message || '알 수 없는 오류가 발생했습니다.'}`)
+         setModalState({
+            show: true,
+            message: `수정 실패: ${error.message || error.data?.message || '알 수 없는 오류'}`,
+            isConfirm: false,
+         })
       }
    }
 
-   const handleDeleteAccount = async () => {
+   const handleDeleteAccount = () => {
       setModalState({
          show: true,
          message: '정말 회원탈퇴 하시겠습니까?',
@@ -168,10 +183,9 @@ const UserInfoForm = () => {
                await dispatch(logoutUserThunk()).unwrap()
                window.location.href = '/'
             } catch (err) {
-               console.error('회원 탈퇴 실패:', err)
                setModalState({
                   show: true,
-                  message: `회원 탈퇴 실패: ${err.message || '알 수 없는 오류가 발생했습니다.'}`,
+                  message: `회원 탈퇴 실패: ${err.message || '알 수 없는 오류'}`,
                   isConfirm: false,
                })
             }
@@ -179,51 +193,13 @@ const UserInfoForm = () => {
       })
    }
 
-   const handleFileChange = async (e) => {
-      const file = e.target.files[0]
-      if (file && file.type.startsWith('image/')) {
-         const reader = new FileReader()
-         reader.onloadend = () => setPreviewImage(reader.result)
-         reader.readAsDataURL(file)
-
-         try {
-            const uploadedImageUrl = await uploadProfileImage(file)
-            setFormData((prev) => ({ ...prev, profile_img: uploadedImageUrl }))
-         } catch (error) {
-            alert('이미지 업로드 실패')
-            setPreviewImage(originalData.profile_img ? `${API_BASE_URL}${originalData.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`)
-         }
-      } else {
-         alert('이미지 파일만 선택해주세요.')
-      }
-   }
-
-   const uploadProfileImage = async (file) => {
-      const formData = new FormData()
-      formData.append('profileImage', file)
-
-      const response = await fetch(`${API_BASE_URL}/mypage/uploads/profile-images`, {
-         method: 'POST',
-         headers: { Authorization: `Bearer ${token}` },
-         body: formData,
-         credentials: 'include',
-      })
-
-      if (!response.ok) throw new Error('업로드 실패')
-      const data = await response.json()
-      return data.url
-   }
-
    if (loading && !user) return <p>로딩 중...</p>
    if (error) return <p>에러 발생: {error.message || '데이터를 불러오는 데 실패했습니다.'}</p>
 
    return (
       <div className="user-info-box">
-         {loading && !user && <p className="loading">로딩 중...</p>}
-         {error && <p className="error">에러: {error}</p>}
-
          <div className="user-info-left" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
-            <img className="user-profile-img" src={previewImage || `${API_BASE_URL}/uploads/profile-images/default.png`} alt="프로필" style={{ cursor: 'pointer' }} />
+            <img className="user-profile-img" src={previewImage || user?.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ cursor: 'pointer' }} />
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
          </div>
 
@@ -240,7 +216,7 @@ const UserInfoForm = () => {
 
             <div className="profile-row">
                <label htmlFor="email">이메일</label>
-               <input id="email" name="email" type="email" value={formData.email} placeholder="가입시 입력한 이메일은 변경할 수 없습니다." readOnly />
+               <input id="email" name="email" type="email" value={formData.email} readOnly />
             </div>
 
             <div className="profile-row">
@@ -252,20 +228,22 @@ const UserInfoForm = () => {
                   </button>
                </div>
             </div>
+
             <div className="profile-row">
                <label htmlFor="address">주소</label>
                <input id="address" name="address" type="text" value={formData.address} readOnly placeholder="주소" />
             </div>
+
             <div className="profile-row">
                <label htmlFor="detailaddress">상세 주소</label>
                <input id="detailaddress" name="detailaddress" type="text" value={formData.detailaddress} onChange={handleChange} placeholder="상세 주소" />
             </div>
+
             <div className="profile-row">
                <label htmlFor="extraaddress">참고항목</label>
-               <input id="extraaddress" name="extraaddress" type="text" value={formData.extraaddress} readOnly placeholder="참고항목" />
+               <input id="extraaddress" name="extraaddress" type="text" value={formData.extraaddress} readOnly />
             </div>
 
-            {modalState.show && <Modal message={modalState.message} isConfirm={modalState.isConfirm} onClose={closeModal} onConfirm={modalState.onConfirm} />}
             <button className="btn btn-save" onClick={handleSave} disabled={loading}>
                {loading ? '저장 중...' : '정보 수정'}
             </button>
@@ -273,6 +251,8 @@ const UserInfoForm = () => {
                회원 탈퇴
             </button>
          </div>
+
+         {modalState.show && <Modal message={modalState.message} isConfirm={modalState.isConfirm} onClose={closeModal} onConfirm={modalState.onConfirm} />}
       </div>
    )
 }

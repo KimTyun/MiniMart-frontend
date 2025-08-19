@@ -41,18 +41,16 @@ function ManagerStatistics() {
       <>
          <div>
             <h3>올해 연령대별 가입자 통계</h3>
-            <div style={{ width: '100%', height: 400 }}>
-               <ResponsiveContainer width="100%" height="100%">
-                  <PieChart>
-                     <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} fill="#0d00ff" dataKey="value">
-                        {pieData.map((entry, index) => (
-                           <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                        ))}
-                     </Pie>
-                     <Legend iconSize={30} layout="vertical" type="file" verticalAlign="middle" align="center" wrapperStyle={{ paddingLeft: 320 }} />
-                  </PieChart>
-               </ResponsiveContainer>
-            </div>
+            <ResponsiveContainer width="100%" height="100%">
+               <PieChart>
+                  <Pie data={pieData} cx="50%" cy="50%" labelLine={false} label={renderCustomizedLabel} outerRadius={120} fill="#0d00ff" dataKey="value">
+                     {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                     ))}
+                  </Pie>
+                  <Legend iconSize={30} layout="vertical" type="file" verticalAlign="middle" align="center" wrapperStyle={{ paddingLeft: 320 }} />
+               </PieChart>
+            </ResponsiveContainer>
          </div>
       </>
    )
