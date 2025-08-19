@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux'
 import { logoutUserThunk, fetchUserInfoThunk } from '../../features/authSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
-import { useState } from 'react'
 
 const Button = styled.button`
    width: 100px;
@@ -26,8 +25,6 @@ const LoginButton = styled.button`
    cursor: pointer;
 `
 function Haeder() {
-   const [imageError, setImageError] = useState(false)
-
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth?.user)
    const token = useSelector((state) => state.auth.token)
@@ -60,7 +57,7 @@ function Haeder() {
 
    // 이미지 가져오지 못했을때 새로고침시 오류 해결
    const getImage = () => {
-      if (imageError || !user?.profile_img.img) {
+      if (!user.profile_img || user.profile_img === '/uploads/profile-images/default.png') {
          return '/none_profile_img.png'
       }
       return user.profile_img
