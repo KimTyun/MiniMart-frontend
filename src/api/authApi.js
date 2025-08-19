@@ -28,15 +28,16 @@ export const fetchUserInfo = async () => {
    }
 }
 
-// // 카카오 로그아웃
-// export const KakaoLogout = async () => {
-//    try {
-//       await minimartApi.post('/auth/kakao/logout', {})
-//    } catch (_) {
-//    } finally {
-//       localStorage.removeItem('token')
-//    }
-// }
+// 카카오 로그아웃
+export const KakaoLogout = async () => {
+   try {
+      await minimartApi.post('/auth/kakao/logout', {})
+   } catch (error) {
+      console.error('카카오 로그아웃 오류:', error)
+   } finally {
+      localStorage.removeItem('token')
+   }
+}
 
 // 회원가입
 export const registerUser = async (userData) => {
@@ -62,30 +63,14 @@ export const loginUser = async (credentials) => {
 
 // 로그아웃
 export const logoutUser = async () => {
-   const token = localStorage.getItem('token')
+   try {
+      await minimartApi.post('/auth/local/logout')
 
-   if (token) {
-      try {
-         const response = await minimartApi.post(
-            '/auth/local/logout',
-            {},
-            {
-               headers: {
-                  Authorization: `Bearer ${token}`,
-               },
-            }
-         )
-
-         localStorage.removeItem('token')
-         return response
-      } catch (error) {
-         console.error(`API Request 오류: ${error}`)
-
-         throw error
-      }
-   } else {
-      localStorage.removeItem('token')
-      return { success: true, message: '이미 로그아웃 상태입니다.' }
+      console.log('로그아웃 성공')
+      return { success: true, message: '로그아웃 되었습니다.' }
+   } catch (error) {
+      console.error(`로그아웃 API 요청 오류: ${error}`)
+      return { success: false, message: '로그아웃 실패: 서버 연결 오류' }
    }
 }
 

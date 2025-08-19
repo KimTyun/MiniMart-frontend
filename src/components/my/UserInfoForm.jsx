@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { fetchMyPageThunk, updateMyPageThunk, deleteAccountThunk } from '../../features/mypageSlice'
 import { logoutUserThunk } from '../../features/authSlice'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
+import '../../styles/mypage.css'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
@@ -13,11 +14,11 @@ const Modal = ({ message, isConfirm, onClose, onConfirm }) => {
             <p>{message}</p>
             <div className="modal-actions">
                {isConfirm && (
-                  <button className="modal-confirm-btn" onClick={onConfirm}>
+                  <button className=".modal-buttons" onClick={onConfirm}>
                      확인
                   </button>
                )}
-               <button className="modal-close-btn" onClick={onClose}>
+               <button className=".btn-small.secondary" onClick={onClose}>
                   {isConfirm ? '취소' : '확인'}
                </button>
             </div>
@@ -223,7 +224,7 @@ const UserInfoForm = () => {
          {error && <p className="error">에러: {error}</p>}
 
          <div className="user-info-left" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
-            <img className="user-profile-img" src={previewImage || `${API_BASE_URL}/uploads/profile-images/default.png`} alt="프로필" style={{ cursor: 'pointer' }} />
+            <img className="user-profile-img" src={previewImage || user?.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ cursor: 'pointer' }} />
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
          </div>
 

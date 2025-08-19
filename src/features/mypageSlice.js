@@ -150,36 +150,22 @@ const mypageSlice = createSlice({
    reducers: {},
    extraReducers: (builder) => {
       builder
-         // 더미 내 정보 불러오기 (fetchMyPageThunk)
+         // 내 정보 불러오기
          .addCase(fetchMyPageThunk.pending, (state) => {
-            state.status = 'loading'
+            state.loading = true
+            state.error = null
          })
          .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
-            state.status = 'succeeded'
-            // 당신의 dummyDb 구조에 맞게 수정
+            state.loading = false
+            state.user = action.payload
             state.orders = action.payload.orders
             state.followings = action.payload.followings
+            state.error = null
          })
          .addCase(fetchMyPageThunk.rejected, (state, action) => {
             state.status = 'failed'
             state.error = action.payload || action.error.message
          })
-         // // 내 정보 불러오기
-         // .addCase(fetchMyPageThunk.pending, (state) => {
-         //    state.loading = true
-         //    state.error = null
-         // })
-         // .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
-         //    state.loading = false
-         //    state.user = action.payload
-         //    state.orders = action.payload.orders
-         //    state.followings = action.payload.followings
-         //    state.error = null
-         // })
-         // .addCase(fetchMyPageThunk.rejected, (state, action) => {
-         //    state.status = 'failed'
-         //    state.error = action.payload || action.error.message
-         // })
          // 회원정보 수정
          .addCase(updateMyPageThunk.pending, (state) => {
             state.loading = true
