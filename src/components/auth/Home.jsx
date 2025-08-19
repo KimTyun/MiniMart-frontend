@@ -13,7 +13,6 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
-import { fetchFollowingSellersThunk } from '../../features/followSlice'
 
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
@@ -29,14 +28,7 @@ function Home() {
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
-   const { followingList, loading } = useSelector((state) => state.follow)
-   const { itemRecent, error } = useSelector((state) => state.item)
-
-   useEffect(() => {
-      if (user) {
-         dispatch(fetchFollowingSellersThunk())
-      }
-   }, [dispatch, user])
+   const { itemRecent, loading, error } = useSelector((state) => state.item)
 
    // 최근 등록된 아이템 가져오기
    useEffect(() => {
@@ -139,26 +131,6 @@ function Home() {
                </CardActionArea>
             </Card>
          </div>
-
-         {/* 팔로잉한 상점들 섹션 */}
-         {user && (
-            <div className="follow-whole">
-               <h1>팔로잉한 상점들</h1>
-               <div className="follow">
-                  {loading && <p>로딩 중...</p>}
-                  {!loading && followingList && followingList.length > 0
-                     ? followingList.map((seller) => (
-                          <Link to={`/seller/${seller.id}`} key={seller.id} className="follow-card" style={{ textDecoration: 'none' }}>
-                             <div className="follow-pro">
-                                <img src={seller.profile_img || '/none_profile_img.webp'} alt={seller.name} />
-                                <p>{seller.name}</p>
-                             </div>
-                          </Link>
-                       ))
-                     : !loading && <p>팔로우하는 상점이 없습니다.</p>}
-               </div>
-            </div>
-         )}
       </div>
    )
 }

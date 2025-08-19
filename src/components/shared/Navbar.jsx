@@ -55,6 +55,14 @@ function Haeder() {
       navigate('/seller/mypage')
    }
 
+   // 이미지 가져오지 못했을때 새로고침시 오류 해결
+   const getImage = () => {
+      if (!user.profile_img || user.profile_img === '/uploads/profile-images/default.png') {
+         return '/none_profile_img.png'
+      }
+      return user.profile_img
+   }
+
    return (
       <div style={{ width: '100%' }}>
          <div style={{ display: 'flex', height: '89px', justifyContent: 'space-between' }}>
@@ -73,8 +81,8 @@ function Haeder() {
                   <>
                      {user.role == 'ADMIN' ? <Button onClick={goToManager}>고객 관리</Button> : null}
                      {user.role == 'SELLER' ? <Button onClick={goSellerMyPage}>상점 관리</Button> : null}
-                     <img src={user.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} referrerPolicy="no-referrer" />
-                     <p style={{ width: '60px', margin: '0 40px 0 20px' }}>{user.name}</p>
+                     <img src={getImage()} alt="프로필" style={{ width: '24px', height: '24px', borderRadius: '50%', cursor: 'pointer' }} onClick={() => navigate('/mypage')} referrerPolicy="no-referrer" />
+                     <p style={{ width: '120px' }}>{user.name}</p>
                      <LoginButton onClick={handleLogout}>로그아웃</LoginButton>
                   </>
                ) : (
