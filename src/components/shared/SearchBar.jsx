@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -11,9 +11,7 @@ const SearchBar = () => {
    const token = useSelector((state) => state.auth.token)
 
    const handleSearch = async () => {
-      if (!searchTerm.trim()) {
-         return alert('검색어를 입력해주세요.')
-      }
+      navigate(`/search?keyword=${searchTerm}`)
 
       try {
          const headers = { 'Content-Type': 'application/json' }
@@ -71,7 +69,6 @@ const SearchBar = () => {
    return (
       <div className="searchbar-wrapper">
          <div className="searchbar-container">
-            <MenuIcon className="searchbar-menu-icon" />
             <div className="searchbar-search-box">
                <input type="text" placeholder="검색어를 입력해주세요." className="searchbar-input" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} onKeyPress={handleKeyPress} />
                <SearchIcon className="searchbar-search-icon" onClick={handleSearch} />
