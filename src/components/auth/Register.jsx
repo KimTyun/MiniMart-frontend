@@ -229,14 +229,6 @@ function Register() {
 
          {modalState.show && <Modal message={modalState.message} onClose={closeModal} />}
 
-         <div className="register-sns">
-            <p className="sns-label">다른 방법으로 회원가입하기</p>
-            <div className="sns-icons">
-               <img src="/kakao_login_small.png" alt="카카오 로그인" />
-               <img src="/public/google-icon.png" alt="구글 로그인" />
-            </div>
-         </div>
-
          <div className="button-group">
             <button onClick={handleRegister} disabled={loading}>
                {loading ? '가입 중...' : '회원가입 완료'}

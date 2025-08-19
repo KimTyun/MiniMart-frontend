@@ -26,26 +26,26 @@ const Footer = () => {
                <Link to="/about" className="footer-link">
                   브랜드 소개
                </Link>
-               <Link to="/stores" className="footer-link">
+               <Link to="/about" className="footer-link">
                   매장
                </Link>
-               <Link to="/products/bags" className="footer-link">
-                  가방
+               <Link to="" className="footer-link">
+                  수공예품
                </Link>
-               <Link to="/products/jackets" className="footer-link">
-                  셔츠, 자켓
+               <Link to="" className="footer-link">
+                  판매자 전체 보기
                </Link>
             </div>
 
             <div className="footer-section">
                <h3 className="footer-title">고객 서비스</h3>
-               <Link to="/orders" className="footer-link">
+               <Link to="/customer-service" className="footer-link">
                   주문 배송 조회
                </Link>
-               <Link to="/returns" className="footer-link">
+               <Link to="/customer-service" className="footer-link">
                   반품 신청
                </Link>
-               <Link to="/shipping" className="footer-link">
+               <Link to="/customer-service" className="footer-link">
                   배송 서비스
                </Link>
                <Link to="/customer-service" className="footer-link">
@@ -55,7 +55,7 @@ const Footer = () => {
 
             <div className="footer-section">
                <h3 className="footer-title">Company</h3>
-               <Link to="/terms" className="footer-link">
+               <Link to="/privacy" className="footer-link">
                   Terms & conditions
                </Link>
                <Link to="/privacy" className="footer-link">

@@ -30,14 +30,6 @@ ul {
    max-width: 1100px;
 }
 
-/* 화면이 1200px 이하일 때만 너비 800px로 고정 */
-@media (max-width: 1200px) {
-   .serach {
-      width: 800px;
-      margin: 0;
-   }
-}
-
 /* 햄버거 메뉴 */
 .hamburger {
    width: 40px;
@@ -92,7 +84,7 @@ ul {
 /* 신제품 출시! */
 .new-h1 {
    margin: 60px 0;
-   text-align: left;
+   text-align: center;
 }
 
 .new-card {

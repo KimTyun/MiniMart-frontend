@@ -25,7 +25,7 @@ import SellerPage from './pages/seller/SellerPage'
 import ItemUpdatePage from './pages/item/ItemUpdatePage'
 function App() {
    const dispatch = useDispatch()
-   const { token } = useSelector((state) => state.auth)
+   useSelector((state) => state.auth)
 
    // 앱 시작 시 토큰이 있으면 사용자 정보 요청
    // 카카오 토큰이 없으면 로컬 로그인이 되어있는가 체크
