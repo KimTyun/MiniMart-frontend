@@ -4,7 +4,9 @@
    gap: 50px;
    margin: 100px 0;
 }
-
+.cart > div {
+   margin: 0 auto;
+}
 .cart .cart-sum {
    display: flex;
    justify-content: flex-end;

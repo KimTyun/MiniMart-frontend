@@ -59,3 +59,25 @@ export const getSellerItems = async (id) => {
       throw error
    }
 }
+
+//상품 삭제하기
+export const deleteItem = async (id) => {
+   try {
+      const response = await minimartApi.delete(`/item/${id}`)
+      return response.data
+   } catch (error) {
+      console.error('상품 불러오기 실패 : ', error)
+      throw error
+   }
+}
+
+//상품 수정하기
+export const updateItem = async (data) => {
+   try {
+      const response = await minimartApi.put(`/item/${data.id}`, data)
+      return response
+   } catch (error) {
+      console.error('상품 수정에 실패했습니다. :', error)
+      throw error
+   }
+}
