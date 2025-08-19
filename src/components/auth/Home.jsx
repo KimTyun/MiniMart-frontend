@@ -14,6 +14,7 @@ import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
 import { fetchFollowingSellersThunk } from '../../features/followSlice'
+
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
 function Home() {
@@ -75,15 +76,12 @@ function Home() {
             </Slider>
          </div>
 
-         {/* 신제품 출시! 나중에 상품 등록 되면 DB에서 어떻게 가져올지 보고 변경*/}
+         {/* 신제품 출시 */}
          <h1 className="new-h1">신제품 출시 !</h1>
          {loading && <div>로딩중...</div>}
          {error && <div>{error}</div>}
          <div style={{ display: 'flex', overflowX: 'auto' }}>
             {(itemRecent?.items ?? []).map((item) => {
-               // 대표 이미지(조인) 하나만 내려온다고 가정 (rep_img_yn = true)
-               // const repImg = (item.ItemImgs && item.ItemImgs[0]) || null
-
                return (
                   <Card className="new-card" key={item.id}>
                      <CardActionArea>
@@ -106,12 +104,13 @@ function Home() {
                )
             })}
          </div>
+
          {/* 지금 인기있는 제품들 */}
          <h1 className="popular-h1">지금 인기있는 제품들</h1>
          <div className="popular-whole" style={{ display: 'flex' }}>
             <Card sx={{ maxWidth: 510 }}>
                <CardActionArea>
-                  <CardMedia sx={{ height: 525 }} component="img" height="140" image="/인기제품/popular1.png" alt="신제품1" />
+                  <CardMedia sx={{ height: 525 }} component="img" image="/인기제품/popular1.png" alt="신제품1" />
                   <CardContent>
                      <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
                         썬글라스
@@ -126,7 +125,7 @@ function Home() {
             </Card>
             <Card sx={{ maxWidth: 510 }}>
                <CardActionArea>
-                  <CardMedia sx={{ height: 525 }} component="img" height="140" image="/인기제품/popular2.png" alt="신제품1" />
+                  <CardMedia sx={{ height: 525 }} component="img" image="/인기제품/popular2.png" alt="신제품2" />
                   <CardContent>
                      <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
                         썬글라스
@@ -141,13 +140,12 @@ function Home() {
             </Card>
          </div>
 
-         {/*팔로잉한 상점들 섹션 */}
+         {/* 팔로잉한 상점들 섹션 */}
          {user && (
             <div className="follow-whole">
                <h1>팔로잉한 상점들</h1>
                <div className="follow">
                   {loading && <p>로딩 중...</p>}
-
                   {!loading && followingList && followingList.length > 0
                      ? followingList.map((seller) => (
                           <Link to={`/seller/${seller.id}`} key={seller.id} className="follow-card" style={{ textDecoration: 'none' }}>

@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { registerSellerThunk } from '../features/sellerSlice'
 import { useNavigate } from 'react-router-dom'
 import { uploadImage } from '../api/uploadApi'
+import { useDaumPostcodePopup } from 'react-daum-postcode'
 
 function RegisterSeller() {
    const dispatch = useDispatch()
@@ -31,6 +32,25 @@ function RegisterSeller() {
       const d = v.replace(/\D/g, '').slice(0, 10)
       const m = d.match(/^(\d{0,3})(\d{0,2})(\d{0,5})$/)
       return [m?.[1], m?.[2], m?.[3]].filter(Boolean).join('-')
+   }
+   const scriptUrl = 'https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js'
+   const openDaumPostcode = useDaumPostcodePopup(scriptUrl)
+
+   const handleAddressSearch = () => {
+      openDaumPostcode({
+         onComplete: (data) => {
+            let { roadAddress, zonecode, bname, buildingName, apartment } = data
+            let extraAddr = ''
+            if (bname && /[동|로|가]$/g.test(bname)) extraAddr += bname
+            if (buildingName && apartment === 'Y') extraAddr += extraAddr ? `, ${buildingName}` : buildingName
+            if (extraAddr) extraAddr = `(${extraAddr})`
+
+            setPostcode(zonecode)
+            setAddress(roadAddress)
+            setExtraAddress(extraAddr)
+            setDetailAddress('')
+         },
+      })
    }
 
    const onFileChange = async (e) => {
@@ -148,7 +168,7 @@ function RegisterSeller() {
             <label>사업장 주소</label>
             <div className="postcode-box">
                <input type="text" className="postcode-box" value={postcode} maxLength={5} onChange={(e) => setPostcode(e.target.value.replace(/\D/g, ''))} placeholder="우편번호 입력" />
-               <button className="postcode-button" type="button">
+               <button className="postcode-button" type="button" onClick={handleAddressSearch}>
                   우편번호 찾기
                </button>
             </div>
