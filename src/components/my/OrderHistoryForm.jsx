@@ -86,15 +86,10 @@ const OrderHistoryForm = () => {
    }
 
    if (authLoading || loading) {
-      return <div className="loading-container">사용자 정보를 불러오는 중입니다...</div>
-   }
-
-   if (error) {
+      return <div className="loading-container">데이터를 불러오는 중입니다...</div>
+   } else if (error) {
       return <div className="error-container">에러 발생: {error}</div>
-   }
-
-   // 로그인이 되지 않았을 경우
-   if (!user || !isAuthenticated) {
+   } else if (!user || !isAuthenticated) {
       return <div className="loading-container">로그인 정보가 유효하지 않습니다.</div>
    }
 
