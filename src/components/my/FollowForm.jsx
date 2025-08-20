@@ -8,6 +8,7 @@ const FollowForm = () => {
       { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
    ])
    const [loading, setLoading] = useState(false)
+   const [error, setError] = useState(null)
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [selectedSeller, setSelectedSeller] = useState(null)
    const [message, setMessage] = useState('')
@@ -33,10 +34,12 @@ const FollowForm = () => {
          setFollowings((prevFollowings) => prevFollowings.filter((seller) => seller.id !== selectedSeller.id))
 
          setMessage('판매자를 언팔로우했습니다.')
+         setError(null)
       } catch (error) {
-         setMessage('언팔로우 실패: 네트워크 오류가 발생했습니다.: ', error)
+         setError('언팔로우 실패: 네트워크 오류가 발생했습니다.')
+         setMessage('')
       } finally {
-         setLoading(false) // 로딩 상태 종료
+         setLoading(false)
          setSelectedSeller(null)
       }
    }
@@ -74,11 +77,9 @@ const FollowForm = () => {
          <section>
             <h2 className="section-title">팔로잉 목록</h2>
 
-            {message && <p className="loading">{message}</p>}
-
             {loading && <p className="loading">로딩 중...</p>}
-
-            {!loading && followings.length === 0 && <p className="loading">팔로우한 판매자가 없습니다.</p>}
+            {error && <p className="error">{error}</p>}
+            {!loading && !error && followings.length === 0 && <p className="empty-state">팔로우한 판매자가 없습니다.</p>}
 
             {!loading && followings.length > 0 && (
                <div className="following-list">

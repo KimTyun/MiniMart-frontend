@@ -1,16 +1,17 @@
 import { useDispatch } from 'react-redux'
-import { itemCreateThunk } from '../../features/itemSlice'
-import { useState } from 'react'
+import { itemCreateThunk, updateItemThunk } from '../../features/itemSlice'
+import { useEffect, useState } from 'react'
 import '../../styles/itemUpload.css'
 import DeleteIcon from '@mui/icons-material/Delete'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 
-function IteamCreateForm() {
+function IteamCreateForm({ prevData }) {
    const [imgUrls, setImgUrls] = useState([])
    const [imgFiles, setImgFiles] = useState([])
    const [repImgUrl, setRepImgUrl] = useState(null)
    const [repImgFile, setRepImgFile] = useState(null)
    const [detailsImg, setDetailsImg] = useState(null)
+   const { id } = useParams()
    const [options, setOptions] = useState([{ id: 1, name: '기본옵션', price: '0' }])
    const [formData, setFormData] = useState({ status: 'FOR_SALE', stock_number: '0', price: '0', is_sale: false, sale: '0', description: '', name: '' })
    const [empty, setEmpty] = useState({ name: false, price: false, stock_number: false, description: false, options: false, imgs: false, img: false, rep_img: false })
@@ -19,18 +20,27 @@ function IteamCreateForm() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
+   useEffect(() => {
+      if (!prevData) return
+      setFormData(prevData.formData)
+      setImgUrls(prevData.imgs)
+      setRepImgUrl(prevData.repImg)
+      setDetailsImg(prevData.detailsImg)
+      setOptions(prevData.options)
+   }, [prevData])
+
    function handleSubmit(e) {
       e.preventDefault()
 
       const newEmpty = {
          name: !formData?.name?.trim(),
-         price: !formData?.price?.trim() || formData.price == 0,
-         stock_number: !formData?.stock_number?.trim() || (formData.stock_number == 0 && formData.status === 'FOR_SALE'),
+         price: !String(formData?.price)?.trim() || formData.price == 0,
+         stock_number: !String(formData?.stock_number)?.trim() || (formData.stock_number == 0 && formData.status === 'FOR_SALE'),
          description: !formData?.description?.trim(),
-         imgs: imgFiles.length === 0,
-         img: !detailsImg,
+         imgs: imgFiles.length === 0 && !prevData,
+         img: !detailsImg && !prevData,
          options: options.some((o) => !o.name.trim()),
-         rep_img: !repImgFile,
+         rep_img: !repImgFile && !prevData,
       }
       setEmpty(newEmpty)
 
@@ -43,57 +53,85 @@ function IteamCreateForm() {
       if (formData.is_sale && formData.sale == 0) {
          alert('할인율을 정하거나 정가판매로 바꿔주세요')
       }
-
-      const addFormData = new FormData()
-
-      //기본 formData들 추가
-      Object.entries(formData).forEach(([key, value]) => {
-         if (key === 'price' || key === 'stock_number') {
-            // 콤마 제거
-            value = value.replace(/,/g, '')
-         }
-         addFormData.append(key, value)
-      })
-
-      // options 추가
-      const optionsForSubmit = options.map((opt) => ({
-         ...opt,
-         price: opt.price.toString().replace(/,/g, ''),
-      }))
-      addFormData.append('options', JSON.stringify(optionsForSubmit))
-
-      // 이미지 파일들 추가
-      imgFiles.forEach((file) => {
-         const encodedFile = new File([file], encodeURIComponent(file.name), { type: file.type })
-         addFormData.append('imgs', encodedFile)
-      })
-      // 상세설명 이미지 추가
-      const encodedDetailsImg = new File([detailsImg], encodeURIComponent(detailsImg.name), { type: detailsImg.type })
-      addFormData.append('img', encodedDetailsImg)
-
-      //대표 이미지 추가
-      const encodedRepImg = new File([repImgFile], encodeURIComponent(repImgFile.name), { type: repImgFile.type })
-      addFormData.append('rep_img', encodedRepImg)
-
       const tagsArray = hashtags
          .split('#') // '#' 기준 분리
          .map((tag) => tag.trim()) // 앞뒤 공백 제거
          .filter((tag) => tag.length > 0) // 빈 문자열 제거
       const uniqueTags = [...new Set(tagsArray)]
 
-      //해시태그 추가
-      addFormData.append('hashtags', JSON.stringify(uniqueTags))
+      //생성일때만
+      if (!prevData) {
+         const addFormData = new FormData()
 
-      dispatch(itemCreateThunk(addFormData))
-         .unwrap()
-         .then((result) => {
-            alert('상품이 성공적으로 등록되었습니다!')
-            navigate(`/item/${result.item.id}`)
-            window.scrollTo(0, 0)
+         //기본 formData들 추가
+         Object.entries(formData).forEach(([key, value]) => {
+            if (key === 'price' || key === 'stock_number') {
+               // 콤마 제거
+               value = String(value).replace(/,/g, '')
+            }
+            addFormData.append(key, value)
          })
-         .catch((e) => {
-            alert(e || '서버 에러로 등록에 실패하였습니다.')
+
+         // options 추가
+         const optionsForSubmit = options.map((opt) => ({
+            ...opt,
+            price: opt.price.toString().replace(/,/g, ''),
+         }))
+         addFormData.append('options', JSON.stringify(optionsForSubmit))
+
+         // 이미지 파일들 추가
+         imgFiles.forEach((file) => {
+            const encodedFile = new File([file], encodeURIComponent(file.name), { type: file.type })
+            addFormData.append('imgs', encodedFile)
          })
+         // 상세설명 이미지 추가
+         const encodedDetailsImg = new File([detailsImg], encodeURIComponent(detailsImg.name), { type: detailsImg.type })
+         addFormData.append('img', encodedDetailsImg)
+
+         //대표 이미지 추가
+         if (repImgFile) {
+            const encodedRepImg = new File([repImgFile], encodeURIComponent(repImgFile.name), { type: repImgFile.type })
+            addFormData.append('rep_img', encodedRepImg)
+         }
+
+         //해시태그 추가
+         addFormData.append('hashtags', JSON.stringify(uniqueTags))
+
+         dispatch(itemCreateThunk(addFormData))
+            .unwrap()
+            .then((result) => {
+               alert('상품이 성공적으로 등록되었습니다!')
+               navigate(`/item/${result.item.id}`)
+               window.scrollTo(0, 0)
+            })
+            .catch((e) => {
+               alert(e || '서버 에러로 등록에 실패하였습니다.')
+            })
+      } else {
+         //수정일때는
+         const updateData = {
+            ...formData,
+            id,
+            price: String(formData.price).replace(/,/g, ''),
+            stock_number: String(formData.stock_number).replace(/,/g, ''),
+            options: options.map((opt) => ({
+               ...opt,
+               price: String(opt.price).replace(/,/g, ''),
+            })),
+            hashtags: uniqueTags,
+         }
+         console.log('아이디', id)
+         dispatch(updateItemThunk(updateData))
+            .unwrap()
+            .then(() => {
+               alert('상품이 성공적으로 수정되었습니다!')
+               navigate(`/seller/mypage`)
+               window.scrollTo(0, 0)
+            })
+            .catch((e) => {
+               alert(e || '서버 에러로 등록에 실패하였습니다.')
+            })
+      }
    }
 
    function handleImgs(e) {
@@ -181,6 +219,7 @@ function IteamCreateForm() {
       const file = e.target.files[0]
 
       if (!file) return
+
       if (file.size > 4 * 1024 * 1024) {
          alert(`파일이 4MB를 초과합니다.`)
          e.target.value = null
@@ -199,14 +238,20 @@ function IteamCreateForm() {
             <form method="post" encType="multipart/form-data" onSubmit={handleSubmit}>
                <div className="item-upload-form__imgs">{repImgUrl && <img src={repImgUrl} alt="대표 이미지 미리보기" />}</div>
                <div className="item_img">
-                  <label htmlFor="rep_item_img" className="item_img_label">
-                     대표 상품 이미지 등록
-                  </label>
-                  <span> 4mb 이내의 이미지 등록이 가능합니다. (3:4 비율의 이미지를 추천합니다)</span>
+                  {prevData ? (
+                     <span>이미지는 수정할 수 없습니다.</span>
+                  ) : (
+                     <>
+                        <label htmlFor="rep_item_img" className="item_img_label">
+                           대표 상품 이미지 등록
+                        </label>
+                        <span> 이미지는 4MB를 초과할 수 없습니다(3:4 비율의 이미지를 권장합니다)</span>
 
-                  {empty.rep_img && <p className="empty"> 반드시 대표 이미지를 등록해야 합니다.</p>}
+                        {empty.rep_img && <p className="empty"> 반드시 대표 이미지를 등록해야 합니다.</p>}
 
-                  <input type="file" name="" id="rep_item_img" hidden accept="image/*" onChange={(e) => handleRepImg(e)} />
+                        <input type="file" name="" id="rep_item_img" hidden accept="image/*" onChange={(e) => handleRepImg(e)} />
+                     </>
+                  )}
                </div>
 
                <div className="item-upload-form__imgs">
@@ -215,16 +260,21 @@ function IteamCreateForm() {
                   {imgUrls[2] && <img src={imgUrls[2]} alt="미리보기" />}
                   {imgUrls[3] && <img src={imgUrls[3]} alt="미리보기" />}
                </div>
-               <div className="item_img">
-                  <label htmlFor="item_img" className="item_img_label">
-                     상품 이미지 등록{' '}
-                  </label>
-                  <span> 최대 4개까지 이미지 등록이 가능합니다. (파일당 4mb 제한)</span>
 
-                  {empty.imgs && <p className="empty"> 최소 1개의 이미지를 등록해야 합니다.</p>}
+               {prevData ? (
+                  <span>이미지는 수정할 수 없습니다.</span>
+               ) : (
+                  <div className="item_img">
+                     <label htmlFor="item_img" className="item_img_label">
+                        상품 이미지 등록{' '}
+                     </label>
+                     <span> 최대 4개까지 이미지 등록이 가능합니다. (파일당 4mb 제한)</span>
 
-                  <input type="file" name="" id="item_img" hidden multiple accept="image/*" onChange={(e) => handleImgs(e)} />
-               </div>
+                     {empty.imgs && <p className="empty"> 최소 1개의 이미지를 등록해야 합니다.</p>}
+
+                     <input type="file" name="" id="item_img" hidden multiple accept="image/*" onChange={(e) => handleImgs(e)} />
+                  </div>
+               )}
                <div className="item_name_price">
                   <div className="item_name">
                      <label htmlFor="name">제품 이름</label>
@@ -278,8 +328,14 @@ function IteamCreateForm() {
                   </div>
                </div>
                <div>
-                  <label htmlFor="img">상세 설명 이미지 등록(1장, 10mb 제한)</label>
-                  <input type="file" name="" id="img" accept="image/*" onChange={(e) => handleDetailsImg(e)} />
+                  {prevData ? (
+                     <span>이미지는 수정할 수 없습니다.</span>
+                  ) : (
+                     <>
+                        <label htmlFor="img">상세 설명 이미지 등록(1장, 10mb 제한)</label>
+                        <input type="file" name="" id="img" accept="image/*" onChange={(e) => handleDetailsImg(e)} />
+                     </>
+                  )}
                   {empty.img && <p className="empty">상품 상세 설명 이미지를 등록해 주세요 </p>}
                </div>
                <div className="item-description">
@@ -331,7 +387,7 @@ function IteamCreateForm() {
                   </div>
                   <label htmlFor="sale">할인율</label>
                   <input type="text" name="" id="sale" placeholder="숫자만 입력 예) 15" autoComplete="off" onChange={(e) => handleFormData('sale', e.target.value)} value={formData.is_sale === false ? 0 : formData.sale} readOnly={!formData.is_sale} />
-                  <div>{formData.sale === 0 ? <p>예상가격 {formData.price}</p> : <p>예상가격 {(Number(formData?.price?.replace(/,/g, '')) * (100 - formData.sale)) / 100 || 0}</p>}</div>
+                  <div>{formData.sale === 0 ? <p>예상가격 {formData.price}</p> : <p>예상가격 {(Number(String(formData?.price)?.replace(/,/g, '')) * (100 - formData.sale)) / 100 || 0}</p>}</div>
                </div>
 
                <button type="submit" className="item-upload__submit">

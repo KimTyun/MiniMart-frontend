@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { getItem, getSellerItems, itemCreate, itemPopular } from '../api/itemApi'
+import { deleteItem, getItem, getSellerItems, itemCreate, itemPopular, updateItem } from '../api/itemApi'
 import { itemRecent } from '../api/itemApi'
 
 // 최근 상품 가져오기
@@ -47,6 +47,26 @@ export const getSellerItemsThunk = createAsyncThunk('item/getSellerItems', async
    try {
       const response = await getSellerItems(id)
       return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+//상품 삭제
+export const deleteItemThunk = createAsyncThunk('item/deleteItem', async (id, { rejectWithValue }) => {
+   try {
+      const response = await deleteItem(id)
+      return response
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message)
+   }
+})
+
+//상품 수정
+export const updateItemThunk = createAsyncThunk('item/updateItem', async (data, { rejectWithValue }) => {
+   try {
+      const response = await updateItem(data)
+      return response
    } catch (error) {
       return rejectWithValue(error.response?.data?.message)
    }
@@ -124,6 +144,30 @@ const itemSlice = createSlice({
             state.items = action.payload.items
          })
          .addCase(getSellerItemsThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         .addCase(deleteItemThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(deleteItemThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(deleteItemThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         .addCase(updateItemThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(updateItemThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(updateItemThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

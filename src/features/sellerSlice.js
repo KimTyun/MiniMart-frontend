@@ -1,6 +1,6 @@
 // features/sellerSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { registerSeller, getSeller } from '../api/sellerApi'
+import { registerSeller, updateSeller , getSeller} from '../api/sellerApi'
 
 export const registerSellerThunk = createAsyncThunk('seller/register', async (payload, { rejectWithValue }) => {
    try {
@@ -11,12 +11,12 @@ export const registerSellerThunk = createAsyncThunk('seller/register', async (pa
    }
 })
 
-export const getSellerThunk = createAsyncThunk('seller/getSeller', async (_, { rejectWithValue }) => {
+export const updateSellerThunk = createAsyncThunk('seller/updateSeller', async (data, { rejectWithValue }) => {
    try {
-      const response = await getSeller()
-      return response.data.data
-   } catch (error) {
-      return rejectWithValue(error.response?.data?.message || '판매자 조회 실패')
+      const response = await updateSeller(data)
+      return response
+   } catch (err) {
+      return rejectWithValue(err.response?.data?.message || '판매자 수정 실패')
    }
 })
 
@@ -51,6 +51,18 @@ const sellerSlice = createSlice({
             state.sellers = action.payload
          })
          .addCase(getSellerThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+
+         .addCase(updateSellerThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(updateSellerThunk.fulfilled, (state) => {
+            state.loading = false
+         })
+         .addCase(updateSellerThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 import { fetchMyPageThunk, createReviewThunk, cancelOrderThunk } from '../../features/mypageSlice'
 import '../../styles/mypage.css'
 
 const OrderHistoryForm = () => {
    const dispatch = useDispatch()
+   const navigate = useNavigate()
+   const { user, isAuthenticated, loading: authLoading } = useSelector((state) => state.auth)
+
    const { orders, loading, error } = useSelector((state) => state.mypage)
 
    // 모달 상태 관리
    const [isModalOpen, setIsModalOpen] = useState(false)
    const [reviewingOrder, setReviewingOrder] = useState(null)
-   const [rating, setRating] = useState(0)
    const [content, setContent] = useState('')
-   const [reviewImg, setReviewImg] = useState(null)
    const [formMessage, setFormMessage] = useState('')
 
    // 알림 모달 상태 관리
@@ -23,8 +25,13 @@ const OrderHistoryForm = () => {
    const [confirmCallback, setConfirmCallback] = useState(null)
 
    useEffect(() => {
-      dispatch(fetchMyPageThunk())
-   }, [dispatch])
+      if (!authLoading && isAuthenticated && user && user.id) {
+         console.log('User authenticated, fetching mypage data for userId:', user.id)
+         dispatch(fetchMyPageThunk())
+      } else if (!authLoading && (!isAuthenticated || !user)) {
+         console.log('User is not authenticated. Not fetching mypage data.')
+      }
+   }, [dispatch, user, isAuthenticated, authLoading])
 
    // 커스텀 알림 모달 열기
    const showAlert = (message) => {
@@ -43,7 +50,8 @@ const OrderHistoryForm = () => {
    const handleCancelOrder = (orderId) => {
       showConfirm('정말 주문을 취소하시겠습니까?', async () => {
          try {
-            await dispatch(cancelOrderThunk(orderId)).unwrap()
+            const updatedOrders = orders.map((order) => (order.orderId === orderId ? { ...order, status: 'CANCELED' } : order))
+            // dispatch(updateOrdersInRedux(updatedOrders));
             showAlert('주문이 취소되었습니다.')
          } catch (err) {
             showAlert(`주문 취소 실패: ${err.message || '알 수 없는 오류'}`)
@@ -51,44 +59,72 @@ const OrderHistoryForm = () => {
       })
    }
 
+   // 재구매 버튼
+   const handleReorder = (orderId) => {
+      console.log(`Order ID: ${orderId}의 상품을 장바구니에 담습니다. (추후 API 연동 필요)`)
+      navigate('/cart')
+   }
+
    // 리뷰 작성 버튼 클릭 시 모달 열기
    const handleOpenReviewModal = (order) => {
-      setReviewingOrder(order)
-      setIsModalOpen(true)
-      // 모달이 열릴 때 상태 초기화
-      setRating(0)
-      setContent('')
-      setReviewImg(null)
-      setFormMessage('')
+      if (order.OrderItems && order.OrderItems.length > 0) {
+         setReviewingOrder(order)
+         setIsModalOpen(true)
+         setContent('')
+         setFormMessage('')
+      } else {
+         showAlert('리뷰를 작성할 상품 정보가 없습니다.')
+      }
    }
 
    // 모달 닫기
    const handleCloseModal = () => {
       setIsModalOpen(false)
       setReviewingOrder(null)
-      setRating(0)
       setContent('')
-      setReviewImg(null)
       setFormMessage('')
    }
 
-   // 별점 클릭 핸들러
-   const handleRatingClick = (newRating) => {
-      setRating(newRating)
+   if (authLoading || loading) {
+      return <div className="loading-container">데이터를 불러오는 중입니다...</div>
+   } else if (error) {
+      return <div className="error-container">에러 발생: {error}</div>
+   } else if (!user || !isAuthenticated) {
+      return <div className="loading-container">로그인 정보가 유효하지 않습니다.</div>
    }
 
    // 리뷰 작성
    const handleSubmitReview = async () => {
+      if (!user || !user.id) {
+         showAlert('사용자 정보를 불러올 수 없습니다. 다시 로그인해 주세요.')
+         return
+      }
+
+      const firstItem = reviewingOrder.OrderItems[0]?.Item
+      const productId = firstItem?.id
+      const sellerId = reviewingOrder.seller?.id
+
+      if (!productId) {
+         showAlert('리뷰를 작성할 상품 정보를 찾을 수 없습니다.')
+         return
+      }
+      if (!sellerId) {
+         showAlert('판매자 정보를 찾을 수 없습니다.')
+         return
+      }
+
       try {
          const reviewData = {
+            buyerId: user.id,
+            sellerId: sellerId,
+            productId: productId,
             orderId: reviewingOrder.orderId,
-            productId: reviewingOrder.items[0].id,
-            content,
+            content: content,
+            rating: 5,
+            img: null,
          }
 
          console.log('Sending review data:', reviewData)
-
-         await dispatch(createReviewThunk(reviewData)).unwrap()
 
          showAlert('리뷰가 성공적으로 등록되었습니다.')
          handleCloseModal()
@@ -100,73 +136,67 @@ const OrderHistoryForm = () => {
    return (
       <section className="order-history-section">
          <h2 className="section-title">구매 내역</h2>
-
-         {loading && <p className="loading">로딩 중...</p>}
-         {error && <p className="error">에러: {error}</p>}
-         {!loading && orders.length === 0 && <p className="empty-text">구매 내역이 없습니다.</p>}
-
-         {!loading && orders.length > 0 && (
+         {orders.length === 0 && <p className="empty-text">구매 내역이 없습니다.</p>}
+         {orders.length > 0 && (
             <div className="order-list">
-               {orders.map((order) => (
-                  <div className="order-item" key={order.orderId}>
-                     <div className="item-details">
-                        <div className="thumb">
-                           <img src={order.items[0].imageUrl || 'https://placehold.co/100x100'} alt={order.items[0].name} className="product-image" />
+               {orders.map((order) => {
+                  // ✅ OrderItems가 존재하는지 먼저 확인
+                  if (!order.OrderItems || order.OrderItems.length === 0) {
+                     console.log(`주문 ID ${order.orderId}에 대한 상품 정보가 없습니다.`)
+                     return null
+                  }
+
+                  const firstItem = order.OrderItems[0]?.Item
+                  if (!firstItem) return null
+
+                  return (
+                     <div className="order-item" key={order.orderId}>
+                        <div className="item-details">
+                           <div className="thumb">
+                              <img src={firstItem.ItemImgs[0]?.url || 'https://placehold.co/100x100'} alt={firstItem.name} className="product-image" />
+                           </div>
+                           <div className="info">
+                              <p className="meta">주문일: {order.date}</p>
+                              <h3 className="item-title">
+                                 {firstItem.name} {order.OrderItems.length > 1 ? `외 ${order.OrderItems.length - 1}개` : ''}
+                              </h3>
+                              <p className="meta">
+                                 상태: <span className={`status-text status-${order.status.toLowerCase()}`}>{order.status}</span>
+                              </p>
+                           </div>
                         </div>
-                        <div className="info">
-                           <p className="meta">주문일: {order.date}</p>
-                           <h3 className="item-title">
-                              {order.items[0].name} {order.items.length > 1 ? `외 ${order.items.length - 1}개` : ''}
-                           </h3>
-                           <p className="meta">
-                              상태: <span className={`status-text status-${order.status.toLowerCase()}`}>{order.status}</span>
-                           </p>
+                        <div className="seller-mini">
+                           <img src={order.seller?.avatarUrl || 'https://via.placeholder.com/50'} alt={order.seller?.name} className="seller-avatar" />
+                           <span>{order.seller?.name}</span>
+                        </div>
+                        <div className="actions">
+                           <button className="btn-small btn-secondary" onClick={() => handleCancelOrder(order.orderId)} disabled={loading || order.status !== 'PAID'}>
+                              주문 취소
+                           </button>
+                           <button className="btn-small btn-primary" onClick={() => handleOpenReviewModal(order)} disabled={loading || order.hasReview || order.status !== 'DELIVERED' || !user || !user.id}>
+                              {order.hasReview ? '리뷰 완료' : '리뷰 작성'}
+                           </button>
+                           {order.status === 'DELIVERED' && (
+                              <button className="btn-small primary" onClick={() => handleReorder(order.orderId)} disabled={loading}>
+                                 재구매
+                              </button>
+                           )}
                         </div>
                      </div>
-                     <div className="seller-mini">
-                        <img src={order.seller.avatarUrl || 'https://via.placeholder.com/50'} alt={order.seller.name} className="seller-avatar" />
-                        <span>{order.seller.name}</span>
-                     </div>
-                     <div className="actions">
-                        {/* 주문 취소 */}
-                        <button className="btn-small btn-secondary" onClick={() => handleCancelOrder(order.orderId)} disabled={loading || order.status !== 'PAID'}>
-                           주문 취소
-                        </button>
-                        {/* 리뷰 */}
-                        <button className="btn-small btn-primary" onClick={() => handleOpenReviewModal(order)} disabled={loading || order.hasReview || order.status !== 'DELIVERED'}>
-                           {order.hasReview ? '리뷰 완료' : '리뷰 작성'}
-                        </button>
-                     </div>
-                  </div>
-               ))}
+                  )
+               })}
             </div>
          )}
 
-         {/* 리뷰 모달 */}
          {isModalOpen && reviewingOrder && (
             <div className="modal-overlay">
                <div className="modal-content">
                   <h3 className="modal-title">리뷰 작성</h3>
-
                   {formMessage && <div className="form-message">{formMessage}</div>}
-
                   <p className="review-for-item">
-                     <span className="item-name">{reviewingOrder.items[0].name}</span>에 대한 리뷰를 작성합니다.
+                     <span className="item-name">{reviewingOrder.OrderItems[0]?.Item?.name}</span>에 대한 리뷰를 작성합니다.
                   </p>
-                  <div className="star-rating">
-                     {[1, 2, 3, 4, 5].map((star) => (
-                        <span key={star} className={`star ${rating >= star ? 'filled' : ''}`} onClick={() => handleRatingClick(star)}>
-                           ★
-                        </span>
-                     ))}
-                  </div>
                   <textarea value={content} onChange={(e) => setContent(e.target.value)} placeholder="상품에 대한 솔직한 리뷰를 남겨주세요." className="review-textarea" rows="4" />
-                  <div className="file-upload-container">
-                     <label htmlFor="review-img-upload" className="file-upload-label">
-                        이미지 업로드 (선택)
-                     </label>
-                     <input id="review-img-upload" type="file" accept="image/*" onChange={(e) => setReviewImg(e.target.files[0])} className="file-input" />
-                  </div>
                   <div className="modal-buttons">
                      <button className="btn btn-secondary" onClick={handleCloseModal}>
                         취소
@@ -179,7 +209,6 @@ const OrderHistoryForm = () => {
             </div>
          )}
 
-         {/* 커스텀 알림 모달 */}
          {isAlertModalOpen && (
             <div className="modal-overlay">
                <div className="modal-content small-modal">
@@ -193,7 +222,6 @@ const OrderHistoryForm = () => {
             </div>
          )}
 
-         {/* 커스텀 확인 모달 */}
          {isConfirmModalOpen && (
             <div className="modal-overlay">
                <div className="modal-content small-modal">

@@ -43,3 +43,15 @@ export const deleteCartItem = async (id) => {
       throw error
    }
 }
+
+// 주문하기
+export const addOrder = async (data) => {
+   try {
+      const newData = { buyer: data.id, password: null, items: data.items }
+      const response = await minimartApi.post('/order', newData)
+      return response.data
+   } catch (error) {
+      console.error('주문 실패 : ', error)
+      throw error
+   }
+}

@@ -4,3 +4,8 @@ import minimartApi from './axiosApi'
 export const registerSeller = (payload) => minimartApi.post('/api/seller/register', payload)
 // 판매자 조회
 export const getSeller = () => minimartApi.get('api/seller/seller')
+
+export const updateSeller = async (data) => {
+   const response = await minimartApi.put('api/seller/update', data)
+   return response.data
+}
