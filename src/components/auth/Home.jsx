@@ -94,7 +94,6 @@ function Home() {
             console.log('Thunk error:', error)
          })
    }, [dispatch])
-   console.log(itemPopular)
 
    return (
       <div className="home-container">
