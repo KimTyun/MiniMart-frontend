@@ -30,7 +30,7 @@ function Home() {
    const dispatch = useDispatch()
    const user = useSelector((state) => state.auth.user)
    const token = useSelector((state) => state.auth.token)
-   const { itemRecent, loading, error } = useSelector((state) => state.item)
+   const { itemRecent, itemPopular, loading, error } = useSelector((state) => state.item)
    const sellers = useSelector((state) => state.seller.sellers)
 
    // 최근 등록된 아이템 가져오기
@@ -42,6 +42,42 @@ function Home() {
    useEffect(() => {
       dispatch(itemPopularThunk())
    }, [dispatch])
+
+   // s를 대로 변환
+   const ageGroupMap = {
+      '10s': '10대',
+      '20s': '20대',
+      '30s': '30대',
+      '40s': '40대',
+      '+50s': '+50대',
+   }
+
+   // 데이터가 없으면 넘어가고 순서 정해주기
+   const ageGroupOrder = ['10s', '20s', '30s', '40s', '+50s']
+
+   const getPopularItems = () => {
+      if (!itemPopular?.items) return []
+
+      const grouped = itemPopular.items.reduce((acc, item) => {
+         const ageGroup = item.age_group
+         if (!acc[ageGroup]) {
+            acc[ageGroup] = []
+         }
+         acc[ageGroup].push(item)
+         return acc
+      }, {})
+
+      // 순서대로 나열, 데이터가 있는 연령대만 반환
+      return ageGroupOrder
+         .filter((ageGroup) => grouped[ageGroup] && grouped[ageGroup].length > 0)
+         .map((ageGroup) => ({
+            ageGroup,
+            displayName: ageGroupMap[ageGroup],
+            items: grouped[ageGroup],
+         }))
+   }
+
+   const popularItems = getPopularItems()
 
    useEffect(() => {
       if (token && !user) {
@@ -58,9 +94,10 @@ function Home() {
             console.log('Thunk error:', error)
          })
    }, [dispatch])
+   console.log(itemPopular)
 
    return (
-      <div style={{ width: '100%' }}>
+      <div className="home-container">
          {/* 검색하는 부분 */}
          <SearchBar />
          <div className="slider">
@@ -93,16 +130,16 @@ function Home() {
                            navigator(`/item/${item.id}`)
                         }}
                      >
-                        <CardMedia sx={{ height: 400 }} component="img" src={`${VITE_API_URL}${item.ItemImgs[0]?.img_url}`} alt={item.name} />
+                        <CardMedia className="new-card-media" component="img" src={`${VITE_API_URL}${item.ItemImgs[0]?.img_url}`} alt={item.name} />
                         <CardContent>
-                           <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
+                           <Typography className="new-card-title" gutterBottom variant="h5" component="div">
                               {item.name}
                            </Typography>
-                           <Typography component="div" sx={{ display: 'flex' }}>
-                              <Typography component="span" variant="h5" sx={{ color: 'text.secondary', textAlign: 'left' }}>
+                           <Typography className="new-card-info" component="div">
+                              <Typography className="new-card-seller" component="span" variant="h5">
                                  {item.Seller?.name}
                               </Typography>
-                              <Typography component="span" variant="h5" sx={{ color: 'text.secondary', textAlign: 'right' }}>
+                              <Typography className="new-card-arrow" component="span" variant="h5">
                                  →
                               </Typography>
                            </Typography>
@@ -112,7 +149,7 @@ function Home() {
                )
             })}
          </div>
-         {/* 판매자 목록? */}
+         {/* 판매자 목록 */}
          <h1 className="seller-h1">판매자 목록</h1>
          <div className="seller-whole">
             {sellers && sellers.length > 0 ? (
@@ -137,37 +174,37 @@ function Home() {
          </div>
          {/* 지금 인기있는 제품들 */}
          <h1 className="popular-h1">지금 인기있는 제품들</h1>
-         <div className="popular-whole" style={{ display: 'flex' }}>
-            <Card sx={{ maxWidth: 510 }}>
-               <CardActionArea>
-                  <CardMedia sx={{ height: 525 }} component="img" image="/인기제품/popular1.png" alt="신제품1" />
-                  <CardContent>
-                     <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
-                        썬글라스
-                     </Typography>
-                     <Typography component="div" sx={{ display: 'flex' }}>
-                        <Typography component="span" variant="h6" sx={{ color: 'text.secondary', textAlign: 'left' }}>
-                           20대 인기 1위
-                        </Typography>
-                     </Typography>
-                  </CardContent>
-               </CardActionArea>
-            </Card>
-            <Card sx={{ maxWidth: 510 }}>
-               <CardActionArea>
-                  <CardMedia sx={{ height: 525 }} component="img" image="/인기제품/popular2.png" alt="신제품2" />
-                  <CardContent>
-                     <Typography gutterBottom variant="h5" component="div" sx={{ textAlign: 'left' }}>
-                        썬글라스
-                     </Typography>
-                     <Typography component="div" sx={{ display: 'flex' }}>
-                        <Typography component="span" variant="h6" sx={{ color: 'text.secondary', textAlign: 'left' }}>
-                           10대 인기 1위
-                        </Typography>
-                     </Typography>
-                  </CardContent>
-               </CardActionArea>
-            </Card>
+         <div className="popular-whole">
+            {popularItems.length > 0 ? (
+               popularItems.map(({ ageGroup, displayName, items }) =>
+                  items.map((item, index) => (
+                     <Card key={`${ageGroup}-${index}`} className="popular-card">
+                        <CardActionArea
+                           onClick={() => {
+                              navigator(`/item/${item.item_id}`)
+                           }}
+                        >
+                           <CardMedia className="popular-card-media" component="img" image={`${VITE_API_URL}${item.rep_img_url}`} alt={item.item_name} />
+                           <CardContent>
+                              <Typography className="popular-card-title" gutterBottom variant="h5" component="div">
+                                 {item.item_name}
+                              </Typography>
+                              <Typography className="popular-card-info" component="div">
+                                 <Typography className="popular-card-seller" component="span" variant="h6">
+                                    {item.seller_name}
+                                 </Typography>
+                                 <Typography className="popular-card-rank" component="span" variant="h6">
+                                    {displayName} 인기 1위
+                                 </Typography>
+                              </Typography>
+                           </CardContent>
+                        </CardActionArea>
+                     </Card>
+                  ))
+               )
+            ) : (
+               <div>인기 상품이 없습니다.</div>
+            )}
          </div>
       </div>
    )
