@@ -1,0 +1,55 @@
+.seller_top {
+   display: flex;
+   margin: 30px auto;
+}
+
+.seller_info {
+   display: flex;
+}
+
+.seller_info > div {
+   width: auto;
+   line-height: 50px;
+   padding-top: 5px;
+}
+
+.seller_info > div > img {
+   width: 25px;
+   height: 25px;
+}
+.seller_info p {
+   line-height: 50px;
+   text-align: start;
+   margin-left: 20px;
+}
+
+.seller_introduce {
+   margin: 0 auto;
+}
+.seller_introduce > p {
+   text-align: left;
+   font-weight: bold;
+   text-align: center;
+}
+
+.introduce_detail {
+   width: 800px;
+   font-size: 2.5rem;
+   margin: 0 auto;
+}
+
+.seller_items {
+   display: flex;
+   flex-wrap: wrap;
+   margin: 0 auto;
+   justify-content: center;
+}
+
+.seller_card {
+   width: 500px;
+}
+
+.seller_item_img {
+   width: 350px;
+   height: 350px;
+}

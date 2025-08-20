@@ -154,7 +154,13 @@ function Home() {
             {sellers && sellers.length > 0 ? (
                sellers.map((seller) => {
                   return (
-                     <div key={seller.id} className="seller-card">
+                     <div
+                        onClick={() => {
+                           navigator(`/seller/${seller.id}`)
+                        }}
+                        key={seller.id}
+                        className="seller-card"
+                     >
                         <div className="seller-left">
                            <img src={`${seller.User.profile_img}`} alt="" />
                            <h3>{seller.name}</h3>

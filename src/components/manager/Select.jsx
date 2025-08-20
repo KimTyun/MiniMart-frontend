@@ -22,9 +22,6 @@ function Select() {
          <div style={navStyle} onClick={() => navigate('/manager/statistics')}>
             통계
          </div>
-         <div style={navStyle} onClick={() => navigate('/manager/qna')}>
-            문의 관리
-         </div>
       </div>
    )
 }
