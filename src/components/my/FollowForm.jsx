@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import '../../styles/mypage.css'
 
 const FollowForm = () => {
-   // Redux나 실제 DB 대신, 외부에서 주입될 데이터를 가정하여 상태를 관리합니다.
    const [followings, setFollowings] = useState([
       { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
       { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },

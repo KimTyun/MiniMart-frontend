@@ -1,8 +1,8 @@
-import axios from 'axios'
+import minimartApi from './axiosApi'
 
 // 문의 작성 API
 export const createQna = async (formData) => {
-   const res = await axios.post('/api/qna', formData, {
+   const res = await minimartApi.post('/api/qna', formData, {
       headers: {
          'Content-Type': 'multipart/form-data',
       },

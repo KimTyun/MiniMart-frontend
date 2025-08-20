@@ -1,17 +1,17 @@
-import axios from 'axios'
+import minimartApi from './axiosApi'
 
-const BASE_URL = 'http://localhost:8000/auth/find/email'
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 export const sendCodeByEmail = (email) => {
-   return axios.post(`${BASE_URL}/send-code`, { email })
+   return minimartApi.post(`${API_BASE_URL}/send-code`, { email })
 }
 
 export const verifyCodeByEmail = (email, code) => {
-   return axios.post(`${BASE_URL}/verify-code`, { email, code })
+   return minimartApi.post(`${API_BASE_URL}/verify-code`, { email, code })
 }
 
 export const resetPasswordByEmail = (email, newPassword) => {
-   return axios.post(`${BASE_URL}/reset-password`, {
+   return minimartApi.post(`${API_BASE_URL}/reset-password`, {
       email,
       newPassword,
    })
