@@ -1,6 +1,6 @@
 // features/sellerSlice.js
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
-import { registerSeller, updateSeller , getSeller} from '../api/sellerApi'
+import { registerSeller, updateSeller, getSeller } from '../api/sellerApi'
 
 export const registerSellerThunk = createAsyncThunk('seller/register', async (payload, { rejectWithValue }) => {
    try {
@@ -11,6 +11,14 @@ export const registerSellerThunk = createAsyncThunk('seller/register', async (pa
    }
 })
 
+export const getSellerThunk = createAsyncThunk('seller/getSeller', async (_, { rejectWithValue }) => {
+   try {
+      const response = await getSeller()
+      return response.data.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || '판매자 조회 실패')
+   }
+})
 export const updateSellerThunk = createAsyncThunk('seller/updateSeller', async (data, { rejectWithValue }) => {
    try {
       const response = await updateSeller(data)
