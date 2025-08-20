@@ -7,6 +7,7 @@ import mypageReducer from '../features/mypageSlice'
 import followReducer from '../features/followSlice'
 import adminReducer from '../features/adminSlice'
 import orderReducer from '../features/orderSlice'
+import searchReducer from '../features/searchSlice'
 
 const store = configureStore({
    reducer: {
@@ -18,6 +19,7 @@ const store = configureStore({
       follow: followReducer,
       admin: adminReducer,
       order: orderReducer,
+      search: searchReducer,
    },
 })
 
