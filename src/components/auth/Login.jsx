@@ -21,22 +21,24 @@ function Login() {
    const dispatch = useDispatch()
    const navigate = useNavigate()
 
-   const { loading, error, loginUrl } = useSelector((state) => state.auth)
-   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated)
+   const { loading, error, loginUrl, isAuthenticated } = useSelector((state) => state.auth)
 
    const [formData, setFormData] = useState({
       email: '',
       password: '',
    })
 
-   const [showModal, setShowModal] = useState(false)
+   const [modalState, setModalState] = useState({
+      show: false,
+      message: '',
+   })
 
    useEffect(() => {
       if (isAuthenticated) {
-         setShowModal(true)
+         navigate('/mypage')
       }
       dispatch(getKakaoLoginUrlThunk())
-   }, [isAuthenticated, dispatch])
+   }, [isAuthenticated, navigate, dispatch])
 
    const handleChange = (e) => {
       const { name, value } = e.target
@@ -49,36 +51,29 @@ function Login() {
    const handleSubmit = async (e) => {
       e.preventDefault()
 
-      const { email, password } = formData
-
-      if (!email || !password) {
-         setShowModal(true)
+      if (!formData.email || !formData.password) {
+         setModalState({ show: true, message: '이메일과 비밀번호를 모두 입력해주세요.' })
          return
       }
 
-      const resultAction = await dispatch(loginUserThunk({ email, password }))
+      const resultAction = await dispatch(loginUserThunk(formData))
 
       if (loginUserThunk.fulfilled.match(resultAction)) {
          navigate('/')
       } else {
-         setShowModal(true)
+         const errorMessage = resultAction.payload || '로그인에 실패했습니다. 다시 시도해 주세요.'
+         setModalState({ show: true, message: errorMessage })
       }
    }
 
    const handleModalClose = () => {
-      setShowModal(false)
-      if (isAuthenticated) {
-         navigate('/mypage')
-      }
+      setModalState({ show: false, message: '' })
    }
-
-   useEffect(() => {
-      dispatch(getKakaoLoginUrlThunk())
-   }, [dispatch])
 
    return (
       <div className="login-container">
-         {showModal && <Modal message={isAuthenticated ? '이미 로그인 되어있습니다. 내 정보 페이지로 이동합니다.' : error || '이메일과 비밀번호를 모두 입력해주세요.'} onClose={handleModalClose} />}
+         {modalState.show && <Modal message={modalState.message} onClose={handleModalClose} />}
+
          <form className="login-form-box" onSubmit={handleSubmit}>
             <h2 className="login-title">로그인</h2>
 

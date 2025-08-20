@@ -193,8 +193,9 @@ const UserInfoForm = () => {
       })
    }
 
-   if (loading && !user) return <p>로딩 중...</p>
+   if (loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생: {error.message || '데이터를 불러오는 데 실패했습니다.'}</p>
+   if (!user) return <p>사용자 정보가 없습니다. 로그인해주세요.</p>
 
    return (
       <div className="user-info-box">
