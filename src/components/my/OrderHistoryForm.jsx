@@ -7,7 +7,7 @@ import '../../styles/mypage.css'
 const OrderHistoryForm = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
-   const { user, isAuthenticated, loading: authLoading } = useSelector((state) => state.auth)
+   const { user, isAuthenticated, Loading } = useSelector((state) => state.auth)
 
    const { orders, loading, error } = useSelector((state) => state.mypage)
 
@@ -25,13 +25,13 @@ const OrderHistoryForm = () => {
    const [confirmCallback, setConfirmCallback] = useState(null)
 
    useEffect(() => {
-      if (!authLoading && isAuthenticated && user && user.id) {
-         console.log('User authenticated, fetching mypage data for userId:', user.id)
+      if (!Loading && isAuthenticated && user && user.id) {
+         console.log('userId:', user.id)
          dispatch(fetchMyPageThunk())
-      } else if (!authLoading && (!isAuthenticated || !user)) {
-         console.log('User is not authenticated. Not fetching mypage data.')
+      } else if (!Loading && (!isAuthenticated || !user)) {
+         console.log('인증이 실패했습니다. 사용자 정보를 불러올 수 없습니다.')
       }
-   }, [dispatch, user, isAuthenticated, authLoading])
+   }, [dispatch, user, isAuthenticated, Loading])
 
    // 커스텀 알림 모달 열기
    const showAlert = (message) => {
@@ -50,8 +50,7 @@ const OrderHistoryForm = () => {
    const handleCancelOrder = (orderId) => {
       showConfirm('정말 주문을 취소하시겠습니까?', async () => {
          try {
-            const updatedOrders = orders.map((order) => (order.orderId === orderId ? { ...order, status: 'CANCELED' } : order))
-            // dispatch(updateOrdersInRedux(updatedOrders));
+            await dispatch(cancelOrderThunk(orderId)).unwrap()
             showAlert('주문이 취소되었습니다.')
          } catch (err) {
             showAlert(`주문 취소 실패: ${err.message || '알 수 없는 오류'}`)
@@ -61,7 +60,7 @@ const OrderHistoryForm = () => {
 
    // 재구매 버튼
    const handleReorder = (orderId) => {
-      console.log(`Order ID: ${orderId}의 상품을 장바구니에 담습니다. (추후 API 연동 필요)`)
+      console.log(`Order ID: ${orderId}의 상품을 장바구니에 담습니다.`)
       navigate('/cart')
    }
 
@@ -85,8 +84,8 @@ const OrderHistoryForm = () => {
       setFormMessage('')
    }
 
-   if (authLoading || loading) {
-      return <div className="loading-container">데이터를 불러오는 중입니다...</div>
+   if (Loading || loading) {
+      return <div className="loading-container">사용자 정보를 불러오는 중입니다...</div>
    } else if (error) {
       return <div className="error-container">에러 발생: {error}</div>
    } else if (!user || !isAuthenticated) {
@@ -124,7 +123,7 @@ const OrderHistoryForm = () => {
             img: null,
          }
 
-         console.log('Sending review data:', reviewData)
+         await dispatch(createReviewThunk(reviewData)).unwrap()
 
          showAlert('리뷰가 성공적으로 등록되었습니다.')
          handleCloseModal()
@@ -140,7 +139,6 @@ const OrderHistoryForm = () => {
          {orders.length > 0 && (
             <div className="order-list">
                {orders.map((order) => {
-                  // ✅ OrderItems가 존재하는지 먼저 확인
                   if (!order.OrderItems || order.OrderItems.length === 0) {
                      console.log(`주문 ID ${order.orderId}에 대한 상품 정보가 없습니다.`)
                      return null
@@ -157,7 +155,7 @@ const OrderHistoryForm = () => {
                            </div>
                            <div className="info">
                               <p className="meta">주문일: {order.date}</p>
-                              <h3 className="item-title">
+                              <h3 className="title">
                                  {firstItem.name} {order.OrderItems.length > 1 ? `외 ${order.OrderItems.length - 1}개` : ''}
                               </h3>
                               <p className="meta">

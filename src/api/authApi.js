@@ -1,5 +1,5 @@
 import minimartApi from './axiosApi'
-const API_URL = import.meta.env.VITE_API_URL
+const API_BASE_URL = import.meta.env.VITE_API_URL
 
 // 카카오 로그인 URL 가져오기
 export const getKakaoLoginUrl = async () => {
@@ -42,7 +42,7 @@ export const KakaoLogout = async () => {
 // 회원가입
 export const registerUser = async (userData) => {
    try {
-      const response = await minimartApi.post(`${API_URL}/auth/local/register`, userData)
+      const response = await minimartApi.post(`${API_BASE_URL}/auth/local/register`, userData)
       return response
    } catch (error) {
       console.error('회원가입 요청 오류:', error)
@@ -53,7 +53,7 @@ export const registerUser = async (userData) => {
 // 로그인
 export const loginUser = async (credentials) => {
    try {
-      const response = await minimartApi.post(`${API_URL}/auth/local/login`, credentials)
+      const response = await minimartApi.post(`${API_BASE_URL}/auth/local/login`, credentials)
       return response
    } catch (error) {
       console.error('로그인 요청 오류:', error)
