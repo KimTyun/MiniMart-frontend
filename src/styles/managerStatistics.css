@@ -1,11 +1,8 @@
-.recharts-wrapper {
-   margin: 0 20px;
+.recharts-legend-wrapper .recharts-default-legend {
+   display: flex;
+   justify-content: center;
 }
 
-.manager-statistics .recharts-responsive-container {
-   margin: 0 !important;
-}
-
-.recharts-default-legend {
-   background-color: aqua;
+.recharts-legend-item {
+   width: 150px;
 }
