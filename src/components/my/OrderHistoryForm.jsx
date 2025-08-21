@@ -50,8 +50,7 @@ const OrderHistoryForm = () => {
    const handleCancelOrder = (orderId) => {
       showConfirm('정말 주문을 취소하시겠습니까?', async () => {
          try {
-            const updatedOrders = orders.map((order) => (order.orderId === orderId ? { ...order, status: 'CANCELED' } : order))
-            // dispatch(cancelOrderThunk(updatedOrders))
+            await dispatch(cancelOrderThunk(orderId)).unwrap()
             showAlert('주문이 취소되었습니다.')
          } catch (err) {
             showAlert(`주문 취소 실패: ${err.message || '알 수 없는 오류'}`)
@@ -156,7 +155,7 @@ const OrderHistoryForm = () => {
                            </div>
                            <div className="info">
                               <p className="meta">주문일: {order.date}</p>
-                              <h3 className="item-title">
+                              <h3 className="title">
                                  {firstItem.name} {order.OrderItems.length > 1 ? `외 ${order.OrderItems.length - 1}개` : ''}
                               </h3>
                               <p className="meta">

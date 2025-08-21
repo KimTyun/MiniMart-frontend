@@ -76,7 +76,7 @@ export const updateMyPageThunk = createAsyncThunk('mypage/updateMyPage', async (
       const res = await updateMyPage(formData)
       return res.data
    } catch (err) {
-      console.error('updateMyPageThunk error response:', err.response)
+      console.error('정보 수정 중 에러 발생:', err.response)
       return thunkAPI.rejectWithValue(err.response?.data || '수정 실패')
    }
 })
@@ -94,24 +94,19 @@ export const deleteAccountThunk = createAsyncThunk('mypage/deleteAccount', async
 // 더미 주문취소
 export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, { rejectWithValue }) => {
    try {
-      // 전달받은 orderId를 콘솔에 출력하여 확인합니다.
       console.log('orderID:', orderId)
 
-      // 더미 데이터에서 해당 주문을 찾습니다.
       const order = dummyDb.orders.find((o) => o.orderId === orderId)
 
-      // 주문이 존재하지 않거나, 이미 배송 완료된 주문이라면 실패를 시뮬레이션합니다.
       if (!order || order.status === 'DELIVERED') {
-         // 이 블록이 실행될 때도 콘솔에 로그를 남깁니다.
          console.log('주문상태 처리 중 에러 발생:', orderId)
          return rejectWithValue({ message: '주문을 찾을 수 없거나 이미 배송이 시작되어 취소할 수 없습니다.' })
       }
 
-      // 더미 데이터를 직접 수정하는 대신, 성공 응답을 반환하여 리듀서에서 상태를 변경하게 합니다.
       return Promise.resolve({
          message: '주문이 성공적으로 취소되었습니다.',
          orderId,
-         status: 'CANCELED', // ✨ 추가된 부분
+         status: 'CANCELED',
       })
    } catch (err) {
       console.error('주문 취소 중 에러 발생:', err)
@@ -224,9 +219,8 @@ const mypageSlice = createSlice({
             state.status = 'succeeded'
             // 불변성을 지키기 위해 map을 사용하여 새로운 배열을 반환합니다.
             const updatedOrders = state.orders.map((order) =>
-               order.orderId === action.payload.orderId
-                  ? { ...order, status: action.payload.status } // 새로운 객체를 만들어 상태를 변경
-                  : order
+               // ✨ Thunk에서 반환된 payload의 status를 사용하여 상태를 업데이트합니다.
+               order.orderId === action.payload.orderId ? { ...order, status: action.payload.status } : order
             )
             state.orders = updatedOrders
          })
