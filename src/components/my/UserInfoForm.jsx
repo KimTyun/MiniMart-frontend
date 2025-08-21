@@ -30,8 +30,8 @@ const Modal = ({ message, isConfirm, onClose, onConfirm }) => {
 const UserInfoForm = () => {
    const fileInputRef = useRef(null)
    const dispatch = useDispatch()
-   const { user, loading, error } = useSelector((state) => state.mypage)
-
+   const { user, Loading, isAuthenticated } = useSelector((state) => state.auth)
+   const { loading, error } = useSelector((state) => state.mypage)
    const [previewImage, setPreviewImage] = useState('')
    const [originalData, setOriginalData] = useState(null)
    const [formData, setFormData] = useState({
@@ -115,8 +115,8 @@ const UserInfoForm = () => {
       try {
          const uploadedImageUrl = await uploadProfileImage(file)
          setFormData((prev) => ({ ...prev, profile_img: uploadedImageUrl }))
-      } catch (_) {
-         setModalState({ show: true, message: '이미지 업로드 실패', isConfirm: false })
+      } catch (error) {
+         setModalState({ show: true, message: '이미지 업로드 실패', isConfirm: false }, error)
          setPreviewImage(originalData?.profile_img ? `${API_BASE_URL}${originalData.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`)
       }
    }
@@ -193,9 +193,9 @@ const UserInfoForm = () => {
       })
    }
 
-   if (loading) return <p>로딩 중...</p>
+   if (Loading || loading) return <p>로딩 중...</p>
    if (error) return <p>에러 발생: {error.message || '데이터를 불러오는 데 실패했습니다.'}</p>
-   if (!user) return <p>사용자 정보가 없습니다. 로그인해주세요.</p>
+   if (!user || !isAuthenticated) return <p>사용자 정보가 없습니다. 로그인해주세요.</p>
 
    return (
       <div className="user-info-box">
