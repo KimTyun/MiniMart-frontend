@@ -32,11 +32,12 @@
 
 .seller_introduce > p {
    text-align: left;
-   font-weight: bold;
    text-align: center;
+   font-size: 2rem;
 }
 .seller_introduce > p > span {
    display: block;
+   margin-bottom: 20px;
 }
 
 .introduce_detail {
