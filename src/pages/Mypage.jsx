@@ -9,7 +9,7 @@ import '../styles/MyPage.css'
 
 const MyPage = () => {
    const navigate = useNavigate()
-   const { isAuthenticated, loading, user } = useSelector((state) => state.auth)
+   const { isAuthenticated, loading } = useSelector((state) => state.auth)
 
    useEffect(() => {
       if (!loading && !isAuthenticated) {
