@@ -163,6 +163,7 @@ ul {
    margin: 0 auto;
    border: 1px solid #ddd;
    border-radius: 8px;
+   cursor: pointer;
 }
 
 .seller-left {
@@ -173,6 +174,7 @@ ul {
    padding: 10px;
    margin-top: 20px;
 }
+
 .seller-left img {
    width: 50px;
    height: 50px;
@@ -195,6 +197,7 @@ ul {
 
 .seller-right img {
    width: 200px;
+   height: 150px;
 }
 
 /* 지금 인기있는 제품들 */
@@ -208,6 +211,7 @@ ul {
    text-align: center;
    overflow-x: auto;
    justify-content: space-around;
+   margin-bottom: 250px;
 }
 
 .popular-whole .popular-card.MuiCard-root {
@@ -237,41 +241,4 @@ ul {
 
 .popular-card-rank {
    text-align: right;
-}
-
-/* 팔로잉한 상점들 */
-
-.follow {
-   display: flex;
-   gap: 20px;
-   overflow-x: auto;
-   height: 120px;
-}
-
-.follow-card {
-   width: 250px;
-   height: 100px;
-   border: 1px solid #ccc;
-   border-radius: 10px;
-   background-color: #f9f9f9;
-   font-weight: bolder;
-   flex-shrink: 0;
-}
-.follow-pro {
-   display: flex;
-   margin: 10px;
-}
-.follow-pro p {
-   display: flex;
-   margin: 10px;
-}
-.follow-card img {
-   width: 30px;
-   height: 30px;
-   border-radius: 10px;
-   margin: 10px;
-}
-
-.follow-user {
-   padding-left: 50px;
 }

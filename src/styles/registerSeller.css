@@ -145,7 +145,7 @@ html {
 .login-error {
    color: #d32f2f;
    font-size: 14px;
-   min-height: 20px; /* 에러 메시지 없을 때도 공간 차지 */
+   min-height: 20px;
 }
 
 /* --- 제출 버튼 --- */
@@ -160,7 +160,7 @@ html {
    font-weight: 600;
    cursor: pointer;
    transition: background-color 0.2s;
-   margin-top: 12px; /* 위 요소와 간격 */
+   margin-top: 12px;
 }
 
 .login-submit-btn:hover {
@@ -174,15 +174,54 @@ html {
 
 .firstvisit {
    text-decoration: none;
-   color: inherit; /* 기본 텍스트 색상 유지 */
+   color: inherit;
    cursor: pointer;
 }
 
 .findpassword {
    text-decoration: none;
-   color: inherit; /* 기본 텍스트 색상 유지 */
+   color: inherit;
    cursor: pointer;
    font-size: 12px;
+}
+
+.register-input {
+   display: flex;
+   flex-direction: column;
+   gap: 8px;
+   width: 100%;
+   text-align: start;
+}
+
+.register-introduce label {
+   display: flex;
+   font-size: 16px;
+   font-weight: 500;
+   color: #1e1e1e;
+}
+
+.register-introduce textarea {
+   width: 100%;
+   height: 120px;
+   padding: 0 16px;
+   border: 1px solid #d9d9d9;
+   border-radius: 8px;
+   font-size: 16px;
+   transition: border-color 0.2s;
+   text-align: start;
+}
+
+.register-introduce textarea::placeholder {
+   padding-top: 50px;
+}
+
+.register-introduce textarea:focus {
+   outline: none;
+   border-color: #facc15;
+   box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.3);
+}
+.register-introduce textarea:focus::placeholder {
+   color: white;
 }
 
 /* --- 구분선 --- */
@@ -208,8 +247,8 @@ html {
    height: 52px;
    cursor: pointer;
    transition: transform 0.2s, opacity 0.2s;
-   border-radius: 50%; /* 아이콘을 동그랗게 */
-   overflow: hidden; /* 동그란 모양 밖으로 나가는 부분 숨김 */
+   border-radius: 50%;
+   overflow: hidden;
 }
 .social-icon:hover {
    transform: scale(1.1);
