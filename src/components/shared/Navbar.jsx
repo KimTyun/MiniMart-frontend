@@ -15,7 +15,7 @@ const Button = styled.button`
 `
 
 const LoginButton = styled.button`
-   width: 10%;
+   width: 50px;
    height: 25px;
    font-size: 10px;
    background-color: #2c2c2c;
@@ -66,9 +66,9 @@ function Haeder() {
    return (
       <div style={{ width: '100%' }}>
          <div style={{ display: 'flex', height: '89px', justifyContent: 'space-between' }}>
-            <div style={{ height: '80px', marginLeft: '30px', lineHeight: '80px' }}>
+            <div style={{ height: '80px', lineHeight: '120px', textAlign: 'left' }}>
                <Link to="/">
-                  <img style={{ width: '10rem' }} src="/Logo.png" alt="미니마트 로고" />
+                  <img style={{ width: '150px', marginLeft: '30px' }} src="/Logo.png" alt="미니마트 로고" />
                </Link>
             </div>
             <div style={{ width: '35rem', height: '89px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: '40px' }}>
