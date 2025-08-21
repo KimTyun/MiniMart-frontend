@@ -115,9 +115,10 @@ const UserInfoForm = () => {
       try {
          const uploadedImageUrl = await uploadProfileImage(file)
          setFormData((prev) => ({ ...prev, profile_img: uploadedImageUrl }))
-      } catch (_) {
+      } catch (error) {
          setModalState({ show: true, message: '이미지 업로드 실패', isConfirm: false })
          setPreviewImage(originalData?.profile_img ? `${API_BASE_URL}${originalData.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`)
+         console.log(error)
       }
    }
 
