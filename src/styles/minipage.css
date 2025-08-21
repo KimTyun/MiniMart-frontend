@@ -2,6 +2,10 @@ ul {
    list-style-type: none;
 }
 
+.home-container {
+   width: 100%;
+}
+
 /* 검색 바 */
 
 .search-logo {
@@ -95,7 +99,30 @@ ul {
 
 .new-whole {
    display: flex;
-   padding: 10px;
+   overflow-x: auto;
+   margin: 0 auto;
+   justify-content: space-around;
+}
+
+.new-card-media {
+   height: 400px;
+   border-radius: 20px;
+}
+
+.new-card-title {
+   text-align: left;
+}
+
+.new-card-info {
+   display: flex;
+}
+
+.new-card-seller {
+   text-align: left;
+}
+
+.new-card-arrow {
+   text-align: right;
 }
 
 /* 말줄임표 */
@@ -117,22 +144,99 @@ ul {
    max-width: 200px; /* 필요하면 고정/최대너비 */
 }
 
-/* MD 추천 픽 */
-.md-h1 {
-   text-align: left;
-   margin-left: 50px;
+/* 판매자 목록 */
+.seller-h1 {
+   margin: 150px 0 50px 0;
+}
+.seller-whole {
+   margin-top: 50px;
+   display: flex;
+   overflow-x: auto;
+   gap: 20px;
+}
+
+.seller-card {
+   display: flex;
+   text-align: center;
+   width: 300px;
+   height: 220px;
+   margin: 0 auto;
+   border: 1px solid #ddd;
+   border-radius: 8px;
+}
+
+.seller-left {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   padding: 10px;
+   margin-top: 20px;
+}
+.seller-left img {
+   width: 50px;
+   height: 50px;
+   border-radius: 25px;
+   margin-bottom: 20px;
+}
+
+.seller-right {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   align-items: center;
+   padding: 10px;
+}
+
+.seller-right p {
+   margin-bottom: 15px;
+   font-weight: bold;
+}
+
+.seller-right img {
+   width: 200px;
 }
 
 /* 지금 인기있는 제품들 */
 .popular-h1 {
    text-align: center;
-   margin: 40px 0;
+   margin: 150px 0 50px 0;
 }
 
 .popular-whole {
    display: flex;
-   overflow-x: auto;
    text-align: center;
+   overflow-x: auto;
+   justify-content: space-around;
+}
+
+.popular-whole .popular-card.MuiCard-root {
+   width: 350px;
+   max-width: 350px;
+   flex-shrink: 0;
+   margin: 0 30px;
+}
+
+.popular-card-media {
+   height: 400px;
+   border-radius: 20px;
+}
+
+.popular-card-title {
+   text-align: left;
+}
+
+.popular-card-info {
+   display: flex;
+   justify-content: space-between;
+}
+
+.popular-card-seller {
+   text-align: left;
+}
+
+.popular-card-rank {
+   text-align: right;
 }
 
 /* 팔로잉한 상점들 */
