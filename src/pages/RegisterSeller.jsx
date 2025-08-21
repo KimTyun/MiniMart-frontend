@@ -27,6 +27,11 @@ function RegisterSeller() {
    const [certUrl, setCertUrl] = useState(null)
    const [uploading, setUploading] = useState(false)
 
+   // 줄바꿈을 <br/> 태그로 변환하는 함수
+   const convertNewlinesToBr = (text) => {
+      return text.replace(/\n/g, '<br/>')
+   }
+
    // 보기용 하이픈 포맷
    const formatBiz = (v) => {
       const d = v.replace(/\D/g, '').slice(0, 10)
@@ -102,9 +107,12 @@ function RegisterSeller() {
 
       const business_address = `${postcode ? `[${postcode}] ` : ''}${address} ${detailAddress} ${extraAddress}`.trim()
 
+      // introduce에서 줄바꿈을 <br/> 태그로 변환
+      const formattedIntroduce = introduce ? convertNewlinesToBr(introduce) : null
+
       const payload = {
          name: bizName,
-         introduce: introduce || null,
+         introduce: formattedIntroduce,
          phone_number: bizNumber.replace(/\D/g, ''),
          banner_img: certUrl || null, // ← 업로드 URL 넣기
          biz_reg_no: digitsBiz,
@@ -132,7 +140,7 @@ function RegisterSeller() {
          </div>
 
          <div className="register-input">
-            <label>사본 업로드</label>
+            <label>회사 로고, 대표 상품</label>
             <input type="file" accept="image/*" onChange={onFileChange} />
             {uploading && <p style={{ marginTop: 6 }}>업로드 중...</p>}
             {certPreview && <img src={certPreview} alt="업로드 미리보기" style={{ marginTop: 8, width: 180, height: 'auto', borderRadius: 8, border: '1px solid #ddd' }} />}
@@ -144,9 +152,15 @@ function RegisterSeller() {
             <input type="text" value={bizName} onChange={(e) => setBizName(e.target.value)} placeholder="(주)Minimart" />
          </div>
 
-         <div className="register-input">
+         <div className="register-introduce">
             <label>회사 소개</label>
-            <input type="text" value={introduce} onChange={(e) => setIntroduce(e.target.value)} placeholder="어떤 회사인가요?" />
+            <textarea
+               type="textarea"
+               value={introduce}
+               onChange={(e) => setIntroduce(e.target.value)}
+               placeholder="어떤 회사인가요?&#10;줄바꿈을 사용해서 소개해주세요."
+               rows={4}
+            />
          </div>
 
          <div className="register-input">

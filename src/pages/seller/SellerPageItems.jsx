@@ -2,6 +2,8 @@ import { useSelector } from 'react-redux'
 import '../../styles/sellerPageItems.css'
 
 function SellerPageItems({ items }) {
+   if (!items || items.length === 0) return <div>상품이 없습니다.</div>
+   
    return (
       <div className="seller_items">
          {items.map((item) => (
