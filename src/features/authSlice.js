@@ -5,6 +5,12 @@ import { registerUser, loginUser, logoutUser, deleteUser, checkAuthStatus, getKa
 export const fetchUserInfoThunk = createAsyncThunk('auth/fetchUserInfo', async (_, { rejectWithValue }) => {
    try {
       const data = await fetchUserInfo()
+
+      // profile_img가 상대 경로인 경우에 베이스 URL 추가해주기
+      if (data.profile_img && !data.profile_img.startsWith('http')) {
+         data.profile_img = import.meta.env.VITE_API_URL + data.profile_img
+      }
+
       return data
    } catch (error) {
       if (error.response?.status === 401) {

@@ -92,7 +92,7 @@ function Home() {
    // 프로필 이미지 처리 함수
    const getProfileImage = (profileImg) => {
       // 빈 문자열, null, undefined, 또는 uploads/profile-images/default.png 같은 기본값일 때
-      if (!profileImg || profileImg === '/uploads/profile-images/default.png') {
+      if (!profileImg || profileImg === `${import.meta.env.VITE_API_URL}/uploads/profile-images/default.png`) {
          return '/none_profile_img.png'
       }
       return profileImg

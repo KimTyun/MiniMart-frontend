@@ -4,6 +4,8 @@ import { logoutUserThunk, fetchUserInfoThunk } from '../../features/authSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
+const baseUrl = import.meta.env.VITE_API_URL
+
 const Button = styled.button`
    width: 6rem;
    height: 32px;
@@ -55,12 +57,19 @@ function Haeder() {
       navigate('/seller/mypage')
    }
 
-   // 이미지 가져오지 못했을때 새로고침시 오류 해결
+   // 이미지 가져오지 못했을때 새로고침시 오류 해결, 사용자 정보 수정했을시 이상함 수정
+   const normalizeImageUrl = (imagePath) => {
+      if (!imagePath) return '/none_profile_img.png'
+      if (imagePath === '/uploads/profile-images/default.png') return '/none_profile_img.png'
+      if (imagePath.startsWith('http')) return imagePath
+
+      // 상대 경로를 절대 URL로 변환
+      const path = imagePath.startsWith('/') ? imagePath : '/' + imagePath
+      return baseUrl + path
+   }
+
    const getImage = () => {
-      if (!user.profile_img || user.profile_img === '/uploads/profile-images/default.png') {
-         return '/none_profile_img.png'
-      }
-      return user.profile_img
+      return normalizeImageUrl(user.profile_img)
    }
 
    return (
