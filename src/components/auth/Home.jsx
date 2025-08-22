@@ -144,6 +144,7 @@ function Home() {
                               {item.name}
                            </Typography>
                            <Typography className="new-card-info" component="div">
+                              <Typography className="new-card-img" component="img" src={item.Seller?.banner_img} alt={item.id} variant="h5"></Typography>
                               <Typography className="new-card-seller" component="span" variant="h5">
                                  {item.Seller?.name}
                               </Typography>
@@ -176,6 +177,7 @@ function Home() {
                                  {item.item_name}
                               </Typography>
                               <Typography className="popular-card-info" component="div">
+                                 <Typography className="new-card-img" component="img" src={item.banner_img} alt={item.id} variant="h6"></Typography>
                                  <Typography className="popular-card-seller" component="span" variant="h6">
                                     {item.seller_name}
                                  </Typography>

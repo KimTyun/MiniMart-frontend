@@ -48,7 +48,7 @@ function CartCard({ cartItem }) {
          </div>
          <div className="cartCard-seller-info">
             <div className="seller-info-wrap">
-               <img src={cartItem.Item?.Seller?.User?.profile_img ? `${cartItem.Item.Seller.User.profile_img}` : '/public/none_profile_img.webp'} alt="판매자프로필" />
+               <img src={cartItem.Item?.Seller?.User?.profile_img ? `${cartItem.Item.Seller.banner_img}` : '/public/none_profile_img.webp'} alt="판매자프로필" />
                <p>{cartItem.Item?.Seller?.name}</p>
             </div>
          </div>

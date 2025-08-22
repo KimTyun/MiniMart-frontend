@@ -4,7 +4,6 @@ import '../../styles/sellerPageItems.css'
 function SellerPageItems({ items }) {
    const navigate = useNavigate()
    if (!items || items.length === 0) return <div>상품이 없습니다.</div>
-   console.log(items)
 
    return (
       <div className="seller_items">

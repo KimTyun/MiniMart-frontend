@@ -66,7 +66,6 @@ export const logoutUser = async () => {
    try {
       await minimartApi.post('/auth/local/logout')
 
-      console.log('로그아웃 성공')
       return { success: true, message: '로그아웃 되었습니다.' }
    } catch (error) {
       console.error(`로그아웃 API 요청 오류: ${error}`)

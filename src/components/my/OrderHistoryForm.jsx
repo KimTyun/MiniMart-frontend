@@ -26,7 +26,6 @@ const OrderHistoryForm = () => {
 
    useEffect(() => {
       if (!Loading && isAuthenticated && user && user.id) {
-         console.log('userId:', user.id)
          dispatch(fetchMyPageThunk())
       } else if (!Loading && (!isAuthenticated || !user)) {
          console.log('인증이 실패했습니다. 사용자 정보를 불러올 수 없습니다.')

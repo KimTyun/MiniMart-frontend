@@ -200,7 +200,7 @@ function ItemDetail() {
                   </div>
                </div>
                <div className="another-item-card-wrap">
-                  <h4>이 판매자의 다른 상품</h4>
+                  <h4>{`${Seller?.name} 의 다른 상품`}</h4>
                   {
                      <Swiper slidesPerView="auto" spaceBetween={12} freeMode={true} modules={[FreeMode]} className="fiveDaysSwiper">
                         {items &&

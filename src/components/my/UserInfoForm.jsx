@@ -4,6 +4,7 @@ import { fetchMyPageThunk, updateMyPageThunk, deleteAccountThunk } from '../../f
 import { logoutUserThunk } from '../../features/authSlice'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
 import '../../styles/mypage.css'
+import { useNavigate } from 'react-router-dom'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
@@ -163,6 +164,7 @@ const UserInfoForm = () => {
       try {
          await dispatch(updateMyPageThunk(updatedFields)).unwrap()
          setModalState({ show: true, message: '수정사항이 성공적으로 적용되었습니다.', isConfirm: false })
+         window.location.href = '/'
       } catch (error) {
          setModalState({
             show: true,

@@ -29,8 +29,6 @@ function ManagerProduct() {
       })
    }
 
-   console.log(orders)
-
    return (
       <div>
          <h1>프로덕트 페이지</h1>
