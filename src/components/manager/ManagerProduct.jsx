@@ -13,7 +13,10 @@ function ManagerProduct() {
 
    // 삭제 버튼
    const handleDelete = (id) => {
-      dispatch(deleteOrderThunk(id))
+      const result = window.confirm(`주문번호${id}번을 진짜 취소하시겠습니까?`)
+      if (result) {
+         dispatch(deleteOrderThunk(id))
+      }
    }
 
    // 날짜 포맷팅 함수
