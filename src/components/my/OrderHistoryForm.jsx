@@ -5,6 +5,35 @@ import { fetchMyPageThunk, createReviewThunk, cancelOrderThunk } from '../../fea
 import '../../styles/mypage.css'
 
 const OrderHistoryForm = () => {
+   const dummyDb = {
+      orders: [
+         {
+            orderId: 'ORD001',
+            date: '2023.10.26',
+            status: 'DELIVERED',
+            hasReview: false,
+            seller: { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
+            OrderItems: [
+               {
+                  count: 1,
+                  Item: {
+                     id: 1,
+                     name: '프리미엄 커피 원두 200g',
+                     ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' }],
+                  },
+               },
+               {
+                  count: 1,
+                  Item: {
+                     id: 2,
+                     name: '수제 마카롱 세트',
+                     ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' }],
+                  },
+               },
+            ],
+         },
+      ],
+   }
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { user, isAuthenticated, Loading } = useSelector((state) => state.auth)
@@ -134,8 +163,8 @@ const OrderHistoryForm = () => {
    return (
       <section className="order-history-section">
          <h2 className="section-title">구매 내역</h2>
-         {orders.length === 0 && <p className="empty-text">구매 내역이 없습니다.</p>}
-         {orders.length > 0 && (
+         {orders?.length === 0 && <p className="empty-text">구매 내역이 없습니다.</p>}
+         {orders?.length > 0 && (
             <div className="order-list">
                {orders.map((order) => {
                   if (!order.OrderItems || order.OrderItems.length === 0) {
