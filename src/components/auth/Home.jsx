@@ -6,9 +6,10 @@ import { itemPopularThunk, itemRecentThunk } from '../../features/itemSlice'
 import { getSellerThunk } from '../../features/sellerSlice'
 import { Link, useNavigate } from 'react-router-dom'
 import SearchBar from '../shared/SearchBar'
-import Slider from 'react-slick'
-import 'slick-carousel/slick/slick.css'
-import 'slick-carousel/slick/slick-theme.css'
+import { Swiper, SwiperSlide } from 'swiper/react'
+import { Autoplay, Pagination } from 'swiper/modules'
+import 'swiper/css'
+import 'swiper/css/pagination'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
@@ -18,13 +19,6 @@ import CardActionArea from '@mui/material/CardActionArea'
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
 function Home() {
-   var settings = {
-      dots: true,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 1,
-      slidesToScroll: 1,
-   }
    const navigator = useNavigate()
 
    const dispatch = useDispatch()
@@ -109,21 +103,38 @@ function Home() {
          {/* 검색하는 부분 */}
          <SearchBar />
          <div className="slider">
-            {/* 슬라이드 부분 */}
-            <Slider {...settings}>
-               <div>
-                  <img src="/slide1.jpg" alt="slide1" />
-               </div>
-               <div>
-                  <img src="/slide2.jpg" alt="slide2" />
-               </div>
-               <div>
-                  <img src="/slide3.jpg" alt="slide3" />
-               </div>
-               <div>
-                  <img src="/slide4.jpg" alt="slide4" />
-               </div>
-            </Slider>
+            <Swiper
+               modules={[Autoplay, Pagination]}
+               spaceBetween={0}
+               slidesPerView={1}
+               autoplay={{
+                  delay: 3000,
+                  disableOnInteraction: false,
+               }}
+               pagination={{
+                  clickable: true,
+                  dynamicBullets: true,
+               }}
+               loop={true}
+               speed={500}
+               // 접근성 기능 완전 비활성화
+               a11y={false}
+               allowTouchMove={true}
+               style={{ width: '100%', height: 'auto' }}
+            >
+               <SwiperSlide>
+                  <img src="/slide1.jpg" alt="슬라이드 1" style={{ width: '100%', height: 'auto', display: 'block' }} />
+               </SwiperSlide>
+               <SwiperSlide>
+                  <img src="/slide2.jpg" alt="슬라이드 2" style={{ width: '100%', height: 'auto', display: 'block' }} />
+               </SwiperSlide>
+               <SwiperSlide>
+                  <img src="/slide3.jpg" alt="슬라이드 3" style={{ width: '100%', height: 'auto', display: 'block' }} />
+               </SwiperSlide>
+               <SwiperSlide>
+                  <img src="/slide4.jpg" alt="슬라이드 4" style={{ width: '100%', height: 'auto', display: 'block' }} />
+               </SwiperSlide>
+            </Swiper>
          </div>
          {/* 신제품 출시 */}
          <h1 className="new-h1">신제품 출시 !</h1>

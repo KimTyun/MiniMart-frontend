@@ -83,7 +83,6 @@ function ItemDetail() {
          .unwrap()
          .then(() => {
             const result = confirm('장바구니에 담았습니다. 장바구니로 이동하시겠습니까?')
-            console.log(result)
             if (result) navigate('/cart')
          })
    }
@@ -103,7 +102,8 @@ function ItemDetail() {
                         {imgs.otherImgs &&
                            imgs.otherImgs.map((e, i) => {
                               return (
-                                 <SwiperSlide key={Date.now()}>
+                                 // key값에 index 추가로 지정
+                                 <SwiperSlide key={`${i},${Date.now()}`}>
                                     <img src={`${import.meta.env.VITE_API_URL}${e.img_url}`} alt={`${i + 2}번째 상품 이미지`} />
                                  </SwiperSlide>
                               )
@@ -213,7 +213,7 @@ function ItemDetail() {
                                           <div>
                                              <p>{e.name}</p>
                                              <div>
-                                                <img src={`${Seller?.User?.profile_img}`} alt="판매자" referrerPolicy="no-referrer" />
+                                                <img src={`${Seller.banner_img}`} alt="판매자" referrerPolicy="no-referrer" />
                                                 <p>{Seller?.name}</p>
                                              </div>
                                           </div>

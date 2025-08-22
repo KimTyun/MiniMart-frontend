@@ -17,6 +17,14 @@ export const getCarts = async () => {
       const response = await minimartApi.get('/order/cart')
       return response.data
    } catch (error) {
+      // 장바구니 비어있을경우 빈배열로 저장
+      if (error.response?.status === 404) {
+         return {
+            success: true,
+            message: '장바구니 없음',
+            cart: { CartItems: [] },
+         }
+      }
       console.error('장바구니 가져오기 실패 : ', error)
       throw error
    }

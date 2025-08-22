@@ -4,7 +4,6 @@ import { fetchMyPageThunk, updateMyPageThunk, deleteAccountThunk } from '../../f
 import { logoutUserThunk } from '../../features/authSlice'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
 import '../../styles/mypage.css'
-import { useNavigate } from 'react-router-dom'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
