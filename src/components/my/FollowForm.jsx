@@ -35,7 +35,7 @@ const FollowForm = () => {
          setMessage('판매자를 언팔로우했습니다.')
          setError(null)
       } catch (error) {
-         setError('언팔로우 실패: 네트워크 오류가 발생했습니다.')
+         setError('언팔로우 실패: 네트워크 오류가 발생했습니다.', error)
          setMessage('')
          console.log(error)
       } finally {
@@ -81,6 +81,7 @@ const FollowForm = () => {
             {error && <p className="error">{error}</p>}
             {!loading && !error && followings.length === 0 && <p className="empty-state">팔로우한 판매자가 없습니다.</p>}
 
+            {message && <p className="success-message">{message}</p>}
             {!loading && followings.length > 0 && (
                <div className="following-list">
                   {followings.map((seller) => (
