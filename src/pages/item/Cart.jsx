@@ -55,7 +55,8 @@ function Cart() {
          })
    }
 
-   if (emptyCart || carts?.CartItems?.length == 0) {
+   // 조건 검사에 !carts?.CartItems 추가
+   if (emptyCart || !carts?.CartItems || carts?.CartItems?.length == 0) {
       return (
          <div className="cart">
             <h2>장바구니가 비어있습니다.</h2>

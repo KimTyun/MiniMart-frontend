@@ -118,6 +118,7 @@ const UserInfoForm = () => {
       } catch (error) {
          setModalState({ show: true, message: '이미지 업로드 실패', isConfirm: false }, error)
          setPreviewImage(originalData?.profile_img ? `${API_BASE_URL}${originalData.profile_img}` : `${API_BASE_URL}/uploads/profile-images/default.png`)
+         console.log(error)
       }
    }
 
@@ -162,6 +163,7 @@ const UserInfoForm = () => {
       try {
          await dispatch(updateMyPageThunk(updatedFields)).unwrap()
          setModalState({ show: true, message: '수정사항이 성공적으로 적용되었습니다.', isConfirm: false })
+         window.location.href = '/'
       } catch (error) {
          setModalState({
             show: true,

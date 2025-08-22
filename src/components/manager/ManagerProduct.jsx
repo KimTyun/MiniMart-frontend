@@ -16,6 +16,19 @@ function ManagerProduct() {
       dispatch(deleteOrderThunk(id))
    }
 
+   // 날짜 포맷팅 함수
+   const formatDate = (dateString) => {
+      if (!dateString) return '-'
+      const date = new Date(dateString)
+      return date.toLocaleDateString('ko-KR', {
+         year: 'numeric',
+         month: '2-digit',
+         day: '2-digit',
+         hour: '2-digit',
+         minute: '2-digit',
+      })
+   }
+
    return (
       <div>
          <h1>프로덕트 페이지</h1>
@@ -30,25 +43,24 @@ function ManagerProduct() {
                   <th>주문 상품 개수</th>
                   <th>주문 일자</th>
                   <th>배송지</th>
-                  {/* 나중에 총주문 가격으로 바꿀까 고민 */}
                   <th>총 주문 개수</th>
                   <th>주문 관리</th>
                </tr>
             </thead>
             <tbody>
-               {orders.map((e) => (
-                  <tr key={e.id}>
-                     <td>{e.id}</td>
-                     <td>{e.status}</td>
-                     <td>{e.User?.name}</td>
-                     <td>{e.buyer_id}</td>
-                     <td>{e.User.phone_number}</td>
-                     <td>{e.count}</td>
-                     <td>{e.Order_item?.createdAt}</td>
-                     <td>{e.User.address}</td>
-                     <td>{e.Order_item?.count}</td>
+               {orders.map((order) => (
+                  <tr key={order.id}>
+                     <td>{order.id}</td>
+                     <td>{order.status}</td>
+                     <td>{order.User?.name}</td>
+                     <td>{order.User?.email}</td>
+                     <td>{order.User?.phone_number}</td>
+                     <td>{order.OrderItems?.length || 0}개 상품</td>
+                     <td>{formatDate(order.createdAt || order.OrderItems?.[0]?.createdAt)}</td>
+                     <td>{order.User?.address}</td>
+                     <td>{order.OrderItems?.reduce((total, item) => total + (item.count || 0), 0) || 0}개</td>
                      <td>
-                        <button onClick={() => handleDelete(e.id)}>주문 취소</button>
+                        <button onClick={() => handleDelete(order.id)}>주문 취소</button>
                      </td>
                   </tr>
                ))}

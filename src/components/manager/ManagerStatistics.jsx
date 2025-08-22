@@ -22,8 +22,6 @@ function ManagerStatistics() {
               }))
          : []
 
-   console.log('Filtered pieData:', pieData)
-
    const COLORS = ['#ff0000', '#ff7b00', '#b1a500', '#51ff00', '#0084ff', '#6200ff']
 
    const renderCustomizedLabel = (props) => {

@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react'
 import IteamCreateForm from '../../components/item/IteamCreateForm'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { checkAuthStatusThunk } from '../../features/authSlice'
 
@@ -17,7 +17,7 @@ function ItemCreatePage() {
                navigate('/')
             }
          })
-   }, [])
+   }, [dispatch, navigate])
    return (
       <>
          <IteamCreateForm />
