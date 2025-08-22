@@ -72,7 +72,7 @@ function Haeder() {
                </Link>
             </div>
             <div style={{ width: '35rem', height: '89px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', marginRight: '40px' }}>
-               <button style={{ fontSize: '14px', border: 'none', borderRadius: '6px', marginRight: '10px', width: '100px', height: '32px', backgroundColor: '#FACC15', color: 'white' }} onClick={() => navigate('/orders')}>
+               <button style={{ fontSize: '14px', border: 'none', borderRadius: '6px', marginRight: '10px', width: '100px', height: '32px', backgroundColor: '#FACC15', color: 'white', cursor: 'pointer' }} onClick={() => navigate('/search?keyword=')}>
                   상품 주문
                </button>
                <Button onClick={() => navigate('/cart')}>장바구니</Button>

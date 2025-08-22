@@ -157,34 +157,7 @@ function Home() {
                )
             })}
          </div>
-         {/* 판매자 목록 */}
-         <h1 className="seller-h1">판매자 목록</h1>
-         <div className="seller-whole">
-            {sellers && sellers.length > 0 ? (
-               sellers.map((seller) => {
-                  return (
-                     <div
-                        onClick={() => {
-                           navigator(`/seller/${seller.id}`)
-                        }}
-                        key={seller.id}
-                        className="seller-card"
-                     >
-                        <div className="seller-left">
-                           <img src={getProfileImage(seller.User?.profile_img)} alt={`${seller.id}이미지`} />
-                           <h3>{seller.name}</h3>
-                        </div>
-                        <div className="seller-right">
-                           <p>주요 상품: {seller.main_products}</p>
-                           {seller.banner_img && <img src={seller.banner_img} alt={seller.name} />}
-                        </div>
-                     </div>
-                  )
-               })
-            ) : (
-               <div>판매자가 없습니다.</div>
-            )}
-         </div>
+
          {/* 지금 인기있는 제품들 */}
          <h1 className="popular-h1">지금 인기있는 제품들</h1>
          <div className="popular-whole">
@@ -217,6 +190,34 @@ function Home() {
                )
             ) : (
                <div>인기 상품이 없습니다.</div>
+            )}
+         </div>
+         {/* 판매자 목록 */}
+         <h1 className="seller-h1">판매자 목록</h1>
+         <div className="seller-whole">
+            {sellers && sellers.length > 0 ? (
+               sellers.map((seller) => {
+                  return (
+                     <div
+                        onClick={() => {
+                           navigator(`/seller/${seller.id}`)
+                        }}
+                        key={seller.id}
+                        className="seller-card"
+                     >
+                        <div className="seller-left">
+                           <img src={getProfileImage(seller.User?.profile_img)} alt={`${seller.id}이미지`} />
+                           <h3>{seller.name}</h3>
+                        </div>
+                        <div className="seller-right">
+                           <p>주요 상품: {seller.main_products}</p>
+                           {seller.banner_img && <img src={seller.banner_img} alt={seller.name} />}
+                        </div>
+                     </div>
+                  )
+               })
+            ) : (
+               <div>판매자가 없습니다.</div>
             )}
          </div>
       </div>
