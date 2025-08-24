@@ -8,6 +8,7 @@ import followReducer from '../features/followSlice'
 import adminReducer from '../features/adminSlice'
 import orderReducer from '../features/orderSlice'
 import searchReducer from '../features/searchSlice'
+import recommendReducer from '../features/recommendSlice'
 
 const store = configureStore({
    reducer: {
@@ -20,6 +21,7 @@ const store = configureStore({
       admin: adminReducer,
       order: orderReducer,
       search: searchReducer,
+      recommend: recommendReducer,
    },
 })
 
