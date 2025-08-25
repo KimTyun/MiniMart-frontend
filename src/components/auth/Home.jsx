@@ -204,10 +204,8 @@ function Home() {
                   ))
                )
             ) : (
-               <div>
-                  {/* 인기제품 implicit */}
-                  <RecommendItems />
-               </div>
+               // 인기 제품 없을 때 출력되도록
+               <RecommendItems />
             )}
          </div>
          {/* 판매자 목록 */}

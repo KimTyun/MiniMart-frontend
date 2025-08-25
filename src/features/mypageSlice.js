@@ -111,9 +111,9 @@ const mypageSlice = createSlice({
          })
          .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.user = action.payload
-            state.orders = action.payload.orders
-            state.followings = action.payload.followings
+            state.user = action.payload.data.user
+            state.orders = action.payload.data.orders
+            state.followings = action.payload.data.followings
             state.error = null
          })
          .addCase(fetchMyPageThunk.rejected, (state, action) => {
