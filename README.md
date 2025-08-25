@@ -1,5 +1,4 @@
 <div align="center">
-  <img align="center" height="100" alt="project-logo-readme" src="https://github.com/leejinwoo3/Feane/assets/130732028/77ff4edd-51a0-4841-8556-de35e1ff72be">
   <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼 MINI MART</h1>
 </div>
 <br />
@@ -24,7 +23,7 @@
       <td align="center"><a href="https://github.com/KimTyun"><img src="https://avatars.githubusercontent.com/u/106860407?v=4" width="100px;" alt=""/><br /><sub><b>팀장 : 김택윤</b></sub></a><br /></td>
       <td align="center"><a href="https://github.com/K-cook517"><img src="https://avatars.githubusercontent.com/u/211454084?v=4" width="100px;" alt=""/><br /><sub><b>팀원 : 김동빈</b></sub></a><br />
 </td>
-      <td align="center"><a href="https://github.com/silvergraylap"><img src="https://avatars.githubusercontent.com/u/130732028?v=4" width="100px;" alt=""/><br /><sub><b>팀원 : 박인덕</b></sub></a><br />
+      <td align="center"><a href="https://github.com/silvergraylap"><img src="https://avatars.githubusercontent.com/u/214441739?s=400&v=4" width="100px;" alt=""/><br /><sub><b>팀원 : 박인덕</b></sub></a><br />
 </td>
       <td align="center"><a href="https://github.com/taemin2336"><img src="https://avatars.githubusercontent.com/u/165637767?v=4" width="100px;" alt=""/><br /><sub><b>팀원 : 박태민</b></sub></a><br /></td>
     </tr>
