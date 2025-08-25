@@ -23,10 +23,8 @@ const FollowForm = () => {
       setLoading(true)
 
       try {
-         // 실제 API 호출을 시뮬레이션합니다.
          await new Promise((resolve) => setTimeout(resolve, 1000))
 
-         // 상태를 직접 업데이트하여 해당 판매자를 제거합니다.
          setFollowings((prevFollowings) => prevFollowings.filter((seller) => seller.id !== selectedSeller.id))
 
          setMessage('판매자를 언팔로우했습니다.')
