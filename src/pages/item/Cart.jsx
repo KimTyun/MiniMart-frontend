@@ -53,6 +53,9 @@ function Cart() {
             alert('주문이 완료되었습니다')
             navigate('/')
          })
+         .catch((e) => {
+            alert(e)
+         })
    }
 
    // 조건 검사에 !carts?.CartItems 추가
