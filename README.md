@@ -5,8 +5,7 @@
 
 
 # booktving
-> 오리진스div align="center">
-  <img align="center" height="100" alt="project-logo-readme" src="https://github.com/leejinwoo3/Feane/assets/130732028/77ff4edd-51a0-4841-8556-de35e1ff72be">
+> div align="center">
   <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼 MINI MART</h1>
 </div>
 <br />
