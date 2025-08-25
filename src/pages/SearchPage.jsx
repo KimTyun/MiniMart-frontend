@@ -13,40 +13,31 @@ const SearchPage = () => {
    const location = useLocation()
    const navigate = useNavigate()
 
-   // Redux 스토어에서 검색 상태를 가져옵니다.
    const { results, loading, error } = useSelector((state) => state.search)
 
-   // URL 쿼리 파라미터에서 현재 검색 조건을 읽어와 컴포넌트의 내부 상태를 초기화합니다.
    const params = new URLSearchParams(location.search)
    const [searchTerm, setSearchTerm] = useState(params.get('keyword') || '')
    const [priceRange, setPriceRange] = useState([parseInt(params.get('minPrice'), 10) || 0, parseInt(params.get('maxPrice'), 10) || 10000000])
 
-   // URL이 변경될 때마다 Redux Thunk를 실행하여 API 검색을 요청합니다.
    useEffect(() => {
       const keyword = params.get('keyword') || ''
       const minPrice = parseInt(params.get('minPrice'), 10) || 0
       const maxPrice = parseInt(params.get('maxPrice'), 10) || 10000000
-
-      // UI 상태도 URL과 동기화합니다.
       setSearchTerm(keyword)
       setPriceRange([minPrice, maxPrice])
 
       dispatch(searchItemsThunk({ keyword, minPrice, maxPrice }))
-   }, [location.search, dispatch]) // URL의 search 부분이 변경될 때마다 이 효과를 재실행합니다.
+   }, [location.search, dispatch, params])
 
-   // ✅ 'updateURL' 함수를 다시 정의합니다.
-   // 이 함수는 사용자가 필터를 변경했을 때 URL을 업데이트하는 역할을 합니다.
    const updateURL = useCallback(() => {
       const newParams = new URLSearchParams()
       if (searchTerm) newParams.set('keyword', searchTerm)
       if (priceRange[0] > 0) newParams.set('minPrice', priceRange[0])
       if (priceRange[1] < 10000000) newParams.set('maxPrice', priceRange[1])
 
-      // replace: true 옵션으로 브라우저 히스토리에 쌓이지 않게 합니다.
       navigate(`${location.pathname}?${newParams.toString()}`, { replace: true })
    }, [searchTerm, priceRange, navigate, location.pathname])
 
-   // ✅ 'handlePriceInputChange' 함수를 다시 정의합니다.
    const handlePriceInputChange = (index, value) => {
       const newPriceRange = [...priceRange]
       const numericValue = parseInt(value.replace(/,/g, ''), 10) || 0
@@ -112,23 +103,10 @@ const SearchPage = () => {
                      가격 설정
                   </h3>
                   <Box sx={{ padding: '0 10px' }}>
-                     <Slider
-                        value={priceRange}
-                        onChange={(e, newValue) => setPriceRange(newValue)}
-                        onChangeCommitted={updateURL} // 슬라이더 조작이 끝났을 때 URL 업데이트
-                        valueLabelDisplay="auto"
-                        min={0}
-                        max={10000000}
-                        step={10000}
-                     />
+                     <Slider value={priceRange} onChange={(e, newValue) => setPriceRange(newValue)} onChangeCommitted={updateURL} valueLabelDisplay="auto" min={0} max={10000000} step={10000} />
                   </Box>
                   <div className="price-input-group">
-                     <input
-                        type="text"
-                        value={priceRange[0].toLocaleString()}
-                        onChange={(e) => handlePriceInputChange(0, e.target.value)}
-                        onBlur={updateURL} // 입력창에서 포커스를 잃었을 때 URL 업데이트
-                     />
+                     <input type="text" value={priceRange[0].toLocaleString()} onChange={(e) => handlePriceInputChange(0, e.target.value)} onBlur={updateURL} />
                      <span>-</span>
                      <input type="text" value={priceRange[1].toLocaleString()} onChange={(e) => handlePriceInputChange(1, e.target.value)} onBlur={updateURL} />
                   </div>
