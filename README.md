@@ -1,10 +1,10 @@
 <div align="center">
-  <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼 MINI MART</h1>
+  <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼</h1>
 </div>
 <br />
 
 
-# booktving
+# MINI MART - API
 > div align="center">
   <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼 MINI MART</h1>
 </div>
