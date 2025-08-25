@@ -11,8 +11,8 @@
 <br />
 
 
-# booktving
-> 오리진스를 참고하여 "구글과 다음카카오, 다음 주소 찾기 api"를 활용해서 만든 이커머스 사이트
+# MINI MART - API
+> 아이디어스를 참고하여 "구글과 다음카카오, 다음 주소 찾기 api"를 활용해서 만든 이커머스 사이트
 <br />
 
 ## 팀원
@@ -85,23 +85,22 @@
 
 ------------
 
-### [ERD](https://docs.google.com/spreadsheets/d/1jFEMKzmybVJZHq-4xkeZ1K3mxzsNqekl/edit?gid=543982498#gid=543982498)
+### [ERD](https://www.erdcloud.com/d/5DbeF5rmn7wWfd2pY)
 ### [화면설계](https://www.figma.com/design/gNTLe3DX9wBXhiyTJkqf9K/MiniMart-1%EC%A1%B0?node-id=0-1&p=f&t=SvgzfqY0tN9Gx9IE-0)
 ### [요구사항 정의서](https://docs.google.com/spreadsheets/d/1GHInQ2hytFaNt6-YlhG3UXCae5jtfOmglhQbD_xud9c/edit?gid=0#gid=0)
+### [WBS](https://docs.google.com/spreadsheets/d/1jFEMKzmybVJZHq-4xkeZ1K3mxzsNqekl/edit?gid=543982498#gid=543982498)
 
 
 ### Use-Case
-<img width="600" src="https://github.com/leejinwoo3/Feane/assets/130732028/644c9173-cd12-4c23-b3d5-13881598fd59">
 
 ### ERD
-<img width="600" src="https://github.com/leejinwoo3/Feane/assets/130732028/69fc6bb8-fc25-46f1-8a4e-bd1cdc1e3795">
-<br />
+<img width="3020" height="1412" alt="Project_Minimart" src="https://github.com/user-attachments/assets/c72c3506-1b1d-47dc-8d45-e4f05a855680" />
 
 ------------
 
 ### 프로젝트 기여도
-<img width="600" src="https://github.com/lms8262/booktving/assets/130732028/b2ed567b-2af5-4f13-9aac-f73a2ab7e2a9">
 
 ### 프로젝트 협업용 git
 <a href="https://github.com/KimTyun/MiniMart-api">API git 링크</a>
+<br />
 <a href="https://github.com/KimTyun/MiniMart-frontend">Frontend git 링크</a>
