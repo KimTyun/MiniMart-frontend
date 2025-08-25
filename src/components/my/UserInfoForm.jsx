@@ -76,7 +76,8 @@ const UserInfoForm = () => {
             profile_img: user.profile_img || '',
          })
 
-         const fullImageUrl = user.profile_img && user.profile_img.trim() !== '' ? (user.profile_img.startsWith('http') ? user.profile_img : `${API_BASE_URL}${user.profile_img}`) : `${API_BASE_URL}/uploads/profile-images/default.png`
+         const isDefaultImage = user.profile_img === '/uploads/profile-images/default.png'
+         const fullImageUrl = user.profile_img && !isDefaultImage ? (user.profile_img.startsWith('http') ? user.profile_img : `${API_BASE_URL}${user.profile_img}`) : '/none_profile_img.webp'
          setPreviewImage(fullImageUrl)
       }
    }, [user])
@@ -205,7 +206,7 @@ const UserInfoForm = () => {
    return (
       <div className="user-info-box">
          <div className="user-info-left" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
-            <img className="user-profile-img" src={previewImage || user?.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ cursor: 'pointer' }} />
+            <img className="user-profile-img" src={previewImage && previewImage !== `${API_BASE_URL}/uploads/profile-images/default.png` ? previewImage : '/none_profile_img.webp'} alt="프로필" style={{ cursor: 'pointer' }} />
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
          </div>
 

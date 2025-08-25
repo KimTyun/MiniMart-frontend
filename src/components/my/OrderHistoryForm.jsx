@@ -4,12 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import { fetchMyPageThunk, createReviewThunk, cancelOrderThunk } from '../../features/mypageSlice'
 import '../../styles/mypage.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL
+
 const OrderHistoryForm = () => {
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { user, isAuthenticated, Loading } = useSelector((state) => state.auth)
 
    const { orders, loading, error } = useSelector((state) => state.mypage)
+   const firstItem = orders?.[0]?.OrderItems?.[0]?.Item
 
    // 모달 상태 관리
    const [isModalOpen, setIsModalOpen] = useState(false)
@@ -31,6 +34,16 @@ const OrderHistoryForm = () => {
          console.log('인증이 실패했습니다. 사용자 정보를 불러올 수 없습니다.')
       }
    }, [dispatch, user, isAuthenticated, Loading])
+
+   //판매자 프사 갖고오기
+   const getSellerAvatarSrc = (profileImg) => {
+      const defaultPath = '/uploads/profile-images/default.png'
+
+      if (profileImg && typeof profileImg === 'string' && profileImg.trim().toLowerCase() !== defaultPath) {
+         return `${API_BASE_URL}${profileImg}`
+      }
+      return 'https://placehold.co/50'
+   }
 
    // 커스텀 알림 모달 열기
    const showAlert = (message) => {
@@ -117,7 +130,7 @@ const OrderHistoryForm = () => {
             buyerId: user.id,
             sellerId: sellerId,
             productId: productId,
-            orderId: reviewingOrder.orderId,
+            orderId: reviewingOrder.id,
             content: content,
             rating: 5,
             img: null,
@@ -131,7 +144,6 @@ const OrderHistoryForm = () => {
          showAlert(`리뷰 등록 실패: ${err.message || '알 수 없는 오류'}`)
       }
    }
-
    return (
       <section className="order-history-section">
          <h2 className="section-title">구매 내역</h2>
@@ -164,8 +176,8 @@ const OrderHistoryForm = () => {
                            </div>
                         </div>
                         <div className="seller-mini">
-                           <img src={firstItem?.seller?.avatarUrl || 'https://via.placeholder.com/50'} alt={firstItem?.seller?.name} className="seller-avatar" />
-                           <span>{firstItem?.seller?.name}</span>
+                           <img src={getSellerAvatarSrc(firstItem?.Seller?.User?.profile_img)} alt={firstItem?.Seller?.name} className="seller-avatar" />
+                           <span>{firstItem?.Seller?.name}</span>
                         </div>
                         <div className="actions">
                            <button className="btn-small btn-secondary" onClick={() => handleCancelOrder(order.id)} disabled={loading || order.status !== 'PAID'}>
