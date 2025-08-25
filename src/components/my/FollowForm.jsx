@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import '../../styles/mypage.css'
 
 const FollowForm = () => {
-   const [followings, setFollowings] = useState([
-      { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
-      { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
-   ])
+   const [followings, setFollowings] = useState('')
    const [loading, setLoading] = useState(false)
    const [error, setError] = useState(null)
    const [isModalOpen, setIsModalOpen] = useState(false)

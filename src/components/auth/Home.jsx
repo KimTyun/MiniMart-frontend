@@ -15,6 +15,7 @@ import CardContent from '@mui/material/CardContent'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardActionArea from '@mui/material/CardActionArea'
+import RecommendItems from '../../components/item/recommendItems'
 
 const VITE_API_URL = import.meta.env.VITE_API_URL
 
@@ -26,6 +27,7 @@ function Home() {
    const token = useSelector((state) => state.auth.token)
    const { itemRecent, itemPopular, loading, error } = useSelector((state) => state.item)
    const sellers = useSelector((state) => state.seller.sellers)
+   const { isAuthenticated } = useSelector((state) => state.auth)
 
    // 최근 등록된 아이템 가져오기
    useEffect(() => {
@@ -202,7 +204,8 @@ function Home() {
                   ))
                )
             ) : (
-               <div>인기 상품이 없습니다.</div>
+               // 인기 제품 없을 때 출력되도록
+               <RecommendItems />
             )}
          </div>
          {/* 판매자 목록 */}
