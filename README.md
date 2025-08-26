@@ -1,18 +1,13 @@
 <div align="center">
-  <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼</h1>
-</div>
-<br />
-
-
-# MINI MART - FRONTEND
-> div align="center">
-  <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼 MINI MART</h1>
+    <img width="266" height="66" alt="Logo" src="https://github.com/user-attachments/assets/f915497d-95ff-4921-8ec7-948a318e7f57" />
+    <h1>팀프로젝트 : 오픈마켓 이커머스 플랫폼</h1>
 </div>
 <br />
 
 
 # MINI MART - API
-> 아이디어스를 참고하여 "구글과 다음카카오, 다음 주소 찾기 api"를 활용해서 만든 이커머스 사이트
+> 가입을 쉽게 할 수 있도록 "구글과 다음카카오, 다음 주소 찾기 api"를 활용해서 만든 이커머스 사이트
+> 사용자는 개성 있는 상품을 발견하는 즐거움을, 판매자는 안정적인 온라인 판로를 확보하며 브랜드 가치를 높이는 경험을 제공하는 것을 목표로 합니다.
 <br />
 
 ## 팀원
@@ -30,16 +25,121 @@
 </table>
 <br />
 
+## 개발환경
+ - OS: Windows 10, 11
+ - 실행 환경: Node.js v22.18.0, Python 3.13.7
+ - 개발 도구: VS Code, Git & GitHub, DBeaver, Anaconda
+ - 데이터베이스: MySQL v8.0.43
+
 ## 개발스택
-- LANGUAGE : <img src="https://img.shields.io/badge/JAVA 17-blue?style=flat&logo=Java&logoColor=white"/> <img src="https://img.shields.io/badge/HTML-orange?style=flat&logo=html5&logoColor=white"/> <img src="https://img.shields.io/badge/CSS-1572B6?style=flat&logo=CSS3&logoColor=white"/> <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=Javascript&logoColor=white"/> <img src="https://img.shields.io/badge/Bootstrap-7952B3?style=flat&logo=Bootstrap&logoColor=white"/>
-- FRAMEWORK : <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=flat&logo=springboot&logoColor=white"/> <img src="https://img.shields.io/badge/Spring MVC-6DB33F?style=flat&logo=spring&logoColor=white"/> 
-- DB : <img src="https://img.shields.io/badge/MySQL-4479A1?style=flat&logo=mysql&logoColor=white"/>
-- SECURITY : <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=flat&logo=springsecurity&logoColor=white"/>
-- BULID : <img src="https://img.shields.io/badge/Maven-light purple?style=flat&logo=maven&logoColor=white"/>
-- TOOL : <img src="https://img.shields.io/badge/EclipseIDE-2C2255?style=flat&logo=eclipseide&logoColor=white"/>
-- ORM : <img src="https://img.shields.io/badge/Spring JPA-6DB33F?style=flat&logo=spring&logoColor=white"/>
-- API : 구글과 다음카카오, 다음 주소 찾기 api
-<br />
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><strong>Frontend</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/>
+        <img src="https://img.shields.io/badge/Redux Toolkit-764ABC?style=for-the-badge&logo=Redux&logoColor=white"/>
+        <img src="https://img.shields.io/badge/React Router-CA4245?style=for-the-badge&logo=React-Router&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Styled Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Backend</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Passport-34E27A?style=for-the-badge&logo=Passport&logoColor=white"/>
+        <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON-Web-Tokens&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Database</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Deployment</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=Amazon-AWS&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Collaboration</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black"/>
+      </td>
+    </tr>
+      <tr>
+      <td align="center"><strong>API</strong></td>
+      <td>
+        <p>다음카카오, 구글</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+## 3. 주요 기능 (Features)
+<table>
+  <tbody>
+    <tr>
+      <td align="center"><strong>Frontend</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=React&logoColor=black"/>
+        <img src="https://img.shields.io/badge/Redux Toolkit-764ABC?style=for-the-badge&logo=Redux&logoColor=white"/>
+        <img src="https://img.shields.io/badge/React Router-CA4245?style=for-the-badge&logo=React-Router&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Axios-5A29E4?style=for-the-badge&logo=Axios&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Styled Components-DB7093?style=for-the-badge&logo=styled-components&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Backend</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=Node.js&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Express-000000?style=for-the-badge&logo=Express&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Sequelize-52B0E7?style=for-the-badge&logo=Sequelize&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Passport-34E27A?style=for-the-badge&logo=Passport&logoColor=white"/>
+        <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=JSON-Web-Tokens&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Database</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Deployment</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/AWS-232F3E?style=for-the-badge&logo=Amazon-AWS&logoColor=white"/>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"><strong>Collaboration</strong></td>
+      <td>
+        <img src="https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=Git&logoColor=white"/>
+        <img src="https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=GitHub&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Figma-F24E1E?style=for-the-badge&logo=Figma&logoColor=white"/>
+        <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=Swagger&logoColor=black"/>
+      </td>
+    </tr>
+      <tr>
+      <td align="center"><strong>API</strong></td>
+      <td>
+        <p>다음카카오, 구글</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<br/>
+
 
 ## 담당 파트 상세내역
 > 팀장 : 김택윤
@@ -84,6 +184,8 @@
 <br />
 
 ------------
+## 4. 산출물
+<br />
 
 ### [ERD](https://www.erdcloud.com/d/5DbeF5rmn7wWfd2pY)
 ### [화면설계](https://www.figma.com/design/gNTLe3DX9wBXhiyTJkqf9K/MiniMart-1%EC%A1%B0?node-id=0-1&p=f&t=SvgzfqY0tN9Gx9IE-0)
@@ -91,16 +193,20 @@
 ### [WBS](https://docs.google.com/spreadsheets/d/1jFEMKzmybVJZHq-4xkeZ1K3mxzsNqekl/edit?gid=543982498#gid=543982498)
 
 
-### Use-Case
-
 ### ERD
 <img width="3020" height="1412" alt="Project_Minimart" src="https://github.com/user-attachments/assets/c72c3506-1b1d-47dc-8d45-e4f05a855680" />
 
-------------
+### 프로젝트 아키텍쳐
+<img width="1990" height="1100" alt="image" src="https://github.com/user-attachments/assets/b2db01ff-1131-44d5-97f5-e9d886d1bf1f" />
 
-### 프로젝트 기여도
+
+------------
 
 ### 프로젝트 협업용 git
 <a href="https://github.com/KimTyun/MiniMart-api">API git 링크</a>
 <br />
 <a href="https://github.com/KimTyun/MiniMart-frontend">Frontend git 링크</a>
+
+
+
+
