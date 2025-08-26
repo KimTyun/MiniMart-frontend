@@ -1,0 +1,136 @@
+/* RecommendItems.jsx 컴포넌트를 위한 CSS */
+
+/* 전체 추천 상품 섹션 컨테이너 */
+.recommend-section {
+   width: 100%;
+   margin: 40px auto;
+}
+
+/* 섹션 제목 스타일 (기존 popular-h1과 동일하게 맞춤) */
+.recommend-section h2.section-title {
+   text-align: center;
+   margin: 150px 0 50px 0;
+   font-size: 2em; /* 적절한 크기로 조정 */
+}
+
+/* 추천 상품 목록을 담는 컨테이너 */
+.recommend-list-container {
+   display: flex;
+   overflow-x: auto; /* 가로 스크롤 가능하게 함 */
+   justify-content: space-around; /* 카드 사이 여백을 균등하게 */
+   gap: 20px;
+   padding: 10px 0;
+   -webkit-overflow-scrolling: touch;
+   scrollbar-width: thin;
+   scrollbar-color: #ccc #f0f0f0;
+   max-width: 1200px; /* 전체 컨테이너와 동일하게 맞춤 */
+   margin: 0 auto;
+}
+
+/* 스크롤바 스타일링 (Webkit - Chrome, Safari) */
+.recommend-list-container::-webkit-scrollbar {
+   height: 8px;
+}
+
+.recommend-list-container::-webkit-scrollbar-track {
+   background: #f0f0f0;
+   border-radius: 10px;
+}
+
+.recommend-list-container::-webkit-scrollbar-thumb {
+   background-color: #ccc;
+   border-radius: 10px;
+   border: 2px solid #f0f0f0;
+}
+
+/* 개별 추천 상품 카드 스타일 (popular-card와 유사하게) */
+.recommend-item-card {
+   width: 350px; /* popular-card와 동일한 너비 */
+   flex-shrink: 0;
+   background-color: #fff;
+   border: 1px solid #e0e0e0;
+   border-radius: 12px;
+   overflow: hidden;
+   transition: transform 0.3s ease;
+   cursor: pointer;
+   text-align: left;
+   text-decoration: none;
+   color: inherit;
+}
+
+.recommend-item-card:hover {
+   transform: translateY(-5px);
+}
+
+.recommend-item-image {
+   width: 100%;
+   height: 400px; /* popular-card-media와 동일한 높이 */
+   object-fit: cover;
+   border-radius: 20px; /* popular-card-media와 동일한 둥근 모서리 */
+}
+
+.recommend-item-info {
+   padding: 15px;
+}
+
+.recommend-item-name {
+   font-size: 1rem;
+   font-weight: 600;
+   margin-bottom: 5px;
+   color: #555;
+   white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+}
+
+.recommend-item-price {
+   font-size: 1.1rem;
+   font-weight: 700;
+   color: #007bff;
+}
+
+/* 로그인하지 않았을 때 메시지 스타일 */
+.recommend-empty-message-container {
+   text-align: center;
+   padding: 40px 20px;
+   background-color: #f8f9fa;
+   border-radius: 12px;
+   border: 1px dashed #ccc;
+   margin: 20px auto;
+   max-width: 600px;
+}
+
+.recommend-empty-message-container p {
+   font-size: 1.1rem;
+   color: #6c757d;
+   font-weight: 500;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+   .recommend-section {
+      padding: 0 10px;
+   }
+
+   .recommend-section h2.section-title {
+      font-size: 1.5rem;
+   }
+
+   .recommend-list-container {
+      gap: 15px;
+   }
+
+   .recommend-item-card {
+      width: 300px;
+   }
+
+   .recommend-item-image {
+      height: 300px;
+   }
+}
+
+@media (max-width: 480px) {
+   .recommend-section h2.section-title {
+      font-size: 1.3rem;
+   }
+}

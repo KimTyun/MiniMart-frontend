@@ -1,74 +1,16 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { updateMyPage, unfollowSeller, writeReview, getSeller } from '../api/mypageApi'
+import { updateMyPage, unfollowSeller, cancelOrder, writeReview, getSeller } from '../api/mypageApi'
 import minimartApi from '../api/axiosApi'
 
-// dummyDb는 가상의 주문내역과 팔로워입니다. 이 부분을 보강하거나, 실제 제출 시엔 삭제하고 DB에 저장된 값 불러오는 거 테스트햐봐야 합니다.
-const dummyDb = {
-   orders: [
-      {
-         orderId: 'ORD001',
-         date: '2023.10.26',
-         status: 'DELIVERED',
-         hasReview: false,
-         seller: { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
-         OrderItems: [
-            {
-               count: 1,
-               Item: {
-                  id: 1,
-                  name: '프리미엄 커피 원두 200g',
-                  ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' }],
-               },
-            },
-            {
-               count: 1,
-               Item: {
-                  id: 2,
-                  name: '수제 마카롱 세트',
-                  ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' }],
-               },
-            },
-         ],
-      },
-      {
-         orderId: 'ORD002',
-         date: '2023.10.24',
-         status: 'PAID',
-         hasReview: false,
-         seller: { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
-         OrderItems: [
-            {
-               count: 1,
-               Item: {
-                  id: 3,
-                  name: '유기농 수제잼',
-                  ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Jam' }],
-               },
-            },
-         ],
-      },
-   ],
-   followings: [
-      { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
-      { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
-   ],
-}
-
 // 내 정보 불러오기
-export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async () => {
-   // 실제 API 호출 대신 더미 데이터를 Promise로 반환하여 비동기 상황을 시뮬레이션
-   return Promise.resolve(dummyDb)
+export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, { rejectWithValue }) => {
+   try {
+      const response = await minimartApi.get('/mypage', { withCredentials: true })
+      return response.data
+   } catch (err) {
+      return rejectWithValue(err.response?.data || err.message)
+   }
 })
-
-// 내 정보 불러오기
-// export const fetchMyPageThunk = createAsyncThunk('mypage/fetchMyPage', async (_, { rejectWithValue }) => {
-//    try {
-//       const response = await minimartApi.get('/mypage', { withCredentials: true })
-//       return response.data
-//    } catch (err) {
-//       return rejectWithValue(err.response?.data || err.message)
-//    }
-// })
 
 // 내 정보 수정
 export const updateMyPageThunk = createAsyncThunk('mypage/updateMyPage', async (formData, thunkAPI) => {
@@ -91,39 +33,16 @@ export const deleteAccountThunk = createAsyncThunk('mypage/deleteAccount', async
    }
 })
 
-// 더미 주문취소
-export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, { rejectWithValue }) => {
+// 주문취소
+export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
    try {
-      console.log('orderID:', orderId)
-
-      const order = dummyDb.orders.find((o) => o.orderId === orderId)
-
-      if (!order || order.status === 'DELIVERED') {
-         console.log('주문상태 처리 중 에러 발생:', orderId)
-         return rejectWithValue({ message: '주문을 찾을 수 없거나 이미 배송이 시작되어 취소할 수 없습니다.' })
-      }
-
-      return Promise.resolve({
-         message: '주문이 성공적으로 취소되었습니다.',
-         orderId,
-         status: 'CANCELED',
-      })
-   } catch (err) {
-      console.error('주문 취소 중 에러 발생:', err)
-      return rejectWithValue({ message: '주문 취소 실패' })
+      const response = await cancelOrder(orderId)
+      return response.data
+   } catch (error) {
+      console.error('cancelOrderThunk 에러:', error.response)
+      return thunkAPI.rejectWithValue(error.response?.data?.message || '주문 취소 실패')
    }
 })
-
-// // 주문취소
-// export const cancelOrderThunk = createAsyncThunk('mypage/cancelOrder', async (orderId, thunkAPI) => {
-//    try {
-//       const response = await cancelOrder(orderId)
-//       return response.data
-//    } catch (error) {
-//       console.error('cancelOrderThunk 에러:', error.response)
-//       return thunkAPI.rejectWithValue(error.response?.data?.message || '주문 취소 실패')
-//    }
-// })
 
 // 팔로잉 취소 (sellerId 받음)
 export const unfollowSellerThunk = createAsyncThunk('mypage/unfollowSeller', async (sellerId, thunkAPI) => {
@@ -155,6 +74,21 @@ export const getSellerThunk = createAsyncThunk('mypage/getSeller', async (_, { r
    }
 })
 
+//프사 변경
+export const updateProfilePicThunk = createAsyncThunk('mypage/updateProfilePic', async (formData, { rejectWithValue }) => {
+   try {
+      const response = await minimartApi.post('/mypage/uploads/profile-images', formData, {
+         withCredentials: true,
+         headers: {
+            'Content-Type': 'multipart/form-data',
+         },
+      })
+      return response.data
+   } catch (error) {
+      return rejectWithValue(error.response?.data?.message || error.message)
+   }
+})
+
 const mypageSlice = createSlice({
    name: 'mypage',
    initialState: {
@@ -164,8 +98,8 @@ const mypageSlice = createSlice({
       loading: false,
       error: null,
       seller: null,
-      reviewStatus: null,
       status: 'idle',
+      reviewStatus: 'idle',
    },
    reducers: {},
    extraReducers: (builder) => {
@@ -177,9 +111,9 @@ const mypageSlice = createSlice({
          })
          .addCase(fetchMyPageThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.user = action.payload
-            state.orders = action.payload.orders
-            state.followings = action.payload.followings
+            state.user = action.payload.data.user
+            state.orders = action.payload.data.orders
+            state.followings = action.payload.data.followings
             state.error = null
          })
          .addCase(fetchMyPageThunk.rejected, (state, action) => {
@@ -211,37 +145,20 @@ const mypageSlice = createSlice({
             state.loading = false
             state.error = action.payload
          })
-         // 더미 주문취소
+         // 주문취소
          .addCase(cancelOrderThunk.pending, (state) => {
-            state.status = 'loading'
+            state.loading = true
+            state.error = null
          })
          .addCase(cancelOrderThunk.fulfilled, (state, action) => {
-            state.status = 'succeeded'
-            // 불변성을 지키기 위해 map을 사용하여 새로운 배열을 반환합니다.
-            const updatedOrders = state.orders.map((order) =>
-               // ✨ Thunk에서 반환된 payload의 status를 사용하여 상태를 업데이트합니다.
-               order.orderId === action.payload.orderId ? { ...order, status: action.payload.status } : order
-            )
-            state.orders = updatedOrders
+            state.loading = false
+            state.error = null
+            state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: 'CANCELED' } : order))
          })
          .addCase(cancelOrderThunk.rejected, (state, action) => {
-            state.status = 'failed'
-            state.error = action.payload?.message || action.error.message
+            state.loading = false
+            state.error = action.payload
          })
-         // // 주문취소
-         // .addCase(cancelOrderThunk.pending, (state) => {
-         //    state.loading = true
-         //    state.error = null
-         // })
-         // .addCase(cancelOrderThunk.fulfilled, (state, action) => {
-         //    state.loading = false
-         //    state.error = null
-         //    state.orders = state.orders.map((order) => (order.orderId === action.meta.arg ? { ...order, status: 'CANCELED' } : order))
-         // })
-         // .addCase(cancelOrderThunk.rejected, (state, action) => {
-         //    state.loading = false
-         //    state.error = action.payload
-         // })
          // 팔로잉 취소
          .addCase(unfollowSellerThunk.pending, (state) => {
             state.loading = true
@@ -261,16 +178,19 @@ const mypageSlice = createSlice({
          .addCase(createReviewThunk.pending, (state) => {
             state.loading = true
             state.error = null
+            state.reviewStatus = 'loading'
          })
          .addCase(createReviewThunk.fulfilled, (state, action) => {
             state.loading = false
-            state.orders = state.orders.map((order) => (order.orderId === action.meta.arg.orderId ? { ...order, hasReview: true } : order))
+            state.reviewStatus = 'succeeded'
+            state.orders = state.orders.map((order) => (order.orderId === action.payload.orderId ? { ...order, hasReview: true } : order))
          })
          .addCase(createReviewThunk.rejected, (state, action) => {
             state.loading = false
+            state.reviewStatus = 'failed'
             state.error = action.payload
          })
-
+         // 판매자?
          .addCase(getSellerThunk.pending, (state) => {
             state.loading = true
             state.error = null
@@ -280,6 +200,21 @@ const mypageSlice = createSlice({
             state.seller = action.payload.seller
          })
          .addCase(getSellerThunk.rejected, (state, action) => {
+            state.loading = false
+            state.error = action.payload
+         })
+         // 프사 변경
+         .addCase(updateProfilePicThunk.pending, (state) => {
+            state.loading = true
+            state.error = null
+         })
+         .addCase(updateProfilePicThunk.fulfilled, (state, action) => {
+            state.loading = false
+            if (state.user) {
+               state.user.profile_img = action.payload.url
+            }
+         })
+         .addCase(updateProfilePicThunk.rejected, (state, action) => {
             state.loading = false
             state.error = action.payload
          })

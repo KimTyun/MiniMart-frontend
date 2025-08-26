@@ -4,6 +4,7 @@ import { fetchMyPageThunk, updateMyPageThunk, deleteAccountThunk } from '../../f
 import { logoutUserThunk } from '../../features/authSlice'
 import { useDaumPostcodePopup } from 'react-daum-postcode'
 import '../../styles/mypage.css'
+import minimartApi from '../../api/axiosApi'
 
 const API_BASE_URL = import.meta.env.VITE_API_URL
 
@@ -75,7 +76,8 @@ const UserInfoForm = () => {
             profile_img: user.profile_img || '',
          })
 
-         const fullImageUrl = user.profile_img && user.profile_img.trim() !== '' ? (user.profile_img.startsWith('http') ? user.profile_img : `${API_BASE_URL}${user.profile_img}`) : `${API_BASE_URL}/uploads/profile-images/default.png`
+         const isDefaultImage = user.profile_img === '/uploads/profile-images/default.png'
+         const fullImageUrl = user.profile_img && !isDefaultImage ? (user.profile_img.startsWith('http') ? user.profile_img : `${API_BASE_URL}${user.profile_img}`) : '/none_profile_img.webp'
          setPreviewImage(fullImageUrl)
       }
    }, [user])
@@ -90,16 +92,11 @@ const UserInfoForm = () => {
       const fd = new FormData()
       fd.append('profileImage', file)
 
-      const response = await fetch(`${API_BASE_URL}/mypage/uploads/profile-images`, {
-         method: 'POST',
-         headers: { Authorization: `Bearer ${token}` },
-         body: fd,
-         credentials: 'include',
+      const response = await minimartApi.post('/mypage/uploads/profile-images', fd, {
+         headers: { 'Content-Type': 'multipart/form-data' },
       })
 
-      if (!response.ok) throw new Error('업로드 실패')
-      const data = await response.json()
-      return data.url
+      return response.data.url
    }
 
    const handleFileChange = async (e) => {
@@ -162,8 +159,15 @@ const UserInfoForm = () => {
 
       try {
          await dispatch(updateMyPageThunk(updatedFields)).unwrap()
-         setModalState({ show: true, message: '수정사항이 성공적으로 적용되었습니다.', isConfirm: false })
-         window.location.href = '/'
+         setModalState({
+            show: true,
+            message: '수정사항이 성공적으로 적용되었습니다.',
+            isConfirm: false,
+            onClose: () => {
+               closeModal()
+               window.location.href = '/'
+            },
+         })
       } catch (error) {
          setModalState({
             show: true,
@@ -202,7 +206,7 @@ const UserInfoForm = () => {
    return (
       <div className="user-info-box">
          <div className="user-info-left" onClick={handleImageClick} style={{ cursor: 'pointer' }}>
-            <img className="user-profile-img" src={previewImage || user?.profile_img || '/none_profile_img.webp'} alt="프로필" style={{ cursor: 'pointer' }} />
+            <img className="user-profile-img" src={previewImage && previewImage !== `${API_BASE_URL}/uploads/profile-images/default.png` ? previewImage : '/none_profile_img.webp'} alt="프로필" style={{ cursor: 'pointer' }} />
             <input ref={fileInputRef} type="file" accept="image/*" style={{ display: 'none' }} onChange={handleFileChange} />
          </div>
 

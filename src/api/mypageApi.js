@@ -14,11 +14,11 @@ export const writeReview = (reviewData) => {
 }
 // 팔로잉 취소
 export const unfollowSeller = (sellerId) => {
-   return minimartApi.delete(`/unfollow/${sellerId}`)
+   return minimartApi.post(`/mypage/unfollow/${sellerId}`)
 }
 // 주문 취소
 export const cancelOrder = (orderId) => {
-   return minimartApi.patch(`/orders/${orderId}/cancel`, {})
+   return minimartApi.patch(`/mypage/${orderId}/cancel`, {})
 }
 
 // 판매자 내정보 가져오기
