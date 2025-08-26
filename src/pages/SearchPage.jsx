@@ -27,7 +27,7 @@ const SearchPage = () => {
       setPriceRange([minPrice, maxPrice])
 
       dispatch(searchItemsThunk({ keyword, minPrice, maxPrice }))
-   }, [location.search, dispatch, params])
+   }, [location.search, dispatch])
 
    const updateURL = useCallback(() => {
       const newParams = new URLSearchParams()
