@@ -130,7 +130,8 @@
 
 
 ### ERD
-<img width="3020" height="1412" alt="Project_Minimart" src="https://github.com/user-attachments/assets/c72c3506-1b1d-47dc-8d45-e4f05a855680" />
+<img width="3020" height="1412" alt="Project_Minimart (1)" src="https://github.com/user-attachments/assets/c3e68d03-8d31-4f1e-80b1-0b681df824b6" />
+
 
 ### 프로젝트 아키텍쳐
 <img width="1990" height="1100" alt="image" src="https://github.com/user-attachments/assets/b2db01ff-1131-44d5-97f5-e9d886d1bf1f" />
