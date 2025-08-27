@@ -5,9 +5,10 @@
 <br />
 
 # 1. 프로젝트 개요 (Introduction)
-## MINI MART - FRONTEND
+## MINI MART - Frontend
 > 가입을 쉽게 할 수 있도록 "구글과 다음카카오, 다음 주소 찾기 api"를 활용해서 만든 이커머스 사이트
 > 사용자는 개성 있는 상품을 발견하는 즐거움을, 판매자는 안정적인 온라인 판로를 확보하며 브랜드 가치를 높이는 경험을 제공하는 것을 목표로 합니다.
+> AI를 활용한 추천 기능
 <br />
 
 ## 팀원
@@ -101,7 +102,7 @@
     <tr>
         <td align="center"><strong>상품 및 주문</strong></td>
         <td align="center"><p>상품 등록/수정/삭제, 상세 페이지, 장바구니, 주문 내역 관리</p></td>
-        <td align="center"><p>김택윤, 박태민</p></td>
+        <td align="center"><p>김택윤</p></td>
     </tr>
       <tr>
         <td align="center"><strong>구매자 시스템</strong></td>
@@ -110,7 +111,7 @@
     </tr>
     <tr>
         <td align="center"><strong>판매자 시스템, 관리자 페이지</strong></td>
-        <td align="center"><p>회원 정보 관리, 판매자 등록 신청,판매자 승인 관리,  관리자 승인/거절, 판매자별 상세 페이지, 관리자 대시보드</p></td>
+        <td align="center"><p>회원 정보 관리, 판매자 등록 신청, 판매자 승인 관리, 고객 통계,  관리자 승인/거절, 판매자별 상세 페이지, 관리자 대시보드</p></td>
         <td align="center"><p>박태민</p></td>
     </tr>
   </tbody>
@@ -122,9 +123,9 @@
 ## 4. 시스템 아키텍처 / ERD (Architecture & DB), 산출물
 <br />
 
-### [ERD](https://www.erdcloud.com/d/5DbeF5rmn7wWfd2pY)
+### [ERD](https://www.erdcloud.com/d/hfrZrpNzDvpX4Hnw6)
 ### [화면설계](https://www.figma.com/design/gNTLe3DX9wBXhiyTJkqf9K/MiniMart-1%EC%A1%B0?node-id=0-1&p=f&t=SvgzfqY0tN9Gx9IE-0)
-### [요구사항 정의서](https://docs.google.com/spreadsheets/d/1GHInQ2hytFaNt6-YlhG3UXCae5jtfOmglhQbD_xud9c/edit?gid=0#gid=0)
+### [요구사항 정의서](https://docs.google.com/spreadsheets/d/1GRf1tJOI5YOUl2a6avIVKYtuyc7eKi7FXvF_sQGw5PE/edit?gid=0#gid=0)
 ### [WBS](https://docs.google.com/spreadsheets/d/1jFEMKzmybVJZHq-4xkeZ1K3mxzsNqekl/edit?gid=543982498#gid=543982498)
 
 
@@ -158,6 +159,7 @@
   - 아이디 / 비밀번호 찾기 기능 구현
   - 문의하기 기능 구현 _ 문의내역 리스트 / 문의 답변하기
   - 워크플로우 관리, API 명세서 관리(Swagger 사용)
+  - AI를 활용한 추천 기능 구현
 <br />
 
 > 팀원 : 박인덕
@@ -184,5 +186,8 @@
 <a href="https://github.com/KimTyun/MiniMart-frontend">Frontend git 링크</a>
 
 ------------
+
+
+
 
 
