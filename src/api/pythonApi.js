@@ -13,7 +13,7 @@ const pythonApi = axios.create({
 })
 
 // 주문갯수로 추천
-export const recommendCartCount = async (userId) => {
+export const recommendCart = async (userId) => {
    try {
       const response = await pythonApi.get(`/recommend?user_id=${userId}`)
       const recommendData = response.data

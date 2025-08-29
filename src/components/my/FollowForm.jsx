@@ -2,10 +2,7 @@ import React, { useState } from 'react'
 import '../../styles/mypage.css'
 
 const FollowForm = () => {
-   const [followings, setFollowings] = useState([
-      { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
-      { id: 'seller_2', name: '커피의 정석', avatarUrl: 'https://placehold.co/50x50/a9a9a9/ffffff?text=C' },
-   ])
+   const [followings, setFollowings] = useState('')
    const [loading, setLoading] = useState(false)
    const [error, setError] = useState(null)
    const [isModalOpen, setIsModalOpen] = useState(false)
@@ -26,10 +23,8 @@ const FollowForm = () => {
       setLoading(true)
 
       try {
-         // 실제 API 호출을 시뮬레이션합니다.
          await new Promise((resolve) => setTimeout(resolve, 1000))
 
-         // 상태를 직접 업데이트하여 해당 판매자를 제거합니다.
          setFollowings((prevFollowings) => prevFollowings.filter((seller) => seller.id !== selectedSeller.id))
 
          setMessage('판매자를 언팔로우했습니다.')

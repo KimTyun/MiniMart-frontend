@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import { recommendCartCountUser } from '../api/pythonApi'
+import { recommendCart } from '../api/pythonApi'
 
 const initialState = {
    recommend: [],
@@ -9,7 +9,7 @@ const initialState = {
 
 export const fetchRecommend = createAsyncThunk('recommend/fetchRecommend', async (userId, { rejectWithValue }) => {
    try {
-      const response = await recommendCartCountUser(userId)
+      const response = await recommendCart(userId)
       return response.data
    } catch (error) {
       const errorMessage = error.response?.data?.message || '알 수 없는 오류가 발생했습니다.'

@@ -4,41 +4,15 @@ import { useNavigate } from 'react-router-dom'
 import { fetchMyPageThunk, createReviewThunk, cancelOrderThunk } from '../../features/mypageSlice'
 import '../../styles/mypage.css'
 
+const API_BASE_URL = import.meta.env.VITE_API_URL
+
 const OrderHistoryForm = () => {
-   const dummyDb = {
-      orders: [
-         {
-            orderId: 'ORD001',
-            date: '2023.10.26',
-            status: 'DELIVERED',
-            hasReview: false,
-            seller: { id: 'seller_1', name: '빵순이네', avatarUrl: 'https://placehold.co/50x50/ffc0cb/000000?text=빵' },
-            OrderItems: [
-               {
-                  count: 1,
-                  Item: {
-                     id: 1,
-                     name: '프리미엄 커피 원두 200g',
-                     ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Coffee' }],
-                  },
-               },
-               {
-                  count: 1,
-                  Item: {
-                     id: 2,
-                     name: '수제 마카롱 세트',
-                     ItemImgs: [{ url: 'https://placehold.co/150x150/f0d85a/000000?text=Macaron' }],
-                  },
-               },
-            ],
-         },
-      ],
-   }
    const dispatch = useDispatch()
    const navigate = useNavigate()
    const { user, isAuthenticated, Loading } = useSelector((state) => state.auth)
 
    const { orders, loading, error } = useSelector((state) => state.mypage)
+   const firstItem = orders?.[0]?.OrderItems?.[0]?.Item
 
    // 모달 상태 관리
    const [isModalOpen, setIsModalOpen] = useState(false)
@@ -60,6 +34,16 @@ const OrderHistoryForm = () => {
          console.log('인증이 실패했습니다. 사용자 정보를 불러올 수 없습니다.')
       }
    }, [dispatch, user, isAuthenticated, Loading])
+
+   //판매자 프사 갖고오기
+   const getSellerAvatarSrc = (profileImg) => {
+      const defaultPath = '/uploads/profile-images/default.png'
+
+      if (profileImg && typeof profileImg === 'string' && profileImg.trim().toLowerCase() !== defaultPath) {
+         return `${API_BASE_URL}${profileImg}`
+      }
+      return 'https://placehold.co/50'
+   }
 
    // 커스텀 알림 모달 열기
    const showAlert = (message) => {
@@ -88,13 +72,13 @@ const OrderHistoryForm = () => {
 
    // 재구매 버튼
    const handleReorder = (orderId) => {
-      console.log(`Order ID: ${orderId}의 상품을 장바구니에 담습니다.`)
       navigate('/cart')
    }
 
    // 리뷰 작성 버튼 클릭 시 모달 열기
    const handleOpenReviewModal = (order) => {
-      if (order.OrderItems && order.OrderItems.length > 0) {
+      const orderItems = order.OrderItems
+      if (orderItems && orderItems.length > 0) {
          setReviewingOrder(order)
          setIsModalOpen(true)
          setContent('')
@@ -129,7 +113,8 @@ const OrderHistoryForm = () => {
 
       const firstItem = reviewingOrder.OrderItems[0]?.Item
       const productId = firstItem?.id
-      const sellerId = reviewingOrder.seller?.id
+      const sellerId = firstItem?.seller?.id
+      const orderId = reviewingOrder.id
 
       if (!productId) {
          showAlert('리뷰를 작성할 상품 정보를 찾을 수 없습니다.')
@@ -145,7 +130,7 @@ const OrderHistoryForm = () => {
             buyerId: user.id,
             sellerId: sellerId,
             productId: productId,
-            orderId: reviewingOrder.orderId,
+            orderId: reviewingOrder.id,
             content: content,
             rating: 5,
             img: null,
@@ -159,7 +144,6 @@ const OrderHistoryForm = () => {
          showAlert(`리뷰 등록 실패: ${err.message || '알 수 없는 오류'}`)
       }
    }
-
    return (
       <section className="order-history-section">
          <h2 className="section-title">구매 내역</h2>
@@ -167,24 +151,24 @@ const OrderHistoryForm = () => {
          {orders?.length > 0 && (
             <div className="order-list">
                {orders.map((order) => {
-                  if (!order.OrderItems || order.OrderItems.length === 0) {
-                     console.log(`주문 ID ${order.orderId}에 대한 상품 정보가 없습니다.`)
+                  const orderItems = Array.isArray(order.OrderItems) ? order.OrderItems : [order.OrderItems]
+
+                  if (!orderItems || orderItems.length === 0) {
+                     console.log(`주문 ID ${order.id}에 대한 상품 정보가 없습니다.`)
                      return null
                   }
-
-                  const firstItem = order.OrderItems[0]?.Item
+                  const firstItem = orderItems[0]?.Item
                   if (!firstItem) return null
 
                   return (
-                     <div className="order-item" key={order.orderId}>
+                     <div className="order-item" key={order.id}>
                         <div className="item-details">
                            <div className="thumb">
-                              <img src={firstItem.ItemImgs[0]?.url || 'https://placehold.co/100x100'} alt={firstItem.name} className="product-image" />
+                              <img src={`${import.meta.env.VITE_API_URL}${firstItem.ItemImgs?.[0]?.img_url}` || 'https://placehold.co/100x100'} alt={firstItem.name} className="product-image" />
                            </div>
                            <div className="info">
-                              <p className="meta">주문일: {order.date}</p>
                               <h3 className="title">
-                                 {firstItem.name} {order.OrderItems.length > 1 ? `외 ${order.OrderItems.length - 1}개` : ''}
+                                 {firstItem.name} {orderItems.length > 1 ? `외 ${orderItems.length - 1}개` : ''}
                               </h3>
                               <p className="meta">
                                  상태: <span className={`status-text status-${order.status.toLowerCase()}`}>{order.status}</span>
@@ -192,18 +176,18 @@ const OrderHistoryForm = () => {
                            </div>
                         </div>
                         <div className="seller-mini">
-                           <img src={order.seller?.avatarUrl || 'https://via.placeholder.com/50'} alt={order.seller?.name} className="seller-avatar" />
-                           <span>{order.seller?.name}</span>
+                           <img src={getSellerAvatarSrc(firstItem?.Seller?.User?.profile_img)} alt={firstItem?.Seller?.name} className="seller-avatar" />
+                           <span>{firstItem?.Seller?.name}</span>
                         </div>
                         <div className="actions">
-                           <button className="btn-small btn-secondary" onClick={() => handleCancelOrder(order.orderId)} disabled={loading || order.status !== 'PAID'}>
+                           <button className="btn-small btn-secondary" onClick={() => handleCancelOrder(order.id)} disabled={loading || order.status !== 'PAID'}>
                               주문 취소
                            </button>
                            <button className="btn-small btn-primary" onClick={() => handleOpenReviewModal(order)} disabled={loading || order.hasReview || order.status !== 'DELIVERED' || !user || !user.id}>
                               {order.hasReview ? '리뷰 완료' : '리뷰 작성'}
                            </button>
                            {order.status === 'DELIVERED' && (
-                              <button className="btn-small primary" onClick={() => handleReorder(order.orderId)} disabled={loading}>
+                              <button className="btn-small primary" onClick={() => handleReorder(order.id)} disabled={loading}>
                                  재구매
                               </button>
                            )}

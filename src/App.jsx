@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { checkAuthStatusThunk } from './features/authSlice'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { Routes, Route } from 'react-router-dom'
 import MainPage from './pages/MainPage'
 import LoginSuccess from './pages/LoginSuccess'
 import RegisterPage from './pages/local/RegisterPage'

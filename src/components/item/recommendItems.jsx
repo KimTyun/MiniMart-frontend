@@ -24,12 +24,12 @@ const RecommendItems = () => {
       return <div className="recommend-container loading">추천 상품을 불러오는 중입니다...</div>
    }
 
-   // 오류 상태 처리
+   // 에러처리
    if (error) {
       return <div className="recommend-container error">추천 상품을 불러오는 데 실패했습니다: {error}</div>
    }
 
-   // 데이터가 없을 때
+   // 데이터가읎어
    if (recommend.length === 0) {
       return <div className="recommend-container empty">추천 상품이 없습니다.</div>
    }
