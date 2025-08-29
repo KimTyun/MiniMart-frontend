@@ -204,9 +204,11 @@ function Home() {
                   ))
                )
             ) : (
-               // 인기 제품 없을 때 출력되도록
-               <RecommendItems />
+               <div>인기 상품이 없습니다.</div>
             )}
+            <div>
+               <RecommendItems />
+            </div>
          </div>
          {/* 판매자 목록 */}
          <h1 className="seller-h1">판매자 목록</h1>
