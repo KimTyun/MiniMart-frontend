@@ -174,21 +174,29 @@ function ItemDetail() {
                               <MenuItem value="">
                                  <em>개수를 선택하세요</em>
                               </MenuItem>
-                              {stock_number < 5 ? (
-                                 [...new Array(stock_number)].map((_, i) => (
-                                    <MenuItem value={i + 1} key={i + 1}>
-                                       {i + 1}개
-                                    </MenuItem>
-                                 ))
-                              ) : (
-                                 <>
-                                    <MenuItem value={1}>1개</MenuItem>
-                                    <MenuItem value={2}>2개</MenuItem>
-                                    <MenuItem value={3}>3개</MenuItem>
-                                    <MenuItem value={4}>4개</MenuItem>
-                                    <MenuItem value={5}>5개</MenuItem>
-                                 </>
-                              )}
+                              {stock_number < 5
+                                 ? [...new Array(stock_number)].map((_, i) => (
+                                      <MenuItem value={i + 1} key={i + 1}>
+                                         {i + 1}개
+                                      </MenuItem>
+                                   ))
+                                 : [
+                                      <MenuItem value={1} key={1}>
+                                         1개
+                                      </MenuItem>,
+                                      <MenuItem value={2} key={2}>
+                                         2개
+                                      </MenuItem>,
+                                      <MenuItem value={3} key={3}>
+                                         3개
+                                      </MenuItem>,
+                                      <MenuItem value={4} key={4}>
+                                         4개
+                                      </MenuItem>,
+                                      <MenuItem value={5} key={5}>
+                                         5개
+                                      </MenuItem>,
+                                   ]}
                            </Select>
                         </div>
                      </div>

@@ -61,12 +61,6 @@ const FollowForm = () => {
       setSelectedSeller(null)
    }
 
-   // 새로고침 함수
-   const handleRefresh = () => {
-      setMessage('')
-      dispatch(fetchFollowingSellersThunk())
-   }
-
    // 확인 모달 컴포넌트
    const ConfirmModal = ({ isOpen, message, onConfirm, onCancel }) => {
       if (!isOpen) {
@@ -94,9 +88,7 @@ const FollowForm = () => {
          <section>
             <div className="section-header">
                <h2 className="section-title">팔로잉 목록</h2>
-               <button onClick={handleRefresh} className="btn-small secondary" disabled={loading}>
-                  {loading ? '로딩중...' : '새로고침'}
-               </button>
+               {loading ? '로딩중...' : ''}
             </div>
 
             {loading && <p className="loading">로딩 중...</p>}
