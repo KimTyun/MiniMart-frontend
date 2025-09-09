@@ -190,7 +190,7 @@
 <br />
 ------------
 <br />
-<a href="https://github.com/KimTyun/MiniMart-recommend">Frontend git 링크</a>
+<a href="https://github.com/KimTyun/MiniMart-recommend">recommend git 링크</a>
 
 ------------
 
