@@ -180,8 +180,8 @@
 <br />
 
 ------------
-
 ### 프로젝트 협업용 git
+<br />
 <a href="https://github.com/KimTyun/MiniMart-api">API git 링크</a>
 <br />
 ------------
@@ -191,7 +191,6 @@
 ------------
 <br />
 <a href="https://github.com/KimTyun/MiniMart-recommend">recommend git 링크</a>
-
 ------------
 
 
