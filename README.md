@@ -4,6 +4,9 @@
 </div>
 <br />
 
+<a href="https://github.com/KimTyun/MiniMart-api">MiniMart-API git 링크</a>
+
+
 # 1. 프로젝트 개요 (Introduction)
 ## MINI MART - Frontend
 > 가입을 쉽게 할 수 있도록 "구글과 다음카카오, 다음 주소 찾기 api"를 활용해서 만든 이커머스 사이트
